@@ -32,7 +32,7 @@ And to test the website, by default, you can open `http://0.0.0.0:8081` in your 
 
 ---
 
-#Authors
+###Authors
 - Caitlin Potter <snowball@defpixel.com>
 - Name / Email (Git commit IDs) -- Maybe this list should only include people who have put work into the web server -- Add names as work goes into it
 - Same here
@@ -41,7 +41,7 @@ And to test the website, by default, you can open `http://0.0.0.0:8081` in your 
 
 ---
 
-#License
+###License
 This would be a good thing to write a note of here... But we can worry about that later.
 
 The web application might not have exactly the same license terms as the project as a whole, are my thoughts here.

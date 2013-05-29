@@ -1,13 +1,13 @@
 LinuxLock
 =========
 
-#Description
+###Description
 Private Team Repo for Linux Lock project for PRJ666
 
-#Setup
+###Setup
 The LinuxLock project consists of several individual components, each with its own setup needs. These needs are documented here.
 
-##Web Server
+####Web Server
 The web-server, located under `Server_Code`, requires a relatively recent version of Node.js installed, as well as the packages listed in `Server_Code/package.json`.
 
 Use a version of Node.js either built from source, EG
@@ -37,28 +37,28 @@ node server.js
 
 And to test the website, by default, you can open `http://0.0.0.0:8081` in your favourite web-browser. **However**, for some reason Opera does not figure out that the server is bound to 0.0.0.0, but does seem to accept `http://localhost:8081` instead.
 
-##Raspberry Pi
+####Raspberry Pi
 
 ---
 
-#Usage
+###Usage
 
-##Management
+####Management
 Description of how to use various features of the management console/web application.
 
-##Test Suites
+####Test Suites
 Description of how to run automated tests.
 
 ---
 
-#Other details
+###Other details
 
-##GPIO Test Harness
+####GPIO Test Harness
 Documentation of how to build GPIO Test Harness (We should really document this well so that it can be reproduced in the future if need be).
 
 ---
 
-#Authors
+###Authors
 - Caitlin Potter <snowball@defpixel.com>
 - Name / Email (Git commit IDs)
 - Same here
@@ -67,5 +67,5 @@ Documentation of how to build GPIO Test Harness (We should really document this 
 
 ---
 
-#License
+###License
 This would be a good thing to write a note of here... But we can worry about that later.
