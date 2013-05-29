@@ -33,7 +33,7 @@ And to test the website, by default, you can open `http://0.0.0.0:8081` in your 
 ---
 
 ###Authors
-- Caitlin Potter <snowball@defpixel.com>
+- Caitlin Potter &lt;snowball@defpixel.com&gt;
 - Name / Email (Git commit IDs) -- Maybe this list should only include people who have put work into the web server -- Add names as work goes into it
 - Same here
 - Same here

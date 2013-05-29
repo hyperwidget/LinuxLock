@@ -59,7 +59,7 @@ Documentation of how to build GPIO Test Harness (We should really document this 
 ---
 
 ###Authors
-- Caitlin Potter <snowball@defpixel.com>
+- Caitlin Potter &lt;snowball@defpixel.com&gt;
 - Name / Email (Git commit IDs)
 - Same here
 - Same here
