@@ -1,49 +1,37 @@
 //setup Dependencies
-var connect = require('connect')
-    , express = require('express')
-    , io = require('socket.io')
-    , port = (process.env.PORT || 8081);
+var connect = require('connect'),
+  express = require('express'),
+  io = require('socket.io'),
+  port = (process.env.PORT || 3000);
 
 //Setup Express
-var server = express.createServer();
-server.configure(function(){
-    server.set('views', __dirname + '/views');
-    server.set('view options', { layout: false });
-    server.use(connect.bodyParser());
-    server.use(express.cookieParser());
-    server.use(express.session({ secret: "shhhhhhhhh!"}));
-    server.use(connect.static(__dirname + '/static'));
-    server.use(server.router);
+var app = express();
+app.configure(function(){
+  app.set('views', __dirname + '/views');
+  app.set('view options', { layout: false });
+  app.use(connect.bodyParser());
+  app.use(express.cookieParser());
+  app.use(express.session({ secret: "shhhhhhhhh!"}));
+  app.use(connect.static(__dirname + '/static'));
+  app.use(app.router);
+
+  //Error Handler
+  app.use(function(err, req, res, next) {
+    if(!err) return next();
+    console.log(err);
+    res.send("error!!!");
+  });
 });
 
-//setup the errors
-server.error(function(err, req, res, next){
-    if (err instanceof NotFound) {
-        res.render('404.jade', { locals: { 
-                  title : '404 - Not Found'
-                 ,description: ''
-                 ,author: ''
-                 ,analyticssiteid: 'XXXXXXX' 
-                },status: 404 });
-    } else {
-        res.render('500.jade', { locals: { 
-                  title : 'The Server Encountered an Error'
-                 ,description: ''
-                 ,author: ''
-                 ,analyticssiteid: 'XXXXXXX'
-                 ,error: err 
-                },status: 500 });
-    }
-});
-server.listen( port);
+app.listen( port);
 
 //Setup Socket.IO
-var io = io.listen(server);
+var io = io.listen(app);
 io.sockets.on('connection', function(socket){
   console.log('Client Connected');
   socket.on('message', function(data){
-    socket.broadcast.emit('server_message',data);
-    socket.emit('server_message',data);
+    socket.broadcast.emit('app_message',data);
+    socket.emit('app_message',data);
   });
   socket.on('disconnect', function(){
     console.log('Client Disconnected.');
@@ -57,25 +45,23 @@ io.sockets.on('connection', function(socket){
 
 /////// ADD ALL YOUR ROUTES HERE  /////////
 
-server.get('/', function(req,res){
+app.get('/', function(req,res){
+  console.log('emptyPath');
   res.render('index.jade', {
-    locals : { 
-              title : 'Your Page Title'
-             ,description: 'Your Page Description'
-             ,author: 'Your Name'
-             ,analyticssiteid: 'XXXXXXX' 
-            }
-  });
+      title : 'Linux Lock',
+      description: 'Starting page',
+      author: 'Kaleidus Code'
+    });
 });
 
 
 //A Route for Creating a 500 Error (Useful to keep around)
-server.get('/500', function(req, res){
+app.get('/500', function(req, res){
     throw new Error('This is a 500 Error');
 });
 
 //The 404 Route (ALWAYS Keep this as the last route)
-server.get('/*', function(req, res){
+app.get('/*', function(req, res){
     throw new NotFound;
 });
 
