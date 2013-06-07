@@ -1,0 +1,34 @@
+# Script supposed to install required packages for our system. (in progress)
+
+
+
+#Fine distribution and install Mongo depending on distro
+distro=$(cat /etc/*-release |  grep "^ID=" | awk -F'=' '{print $2}')
+arch=$(uname -m)
+
+# Make sure only root can run our script
+if [ "$(id -u)" != "0" ]; then
+   echo "This script must be run as root" 1>&2
+   exit 1
+fi
+# ...
+
+
+if [ "$distro" = "fedora" ]
+ then
+	if [ "$arch" = "x86_64" ]
+	   then
+		sudo touch /etc/yum.repos.d/10gen.repo
+		sudo chmod 744 /etc/yum.repos.d/10gen.repo
+   	 	 echo -e "[10gen]\nname=10gen Repository\nbaseurl=http://downloads-distro.mongodb.org/repo/redhat/os/x86_64\ngpgcheck=0\nenabled=1" > /etc/yum.repos.d/10gen.repo
+		 sudo yum install -y mongo-10gen mongo-10gen-server
+	else
+    		  echo -e "[10gen]\nname=10gen Repository\nbaseurl=http://downloads-distro.mongodb.org/repo/redhat/os/i686\ngpgcheck=0\nenabled=1" > /etc/yum.repos.d/10gen.repo
+		sudo yum install -y mongo-10gen mongo-10gen-server
+	fi
+elif [[ $distro = "ubuntu" ]]
+ then
+   echo "Installing Mongo for Ubuntu"
+fi
+ exit 1
+

@@ -6,6 +6,8 @@ var connect = require('connect'),
 
 //Setup Express
 var app = express();
+var users = require('./routes/users');
+
 app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view options', { layout: false });
@@ -19,11 +21,17 @@ app.configure(function(){
   app.use(function(err, req, res, next) {
     if(!err) return next();
     console.log(err);
+    res.render('404.jade', {
+      title : 'Linux Lock',
+      description: 'Starting page',
+      author: 'Kaleidus Code',
+      error: err
+    });
     res.send("error!!!");
   });
 });
 
-app.listen( port);
+app.listen( port );
 
 //Setup Socket.IO
 var io = io.listen(app);
@@ -37,6 +45,31 @@ io.sockets.on('connection', function(socket){
     console.log('Client Disconnected.');
   });
 });
+
+
+///////////////////////////////////////////
+//              PASSPORT                 //
+///////////////////////////////////////////
+
+//Authentication 
+var passport = require('passport'),
+  LocalStrategy = require('passport-local').Strategy;
+
+passport.use(new LocalStrategy(
+  function(username, password, done) {
+    users.findByEmail({ username: username }, function(err, user) {
+        console.log('No user');
+      if (err) { return done(err); }
+      if (!user) {
+        return done(null, false, { message: 'Incorrect username.' });
+      }
+      if (!user.validPassword(password)) {
+        return done(null, false, { message: 'Incorrect password.' });
+      }
+      return done(null, user);
+    });
+  }
+));
 
 
 ///////////////////////////////////////////
@@ -54,6 +87,12 @@ app.get('/', function(req,res){
     });
 });
 
+app.post('/login',
+  passport.authenticate('local', {
+   successRedirect: 'http://localhost:3000/',
+   failureRedirect: 'http://localhost:3000/',
+   failureFlash: 'Invalid Credentials' })
+);
 
 //A Route for Creating a 500 Error (Useful to keep around)
 app.get('/500', function(req, res){

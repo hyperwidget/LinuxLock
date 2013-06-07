@@ -3,6 +3,12 @@ extends layout
 block header
 
 block content
-	div
-		a(id='sender')='Send a Message'
-		ul(id='receiver')
+	form(form action="/login",	 method="post")
+		div
+			label(for='username') Username
+			input(id='username', name='username', type='text', value='', placeholder='Enter Username')
+		div
+			label(for='password') Password
+			input(id='password', name='password', type='password', value='', placeholder='Enter Password')
+		div
+			input(type='submit',value='Log In')
