@@ -3,14 +3,24 @@
 ///////////////////////////////////////////
 
 //Mongo require
-var db = require('mongodb').MongoClient;
+var MongoClient = require('mongodb').MongoClient,
+    Server = require('mongodb').Server,
+    db;
+
+var mongoClient = new MongoClient(new Server('localhost', 27017));
 
 // Connect to the db
-db.connect("mongodb://localhost:27017/linux_lock", function(err, db) {
+mongoClient.open(function(err, mongoClient) {
+
   if(!err) {
     console.log("We are connected");
 
-    db.collection('users');
+    db = mongoClient.db('linux_lock');
+    db.collection('users', {strict:true}, function(err, collection){
+        if(err){
+            console.log("can't find users table");
+        }
+    });
 
   } else {
     return console.dir(err);
@@ -26,18 +36,17 @@ exports.findAll = function(req, res) {
             });
         } else {
             collection.find().toArray(function(err, items) {
-                res.jsonp(items);
             });
         }
     });
 };
 
-exports.findByEmail = function(email) {
+exports.findByEmail = function(email, done) {
     console.log('findByEmail: ' + email);
     db.collection('users', function(err, collection) {
         collection.find({'email': email}).toArray(function(err, items) {
             console.log(items);
-            res.jsonp(items);
+            return done(null, items);
         });
     });
 };

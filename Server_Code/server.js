@@ -57,8 +57,7 @@ var passport = require('passport'),
 
 passport.use(new LocalStrategy(
   function(username, password, done) {
-    users.findByEmail({ username: username }, function(err, user) {
-        console.log('No user');
+    users.findByEmail(username, function(err, user) {
       if (err) { return done(err); }
       if (!user) {
         return done(null, false, { message: 'Incorrect username.' });
