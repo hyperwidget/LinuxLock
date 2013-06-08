@@ -36,17 +36,23 @@ exports.findAll = function(req, res) {
             });
         } else {
             collection.find().toArray(function(err, items) {
+                res.jsonp(items);
             });
         }
     });
 };
 
 exports.findByEmail = function(email, done) {
+    var err;
     console.log('findByEmail: ' + email);
     db.collection('users', function(err, collection) {
         collection.find({'email': email}).toArray(function(err, items) {
             console.log(items);
-            return done(null, items);
+            if(!err){
+                return done(null, items);
+            } else{ 
+                return done(err, items);
+            }
         });
     });
 };
