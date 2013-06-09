@@ -2,11 +2,15 @@
 var connect = require('connect'),
   express = require('express'),
   io = require('socket.io'),
-  port = (process.env.PORT || 3000);
-
+  port = (process.env.PORT || 3000),
+  flash = require('connect-flash');
 //Setup Express
 var app = express();
 var users = require('./routes/users');
+var zones = require('./routes/zones');
+var devices = require('./routes/devices');
+var systemSettings = require('./routes/systemSettings');
+var userRFIDs = require('./routes/userRFIDs');
 
 app.configure(function(){
   app.set('views', __dirname + '/views');
@@ -14,6 +18,7 @@ app.configure(function(){
   app.use(connect.bodyParser());
   app.use(express.cookieParser());
   app.use(express.session({ secret: "shhhhhhhhh!"}));
+  app.use(flash());
   app.use(connect.static(__dirname + '/static'));
   app.use(app.router);
 
@@ -62,7 +67,7 @@ passport.use(new LocalStrategy(
       if (!user) {
         return done(null, false, { message: 'Incorrect username.' });
       }
-      if (!user.validPassword(password)) {
+      if (!users.validPassword(password)) {
         return done(null, false, { message: 'Incorrect password.' });
       }
       return done(null, user);

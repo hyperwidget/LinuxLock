@@ -13,12 +13,12 @@ var mongoClient = new MongoClient(new Server('localhost', 27017));
 mongoClient.open(function(err, mongoClient) {
 
   if(!err) {
-    console.log("Connected to users table");
+    console.log("Connected to userRFIDs table");
 
     db = mongoClient.db('linux_lock');
-    db.collection('users', {strict:true}, function(err, collection){
+    db.collection('userRFIDs', {strict:true}, function(err, collection){
         if(err){
-            console.log("can't find users table");
+            console.log("can't find userRFIDs table");
         }
     });
 
@@ -29,7 +29,7 @@ mongoClient.open(function(err, mongoClient) {
 
 exports.findAll = function(req, res) {
     var name = req.query["name"];
-    db.collection('users', function(err, collection) {
+    db.collection('userRFIDs', function(err, collection) {
         if (name) {
             collection.find({"fullName": new RegExp(name, "i")}).toArray(function(err, items) {
                 res.jsonp(items);
@@ -42,11 +42,11 @@ exports.findAll = function(req, res) {
     });
 };
 
-exports.findByEmail = function(email, done) {
+exports.findById = function(id, done) {
     var err;
-    console.log('findByEmail: ' + email);
-    db.collection('users', function(err, collection) {
-        collection.find({'email': email}).toArray(function(err, items) {
+    console.log('findUserRfidById: ' + rfidId);
+    db.collection('userRFIDs', function(err, collection) {
+        collection.find({'_id': 'ObjectId("' + id + '")'}).toArray(function(err, items) {
             console.log(items);
             if(!err){
                 return done(null, items);
@@ -56,11 +56,3 @@ exports.findByEmail = function(email, done) {
         });
     });
 };
-
-var validPassword = function(password){
-    var retval = false;
-
-    return retval;
-}
-
-exports.validPassword = validPassword;
