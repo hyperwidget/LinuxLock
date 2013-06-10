@@ -102,3 +102,6 @@ html, body {
     width: 10%;
     min-width: 30px;
 }
+.row0 {
+    background: lightgray;
+}

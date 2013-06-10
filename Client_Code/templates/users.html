@@ -1,6 +1,6 @@
 <div class="leftPanel">
     <span class="item">
-        <button class="addButton">Add User</button>
+        <button class="addButton" ng-click="addUser()">Add User</button>
     </span>
     <span class="item">
         <span>Search By:</span>
@@ -59,86 +59,14 @@
                 <th>Zones</th>
                 <th>Devices</th>
             </tr>
-            <tr class="lightgray">
-                <td>John</td>
-                <td>Smith</td>
-                <td>jsmith@company.com</td>
-                <td>416 555 1234</td>
-                <td>10000</td>
-                <td>Company - Floor 2, Public Areas</td>
-                <td>-</td>
-            </tr>
-            <tr>
-                <td>John</td>
-                <td>Denver</td>
-                <td>jdenver@company.com</td>
-                <td>416 555 1111</td>
-                <td>100234</td>
-                <td>Public Areas</td>
-                <td>Music Door, Random Door</td>
-            </tr>
-            <tr class="lightgray">
-                <td>John</td>
-                <td>Johnson</td>
-                <td>jjohnson@company.com</td>
-                <td>416 555 4444</td>
-                <td>10566</td>
-                <td>-</td>
-                <td>Front Door</td>
-            </tr>
-            <tr>
-                <td>John</td>
-                <td>Little</td>
-                <td>jlittle@company.com</td>
-                <td>416 555 2222</td>
-                <td>100199</td>
-                <td>Public Areas, Company - Floor 1</td>
-                <td>Music Door, Random Door</td>
-            </tr>
-            <tr class="lightgray selected">
-                <td>John</td>
-                <td>Adams</td>
-                <td>jadams@company.com</td>
-                <td>416 555 9999</td>
-                <td>12222</td>
-                <td>Oval Office, Pentagon</td>
-                <td>Nuclear Silo</td>
-            </tr>
-            <tr>
-                <td>John</td>
-                <td>Hart</td>
-                <td>jhart@company.com</td>
-                <td>416 555 8888</td>
-                <td>108888</td>
-                <td>Public Areas</td>
-                <td>-</td>
-            </tr>
-            <tr class="lightgray">
-                <td>John</td>
-                <td>Brown</td>
-                <td>jbrown@company.com</td>
-                <td>416 555 4394</td>
-                <td>14394</td>
-                <td>-</td>
-                <td>Front Door</td>
-            </tr>
-            <tr>
-                <td>Johnson</td>
-                <td>Dench</td>
-                <td>jdench@company.com</td>
-                <td>416 555 1121</td>
-                <td>101121</td>
-                <td>Public Areas, Company - Floor 2</td>
-                <td>-</td>
-            </tr>
-            <tr class="lightgray">
-                <td>Johnson</td>
-                <td>Richards</td>
-                <td>jrichards@company.com</td>
-                <td>416 555 4424</td>
-                <td>14424</td>
-                <td>Fitness Centre</td>
-                <td>Front Door</td>
+            <tr ng-repeat="user in users" class="{{'row' + $index % 2 }}">
+                <td>{{user.firstName}}</td>
+                <td>{{user.lastName}}</td>
+                <td>{{user.email}}</td>
+                <td>{{user.phoneNumber}}</td>
+                <td>{{user.cards}}</td>
+                <td>{{user.zones}}</td>
+                <td>{{user.devices}}</td>
             </tr>
         </table>
     </span>
