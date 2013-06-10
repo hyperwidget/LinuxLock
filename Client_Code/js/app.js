@@ -1,0 +1,36 @@
+'use strict';
+
+var adminConsoleApp = angular.module('adminConsoleApp', [])
+    .config(function ($routeProvider) {
+        $routeProvider.when('/Users',
+            {
+                templateUrl: 'templates/users.html',
+                controller: 'UsersController'
+            });
+        $routeProvider.when('/Devices',
+            {
+                templateUrl: 'templates/devices.html',
+                controller: 'DevicesController'
+            });
+        $routeProvider.when('/Zones',
+            {
+                templateUrl: 'templates/zones.html',
+                controller: 'ZonesController'
+            })
+        $routeProvider.when('/Reports',
+            {
+                templateUrl: 'templates/reports.html',
+                controller: 'ReportsController'
+            })
+        $routeProvider.when('/Admin',
+            {
+                templateUrl: 'templates/admin.html',
+                controller: 'AdminController'
+            })
+        $routeProvider.when('/Settings',
+            {
+                templateUrl: 'templates/settings.html',
+                controller: 'SettingsController'
+            })
+    });
+
