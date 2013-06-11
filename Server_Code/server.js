@@ -7,6 +7,7 @@ var connect = require('connect'),
 //Setup Express
 var app = express();
 var users = require('./routes/users');
+var adminRoles = require('./routes/adminRoles');
 var zones = require('./routes/zones');
 var devices = require('./routes/devices');
 var systemSettings = require('./routes/systemSettings');
@@ -62,12 +63,12 @@ var passport = require('passport'),
 
 passport.use(new LocalStrategy(
   function(username, password, done) {
-    users.findByEmail(username, function(err, user) {
+    adminRoles.findByEmail(username, function(err, user) {
       if (err) { return done(err); }
       if (!user) {
         return done(null, false, { message: 'Incorrect username.' });
       }
-      if (!users.validPassword(password)) {
+      if (!adminRoles.validPassword(password)) {
         return done(null, false, { message: 'Incorrect password.' });
       }
       return done(null, user);
@@ -93,8 +94,8 @@ app.get('/', function(req,res){
 
 app.post('/login',
   passport.authenticate('local', {
-   successRedirect: 'http://localhost:3000/',
-   failureRedirect: 'http://localhost:3000/',
+   successRedirect: '/',
+   failureRedirect: '/',
    failureFlash: 'Invalid Credentials' })
 );
 
