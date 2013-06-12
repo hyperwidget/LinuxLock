@@ -1,0 +1,45 @@
+#WHAT THIS SCRIPT DOES:
+#
+# This scipt checks if number of collections in the database ( in our case linux_lock)
+# is equal to the number specified by the user, and exits with error if not.
+#
+# Needed to check if mongo succesfully set up all the collections
+# @author: Anatoly Spektor
+
+#How to use it ?
+# with mongo_setup: mongo < mongo_setup | ./mongo_test
+# If you want to see all collections:
+# with mongo_setup: mongo < mongo_setup | ./mongo_test -show
+
+
+# Specify Number of existing collections (can be checked with " show collections " in mongo console)
+# after running mongo_startup script
+NUM_COLLECTIONS=11
+
+# if you pipe this script to mongo_setup, we need to make sure mongo_scrip finished
+sleep 2
+
+# Actual Script
+mongo  << ~ > output.json
+use linux_lock
+show collections
+~
+collection_num=$(cat output.json | tail -n +4 | head -n -1 | wc -l)
+show_cols=$(cat output.json | tail -n +4 | head -n -1)
+
+rm -r output.json > /dev/null
+# use -show as an argument to show the collection list
+if [[ $1 == '-show' ]]
+ then
+ echo "$show_cols"  
+fi
+
+if [ $collection_num -eq $NUM_COLLECTIONS ]
+ then
+   echo "--> All $collection_num were created succesfully"
+   exit 0
+else
+   echo "Error: Collections required: $NUM_COLLECTIONS, Collections created: $collection_num"
+   exit 312 #just for fun
+ fi
+
