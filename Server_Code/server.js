@@ -14,7 +14,7 @@ var systemSettings = require('./routes/systemSettings');
 var userRFIDs = require('./routes/userRFIDs');
 
 app.configure(function(){
-  app.set('views', __dirname + '/views');
+  app.set('views', './../Client_Code/templates');
   app.set('view options', { layout: false });
   app.use(connect.bodyParser());
   app.use(express.cookieParser());
@@ -76,6 +76,7 @@ passport.use(new LocalStrategy(
   }
 ));
 
+console.log("Dir Name : " + __dirname);
 
 ///////////////////////////////////////////
 //              Routes                   //
