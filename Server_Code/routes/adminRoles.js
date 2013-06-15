@@ -5,7 +5,7 @@
 //Mongo require
 var MongoClient = require('mongodb').MongoClient,
     Server = require('mongodb').Server,
-    db;
+    db, mongo = require('mongodb'), BSON = mongo.BSONPure;
 
 var mongoClient = new MongoClient(new Server('localhost', 27017));
 
@@ -42,25 +42,44 @@ exports.findAll = function(req, res) {
     });
 };
 
-exports.findByEmail = function(email, done) {
+exports.findByUserName = function(userName, done) {
     var err;
-    console.log('findByEmail: ' + email);
+    console.log('findByUserName: ' + userName);
     db.collection('adminRoles', function(err, collection) {
-        collection.find({'email': email}).toArray(function(err, items) {
-            console.log(items);
+        collection.find({'username': userName}).toArray(function(err, items) {
             if(!err){
-                return done(null, items);
+                return done(null, items[0]);
             } else{ 
-                return done(err, items);
+                return done(err, items[0]);
             }
         });
     });
 };
 
-var validPassword = function(password){
-    var retval = false;
+exports.findById = function(id, done) {
+    var err;
+    console.log('findById: ' + id);
+    var o_id = new BSON.ObjectID(id);
+    db.collection('adminRoles', function(err, collection) {
+        collection.find({'_id': o_id}).toArray(function(err, items) {
+            if(!err){
+                return done(null, items[0]);
+            } else{ 
+                return done(err, items[0]);
+            }
+        });
+    });
+};
 
-    return retval;
-}
-
-exports.validPassword = validPassword;
+exports.validPassword = function(username, password, done){
+    console.log('validPassword: ' + password);
+    db.collection('adminRoles', function(err, collection) {
+        collection.find({'username': username}).toArray(function(err, items) {
+            if(items[0].password === password){
+                return done(true);
+            } else{ 
+                return done(null);
+            }
+        });
+    });
+};

@@ -13,6 +13,9 @@ var devices = require('./routes/devices');
 var systemSettings = require('./routes/systemSettings');
 var userRFIDs = require('./routes/userRFIDs');
 
+var passport = require('passport'),
+  LocalStrategy = require('passport-local').Strategy;
+
 app.configure(function(){
   app.set('views', './../Client_Code/templates');
   app.set('view options', { layout: false });
@@ -21,6 +24,8 @@ app.configure(function(){
   app.use(express.session({ secret: "shhhhhhhhh!"}));
   app.use(flash());
   app.use(connect.static(__dirname + '/static'));
+  app.use(passport.initialize());
+  app.use(passport.session());
   app.use(app.router);
 
   //Error Handler
@@ -57,26 +62,35 @@ io.sockets.on('connection', function(socket){
 //              PASSPORT                 //
 ///////////////////////////////////////////
 
+passport.serializeUser(function(user, done) {
+  done(null, user._id);
+});
+
+passport.deserializeUser(function(id, done) {
+  adminRoles.findById(id, function(err, user) {
+    done(err, user);
+  });
+});
+
 //Authentication 
-var passport = require('passport'),
-  LocalStrategy = require('passport-local').Strategy;
 
 passport.use(new LocalStrategy(
   function(username, password, done) {
-    adminRoles.findByEmail(username, function(err, user) {
-      if (err) { return done(err); }
+    adminRoles.findByUserName(username, function(err, user) {
+      if (err) { 
+        return done(err); 
+      }
       if (!user) {
         return done(null, false, { message: 'Incorrect username.' });
       }
-      if (!adminRoles.validPassword(password)) {
+      if (user.password !== password) {
         return done(null, false, { message: 'Incorrect password.' });
       }
+      console.log('CORRECT');
       return done(null, user);
     });
   }
 ));
-
-console.log("Dir Name : " + __dirname);
 
 ///////////////////////////////////////////
 //              Routes                   //
@@ -89,15 +103,15 @@ app.get('/', function(req,res){
   res.render('index.jade', {
       title : 'Linux Lock',
       description: 'Starting page',
-      author: 'Kaleidus Code'
+      author: 'Kaleidus Code',
+      flash: req.flash()
     });
 });
 
 app.post('/login',
-  passport.authenticate('local', {
-   successRedirect: '/',
-   failureRedirect: '/',
-   failureFlash: 'Invalid Credentials' })
+  passport.authenticate('local', { successRedirect: '/content',
+                                   failureRedirect: '/',
+                                   failureFlash: true })
 );
 
 //A Route for Creating a 500 Error (Useful to keep around)
