@@ -104,7 +104,7 @@ app.get('/', function(req,res){
       title : 'Linux Lock',
       description: 'Starting page',
       author: 'Kaleidus Code',
-      flash: req.flash()
+      messages: req.flash()
     });
 });
 
