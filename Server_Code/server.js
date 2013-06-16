@@ -114,6 +114,16 @@ app.post('/login',
                                    failureFlash: true })
 );
 
+app.get('/console', function(req,res){
+    console.log('console');
+    res.render('console.jade', {
+        title : 'Linux Lock',
+        description: 'Starting page',
+        author: 'Kaleidus Code',
+        messages: req.flash()
+    });
+});
+
 //A Route for Creating a 500 Error (Useful to keep around)
 app.get('/500', function(req, res){
     throw new Error('This is a 500 Error');
