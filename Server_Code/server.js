@@ -17,7 +17,7 @@ var passport = require('passport'),
   LocalStrategy = require('passport-local').Strategy;
 
 app.configure(function(){
-  app.set('views', './../Client_Code/templates');
+  app.set('views', './../Client_Code');
   app.set('view options', { layout: false });
   app.use(connect.bodyParser());
   app.use(express.cookieParser());

@@ -1,0 +1,56 @@
+div.leftPanel
+    span.item
+        button.addButton(ng-click="addUser()") Add User
+    span.item
+        span Search By:
+    span.item
+        label(for="byFirstName") First Name
+        input.searchBox(type="text", id="byFirstName")
+        button.goButton Go
+    span.item
+        label(for="byLastName") Last Name
+        input.searchBox(type="text", id="byLastName")
+        button.goButton Go
+    span.item
+        label(for="byCardNumber") Card Number
+        input.searchBox(type="text", id="byCardNumber")
+        button.goButton Go
+    span.item
+        label(for="byEmail") Email
+        input.searchBox(type="text", id="byEmail")
+        button.goButton Go
+    span.item
+        label(for="byCardNumber") Phone Number
+        input.searchBox(type="text", id="byPhoneNumber")
+        button.goButton Go
+    span.item
+        label(for="byZone") Zone
+        input.searchBox(type="text", id="byZone")
+        button.goButton Go
+    span.item
+        label(for="byDevice") Device
+        input.searchBox(type="text", id="byDevice")
+        button.goButton Go
+div.mainPanel
+    span.item Results for...
+    span.item
+        button Edit
+        button Delete
+    span.item
+        table
+            tr
+                th First Name
+                th Last Name
+                th Email
+                th Phone
+                th Cards
+                th Zones
+                th Devices
+            tr(ng-repeat="user in users", class="{{'row' + $index % 2 }}")
+                td {{user.firstName}}
+                td {{user.lastName}}
+                td {{user.email}}
+                td {{user.phoneNumber}}
+                td {{user.cards}}
+                td {{user.zones}}
+                td {{user.devices}}
