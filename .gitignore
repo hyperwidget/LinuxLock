@@ -1,5 +1,7 @@
 
 Client_Code/.DS_Store
-
 .DS_Store
 /.project
+
+#Don't add NPM modules directories
+node_modules
