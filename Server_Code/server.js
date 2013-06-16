@@ -23,7 +23,7 @@ app.configure(function(){
   app.use(express.cookieParser());
   app.use(express.session({ secret: "shhhhhhhhh!"}));
   app.use(flash());
-  app.use(connect.static(__dirname + '/static'));
+  app.use(connect.static(__dirname.replace('Server', 'Client')));
   app.use(passport.initialize());
   app.use(passport.session());
   app.use(app.router);
