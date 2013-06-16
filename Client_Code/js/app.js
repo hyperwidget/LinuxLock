@@ -4,7 +4,7 @@ var adminConsoleApp = angular.module('adminConsoleApp', [])
     .config(function ($routeProvider) {
         $routeProvider.when('/Users',
             {
-                templateUrl: 'templates/users.html',
+                templateUrl: 'templates/users',
                 controller: 'UsersController'
             });
         $routeProvider.when('/Devices',

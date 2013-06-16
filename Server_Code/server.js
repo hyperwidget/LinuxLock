@@ -98,7 +98,7 @@ passport.use(new LocalStrategy(
 
 /////// ADD ALL YOUR ROUTES HERE  /////////
 
-app.get('/', function(req,res){
+app.get('/index', function(req,res){
   console.log('emptyPath');
   res.render('index.jade', {
       title : 'Linux Lock',
@@ -117,6 +117,16 @@ app.post('/login',
 app.get('/console', function(req,res){
     console.log('console');
     res.render('console.jade', {
+        title : 'Linux Lock',
+        description: 'Starting page',
+        author: 'Kaleidus Code',
+        messages: req.flash()
+    });
+});
+
+app.get('/templates/:name', function(req,res){
+    console.log('template' + req.params.name);
+    res.render('templates/' + req.params.name + '.jade', {
         title : 'Linux Lock',
         description: 'Starting page',
         author: 'Kaleidus Code',
