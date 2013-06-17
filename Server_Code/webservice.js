@@ -1,38 +1,59 @@
 var restify = require('restify'),
-    mongodb = require('mongodb/lib/mongodb'),
-   dbserver = new mongodb.Server('localhost', 27017, {auto_reconnect: true}),
-         db = new mongodb.Db('linux_lock', dbserver),
-     server = restify.createServer({
+    fs = require('fs'),
+    mongoose = require('mongoose'),
+    server = restify.createServer({
      	name: "linux-lock-services",
      	version: "1.0.0"
-     });
+    })
 
-var client = new mongodb.MongoClient(new mongodb.Server('localhost', 27017));
+mongoose.connect("mongodb://localhost:27017/linux_lock")
 
-server.use(restify.acceptParser(server.acceptable));
-server.use(restify.queryParser());
-server.use(restify.bodyParser());
+mongoose.connection.db.on('open',function(ref){
+  console.log('Connected to MongoDB')
+})
+mongoose.connection.db.on('error',function(err){
+  console.log('Failed to connect to MongoDB')
+  console.log(err)
+})
+
+// Bootstrap models
+var modelsPath = __dirname + '/models';
+
+// Not-very-clever model-import strategy
+fs.readdirSync(modelsPath).forEach(function(name){
+  var obj = require(modelsPath + '/' + name),
+      modelName = obj.name,
+      schemaName = obj.name+"Schema"
+  this[schemaName] = obj.schema;
+  this[modelName] = mongoose.model(modelName,this[schemaName],obj.collection)
+  console.log(this[modelName].modelName)
+})
+
+server.use(restify.acceptParser(server.acceptable))
+server.use(restify.queryParser())
+server.use(restify.bodyParser())
 
 server.get('/auth/:type/:id', function(req,res,next) {
-  var result = false;
   if(req.params.type === "rfid") {
-    // If we're dealing with RFID authentication...
-    db.collection('userRFIDs', function(err, collection) {
-      // TODO:
-      // There should not be duplicate RFID numbers in the system.
-      // However if there ARE duplicates, and any single duplicate
-      // is unauthorized, then deny access.
-      var cursor = collection.find({'rfidNo': req.params.id});
-      if(cursor.size() > 0) {
-        // For now, just return true if the RFID is found in the system.
-        result = true;
+    UserRFID.find({'rfidNo': req.params.id},
+      function(err,items){
+      if(err) console.log(err), res.send({"auth": false});
+      else if(items.length > 0) {
+        // TODO:
+        // There should not be duplicate RFID numbers in the system.
+        // However if there ARE duplicates, and any single duplicate
+        // is unauthorized, then deny access.
+        res.send({"auth": true});
+      } else {
+        res.send({"auth": false});
       }
-    });
+    })
+  } else {
+    res.send({"auth": false})
   }
-  res.send({"auth": result});
-  return next();
-});
+  return next()
+})
 
 server.listen(8080, function() {
   console.log('%s listening at %s', server.name, server.url);
-});
+})
