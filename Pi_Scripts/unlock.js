@@ -24,6 +24,18 @@ process.argv.forEach(function(val,index,array){
   }
 })
 
+if(typeof(type) !== "string") {
+  console.log("Missing 'type' parameter")
+  client.close()
+  process.exit(1)
+}
+
+if(typeof(id) !== "string") {
+  console.log("Missing 'id' parameter")
+  client.close()
+  process.exit(1)
+}
+
 client.get('/auth/'+type+'/'+id, function (err, req, res, obj) {
   if(err) console.log(err)
   else {
