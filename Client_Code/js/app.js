@@ -33,4 +33,3 @@ var adminConsoleApp = angular.module('adminConsoleApp', [])
                 controller: 'SettingsController'
             })
     });
-

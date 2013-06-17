@@ -59,7 +59,10 @@ html, body {
     text-align: right;
     width: 10%
 }
-
+.header .item.logout:hover {
+    color: white;
+    cursor: pointer;
+}
 .content {
     min-height: 708px;
     min-width: 1024px;

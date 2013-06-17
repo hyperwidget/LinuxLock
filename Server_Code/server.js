@@ -86,11 +86,16 @@ passport.use(new LocalStrategy(
       if (user.password !== password) {
         return done(null, false, { message: 'Incorrect password.' });
       }
-      console.log('CORRECT');
       return done(null, user);
     });
   }
 ));
+
+
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) { return next(); }
+  res.redirect('/')
+}
 
 ///////////////////////////////////////////
 //              Routes                   //
@@ -98,9 +103,9 @@ passport.use(new LocalStrategy(
 
 /////// ADD ALL YOUR ROUTES HERE  /////////
 
-app.get('/index', function(req,res){
+app.get('/', function(req,res){
   console.log('emptyPath');
-  res.render('index.jade', {
+  res.render('login.jade', {
       title : 'Linux Lock',
       description: 'Starting page',
       author: 'Kaleidus Code',
@@ -109,12 +114,19 @@ app.get('/index', function(req,res){
 });
 
 app.post('/login',
-  passport.authenticate('local', { successRedirect: '/content',
-                                   failureRedirect: '/',
-                                   failureFlash: true })
+  passport.authenticate('local', { 
+    successRedirect: '/console',
+    failureRedirect: '/',
+    failureFlash: true })
 );
 
-app.get('/console', function(req,res){
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/');
+});
+
+app.get('/console', ensureAuthenticated,
+    function(req,res){
     console.log('console');
     res.render('console.jade', {
         title : 'Linux Lock',
@@ -124,13 +136,14 @@ app.get('/console', function(req,res){
     });
 });
 
-app.get('/templates/:name', function(req,res){
+app.get('/templates/:name', ensureAuthenticated,
+  function(req,res){
     console.log('template' + req.params.name);
     res.render('templates/' + req.params.name + '.jade', {
-        title : 'Linux Lock',
-        description: 'Starting page',
-        author: 'Kaleidus Code',
-        messages: req.flash()
+      title : 'Linux Lock',
+      description: 'Starting page',
+      author: 'Kaleidus Code',
+      messages: req.flash()
     });
 });
 

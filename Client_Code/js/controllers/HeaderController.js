@@ -12,3 +12,11 @@ adminConsoleApp.controller('HeaderController',
        ];
     }
 );
+
+$(function(){
+
+  $('.logout').click(function(){
+    window.location = 'logout';
+  });
+
+});
