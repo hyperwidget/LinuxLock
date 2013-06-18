@@ -1,0 +1,31 @@
+div.leftPanel
+    span.item
+        span Search By:
+    span.item
+        label(for="byFirstName") Device Alias
+        input.searchBox(type="text", id="byDeviceAlias")
+        button.goButton Go
+    span.item
+        label(for="byDeviceType") Device Alias
+        input.searchBox(type="text", id="byDeviceType")
+        button.goButton Go
+div.mainPanel
+    span.item Results for...
+    span.item
+        button Add
+        button Edit
+        button Delete
+    span.item
+        table
+            tr
+                th Alias
+                th Type
+            tr.row0
+                td Front Door
+                td RFID
+            tr
+                td Music Door
+                td RFID
+            tr.row0
+                td Random Door
+                td RFID

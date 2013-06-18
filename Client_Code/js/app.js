@@ -9,7 +9,7 @@ var adminConsoleApp = angular.module('adminConsoleApp', [])
             });
         $routeProvider.when('/Devices',
             {
-                templateUrl: 'templates/devices.html',
+                templateUrl: 'templates/devices',
                 controller: 'DevicesController'
             });
         $routeProvider.when('/Zones',
