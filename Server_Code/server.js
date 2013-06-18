@@ -17,7 +17,7 @@ var passport = require('passport'),
   LocalStrategy = require('passport-local').Strategy;
 
 app.configure(function(){
-  app.set('views', './../Client_Code');
+  app.set('views', './../Client_Code/views');
   app.set('view options', { layout: false });
   app.use(connect.bodyParser());
   app.use(express.cookieParser());
@@ -139,7 +139,7 @@ app.get('/console', ensureAuthenticated,
 app.get('/templates/:name', ensureAuthenticated,
   function(req,res){
     console.log('template' + req.params.name);
-    res.render('templates/' + req.params.name + '.jade', {
+    res.render('partials/' + req.params.name + '.jade', {
       title : 'Linux Lock',
       description: 'Starting page',
       author: 'Kaleidus Code',

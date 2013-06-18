@@ -1,7 +1,5 @@
 div.leftPanel
     span.item
-        button.addButton(ng-click="addUser()") Add User
-    span.item
         span Search By:
     span.item
         label(for="byFirstName") First Name
@@ -34,6 +32,7 @@ div.leftPanel
 div.mainPanel
     span.item Results for...
     span.item
+        button(ng-click="addUser()") Add
         button Edit
         button Delete
     span.item

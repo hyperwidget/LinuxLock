@@ -11,7 +11,7 @@ block content
                     li(ng-repeat="navbarItem in navbarItems")
                         a.item(href="#/{{navbarItem.name}}") {{navbarItem.name}}
             span.item.logout Logout
-        div.mainPanel
+        div.content
             ng-view
 
 block footer
