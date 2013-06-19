@@ -37,19 +37,19 @@ server.get('/auth/:type/:id', function(req,res,next) {
   if(req.params.type === "rfid") {
     UserRFID.find({'rfidNo': req.params.id},
       function(err,items){
-      if(err) console.log(err), res.send({"auth": false});
+      if(err) console.log(err), res.send('0')
       else if(items.length > 0) {
         // TODO:
         // There should not be duplicate RFID numbers in the system.
         // However if there ARE duplicates, and any single duplicate
         // is unauthorized, then deny access.
-        res.send({"auth": true});
+        res.send('1')
       } else {
-        res.send({"auth": false});
+        res.send('0')
       }
     })
   } else {
-    res.send({"auth": false})
+    res.send('0')
   }
   return next()
 })
