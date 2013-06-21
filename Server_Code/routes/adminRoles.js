@@ -1,31 +1,4 @@
-///////////////////////////////////////////
-//              MONGO                    //
-///////////////////////////////////////////
-
-//Mongo require
-var MongoClient = require('mongodb').MongoClient,
-    Server = require('mongodb').Server,
-    db, mongo = require('mongodb'), BSON = mongo.BSONPure;
-
-var mongoClient = new MongoClient(new Server('localhost', 27017));
-
-// Connect to the db
-mongoClient.open(function(err, mongoClient) {
-
-  if(!err) {
-    console.log("Connected to adminRoles table");
-
-    db = mongoClient.db('linux_lock');
-    db.collection('adminRoles', {strict:true}, function(err, collection){
-        if(err){
-            console.log("can't find adminRoles table");
-        }
-    });
-
-  } else {
-    return console.dir(err);
-  }
-});
+require('./mongo_connect.js');
 
 exports.findAll = function(req, res) {
     var name = req.query["name"];

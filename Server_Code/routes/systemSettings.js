@@ -1,31 +1,4 @@
-///////////////////////////////////////////
-//              MONGO                    //
-///////////////////////////////////////////
-
-//Mongo require
-var MongoClient = require('mongodb').MongoClient,
-    Server = require('mongodb').Server,
-    db;
-
-var mongoClient = new MongoClient(new Server('localhost', 27017));
-
-// Connect to the db
-mongoClient.open(function(err, mongoClient) {
-
-  if(!err) {
-    console.log("Connected to systemSettings Table");
-
-    db = mongoClient.db('linux_lock');
-    db.collection('systemSettings', {strict:true}, function(err, collection){
-        if(err){
-            console.log("can't find systemSettings table");
-        }
-    });
-
-  } else {
-    return console.dir(err);
-  }
-});
+require('./mongo_connect.js');
 
 exports.findAll = function(req, res) {
     var name = req.query["name"];
