@@ -33,9 +33,9 @@ user2_id = ObjectId()
 user3_id = ObjectId()
 
 // CREATE USER OBJECTS
-user1 = {_id: user1_id, name: "Barack Obama", email: "obama@linuxlock.com", phone: "222 222 222", userRole: "su"}
-user2= { _id: user2_id, name: "Donald Duck", email: "dduck@linuxlock.com", phone: "647 231 333", userRole: "su"}
-user3 = { _id : user3_id, name: "Roger Federrer", email: "rfed@linuxlock.com", phone: "416 543 986", userRole: "su"}
+user1 = {_id: user1_id, name: "Anatolijs Spektors", email: "aspektors@senecacollege.ca", phone: "222 222 222", userRole: "su"}
+user2= { _id: user2_id, name: "Hunter Jansen", email: "hunter.jansen@senecacollege.ca", phone: "647 231 333", userRole: "su"}
+user3 = { _id : user3_id, name: "Alex D'Amico", email: "ralex.damico@senecacollege.ca", phone: "416 543 986", userRole: "su"}
 
 // INSERT USERS TO DB //
 db.users.insert(user1)
@@ -59,7 +59,7 @@ db.userRFIDs.insert(rfid3)
 
 // CREATE ZONES //
 zone1 = { alias : "Main Office" }
-zone2 = { alias :  "Restaurant" }
+zone2 = { alias :  "Secondary Office" }
 
 // INSERT ZONES TO DB //
 db.zones.insert(zone1)
