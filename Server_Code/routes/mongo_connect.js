@@ -7,9 +7,13 @@
 
 var MongoClient = require('mongodb').MongoClient,
     Server = require('mongodb').Server,
-    db, mongo = require('mongodb'), BSON = mongo.BSONPure;
+    mongo = require('mongodb');
 
 var mongoClient = new MongoClient(new Server('localhost', 27017));
+
+exports.db;
+exports.BSON;
+BSON = mongo.BSONPure;
 
 // Connect to the db
 mongoClient.open(function(err, mongoClient) {
@@ -18,7 +22,6 @@ mongoClient.open(function(err, mongoClient) {
     console.log("Connected To Mongo");
 
     db = mongoClient.db('linux_lock');
-
     // Check if every collection exists if any of them does not exist will show critical error to console
     db.collection('adminRoles', {strict:true}, function(err, collection){
         if(err){

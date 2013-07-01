@@ -1,17 +1,14 @@
 require('./mongo_connect.js');
 
-exports.findAll = function(req, res) {
-    var name = req.query["name"];
+exports.findAll = function(callback) {
     db.collection('users', function(err, collection) {
-        if (name) {
-            collection.find({"fullName": new RegExp(name, "i")}).toArray(function(err, items) {
-                res.jsonp(items);
-            });
-        } else {
-            collection.find().toArray(function(err, items) {
-                res.jsonp(items);
-            });
-        }
+        collection.find().toArray(function(err, items) {
+            if(err){
+                callback(err, items);
+            } else {
+                callback(null, items);
+            }
+        });
     });
 };
 

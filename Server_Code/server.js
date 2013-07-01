@@ -12,6 +12,10 @@ var zones = require('./routes/zones');
 var devices = require('./routes/devices');
 var systemSettings = require('./routes/systemSettings');
 var userRFIDs = require('./routes/userRFIDs');
+var userZones = require('./routes/userZones')
+var userDevices = require('./routes/userDevices')
+var zoneDevices = require('./routes/zoneDevices')
+var events = require('./routes/events')
 
 var passport = require('passport'),
   LocalStrategy = require('passport-local').Strategy;
@@ -145,6 +149,94 @@ app.get('/templates/:name', ensureAuthenticated,
       author: 'Kaleidus Code',
       messages: req.flash()
     });
+});
+
+app.get('/users', ensureAuthenticated,
+  function(req, res){
+    console.log('get users');
+    users.findAll(function(err, items){
+      res.jsonp(items);
+  })
+});
+
+app.get('/events', ensureAuthenticated,
+  function(req, res){
+    console.log('get events');
+    events.findAll(function(err, items){
+      res.jsonp(items);
+  })
+});
+
+app.get('/zones', ensureAuthenticated,
+  function(req, res){
+    console.log('get zones');
+    zones.findAll(function(err, items){
+      res.jsonp(items);
+  })
+});
+
+app.get('/devices', ensureAuthenticated,
+  function(req, res){
+    console.log('get devices');
+    devices.findAll(function(err, items){
+      res.jsonp(items);
+  })
+});
+
+app.get('/events', ensureAuthenticated,
+  function(req, res){
+    console.log('get events');
+    events.findAll(function(err, items){
+     res.jsonp(items);
+  })
+});
+
+app.get('/systemSettings', ensureAuthenticated,
+  function(req, res){
+    console.log('get systemSettings');
+    systemSettings.findAll(function(err, items){
+      res.jsonp(items);
+  })
+});
+
+app.get('/userRFIDs', ensureAuthenticated,
+  function(req, res){
+    console.log('get userRFIDs');
+    userRFIDs.findAll(function(err, items){
+      res.jsonp(items);
+  })
+});
+
+app.get('/userZones', ensureAuthenticated,
+  function(req, res){
+    console.log('get userZones');
+    userZones.findAll(function(err, items){
+      res.jsonp(items);
+  })
+});
+
+app.get('/userDevices', ensureAuthenticated,
+  function(req, res){
+    console.log('get userDevices');
+    userDevices.findAll(function(err, items){
+      res.jsonp(items);
+  })
+});
+
+app.get('/zoneDevices', ensureAuthenticated,
+  function(req, res){
+    console.log('get zoneDevices');
+    zoneDevices.findAll(function(err, items){
+      res.jsonp(items);
+  })
+});
+
+app.get('/adminRoles', ensureAuthenticated,
+  function(req, res){
+    console.log('get adminRoles');
+    adminRoles.findAll(function(err, items){
+      res.jsonp(items);
+  })
 });
 
 //A Route for Creating a 500 Error (Useful to keep around)
