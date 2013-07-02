@@ -1,12 +1,27 @@
 require('./mongo_connect.js');
+userRFIDs = require('./userRFIDs');
 
-exports.findAll = function(callback) {
+exports.findAll = function(done) {
     db.collection('users', function(err, collection) {
         collection.find().toArray(function(err, items) {
             if(err){
-                callback(err, items);
+                done(err, items);
             } else {
-                callback(null, items);
+                for(var i in items){                    
+                    var item = items[i];
+
+                    cardsArray = []
+
+                    userRFIDs.findByUserId(item._id, item, function(err, cards){      
+                        for(var n in cards){
+                            cardsArray.push(cards[n].rfidNo);
+                        }    
+                    });
+
+                    item.cards = cardsArray;
+                }
+
+                done(null, items);
             }
         });
     });
@@ -17,7 +32,6 @@ exports.findByEmail = function(email, done) {
     console.log('findByEmail: ' + email);
     db.collection('users', function(err, collection) {
         collection.find({'email': email}).toArray(function(err, items) {
-            console.log(items);
             if(!err){
                 return done(null, items);
             } else{ 

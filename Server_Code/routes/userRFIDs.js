@@ -26,3 +26,17 @@ exports.findById = function(id, done) {
         });
     });
 };
+
+exports.findByUserId = function(userId, done) {
+    var err,  o_id = new BSON.ObjectID.createFromHexString(userId.toString());
+    console.log('FindRFIDByUser ' + userId);
+    db.collection('userRFIDs', function(err, collection){
+        collection.find({"user._id": o_id }).toArray(function(err, items){
+            if(!err){
+                return done(null, items);
+            } else {
+                return done(err, items);
+            }
+        });
+    });
+};
