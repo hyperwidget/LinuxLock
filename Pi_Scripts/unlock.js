@@ -1,56 +1,55 @@
-var restify = require('restify');
+var restify = require('restify')
+var readline = require('readline')
+
+var SerialPort = require('serialport').SerialPort
+
+var serial = new SerialPort('/dev/ttyUSB0', {
+  baudrate: 2400
+})
+
+serial.on('open',function() {
+  console.log('SerialPort open')
+})
 
 // TODO:
 // Probably want some configuration file that points to the
-// webservice, since we can't expect it to be localhost:8080
+// webservice, since we can't expect it to be 192.168.0.18:8080
 // all the time.
 var client = restify.createJsonClient({
-  url: 'http://localhost:8080',
+  url: 'http://192.168.0.18:8080',
   version: '~1.0'
-});
-
-var type, id;
-
-process.argv.forEach(function(val,index,array){
-  if(index>1) {
-  	var s = new String(val)
-  	if(s.indexOf('type=') === 0){
-  		type = s.substr(5)
-  	} else if(s.indexOf('id=') === 0) {
-		  id = s.substr(3)
-  	} else {
-      console.log("Unsupported option `" + s + "'")
-    }
-  }
 })
 
-if(typeof(type) !== "string") {
-  console.log("Missing 'type' parameter")
-  client.close()
-  process.exit(1)
-}
+var lastRead = 0
+var lastId = ''
+var id = ''
 
-if(typeof(id) !== "string") {
-  console.log("Missing 'id' parameter")
-  client.close()
-  process.exit(1)
-}
-
-client.get('/auth/'+type+'/'+id, function (err, req, res, obj) {
-  if(err) console.log(err)
-  else {
-    try {
-      if(obj.auth===true) {
-      	// TODO:
-      	// Send GPIO signal to open door
-      	console.log("Open the hatch!")
+function tryUnlock(id) {
+  client.get('/auth/rfid/'+id, function(err,req,res,obj) {
+    if(err) console.log(err)
+    else if("auth" in obj) {
+      if(obj.auth) {
+        console.log('Welcome to paradise!')
       } else {
-      	console.log("Can't open the hatch, sorry :(")
+        console.log('Sorry, you\'re not allowed inside :(')
       }
-    } catch(e) {
-  	  console.log("Object does not contain 'auth' parameter! Did something change?")
-  	  console.log(obj)
+    } else {
+      console.log('Unexpected response...')
     }
+  })
+}
+
+serial.on('data', function(data){
+  var text = data.toString('ascii').match(/\w*/)[0]
+  if(id.length > 0 && text.length < 1) {
+    var read = new Date().getTime()
+    if(read - lastRead > 999) {
+      tryUnlock(id)
+      lastRead = read
+    }
+    id = ''
+    return
   }
-  client.close();
-});
+  id = id + text
+})
+
