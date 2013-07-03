@@ -21,7 +21,6 @@ var client = restify.createJsonClient({
 })
 
 var lastRead = 0
-var lastId = ''
 var id = ''
 
 function tryUnlock(id) {
