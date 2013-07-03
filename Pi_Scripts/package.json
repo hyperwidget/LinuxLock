@@ -4,7 +4,8 @@
   "author": "Kaleidus Code",
   "version": "0.0.2",
   "dependencies": {
-    "restify": "2.6.0"
+    "restify": "2.6.0",
+    "serialport": "1.1.1"
   },
   "devDependencies": {
     "vows": "0.5.x",
