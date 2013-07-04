@@ -20,9 +20,6 @@ var client = restify.createJsonClient({
   version: '~1.0'
 })
 
-var lastRead = 0
-var id = ''
-
 function tryUnlock(id) {
   client.get('/auth/rfid/'+id, function(err,req,res,obj) {
     if(err) console.log(err)
@@ -38,6 +35,8 @@ function tryUnlock(id) {
   })
 }
 
+var lastRead = 0
+var id = ''
 serial.on('data', function(data){
   var text = data.toString('ascii').match(/\w*/)[0]
   if(id.length > 0 && text.length < 1) {
