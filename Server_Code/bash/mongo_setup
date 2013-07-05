@@ -1,164 +1,193 @@
-// Mongo database structure setup script
-// How to use it:
-// mongo < mongo_setup
+
+// FIND PROPER DB //
 
 show dbs 
 use linux_lock 
-//Dropping database will all collections
-db.dropDatabase()
-
-
+db.dropDatabase() // Drops all tables in linux lock
 
  // RECREATE COLLECTIONS //
-db.createCollection("users")
-db.createCollection("userDevices")
-db.createCollection("userRFIDs")
-db.createCollection("userZones")
+db.createCollection("rfids")
 db.createCollection("zones")
-db.createCollection("events")
+db.createCollection("cardHolders")
 db.createCollection("devices")
-db.createCollection("zoneDevices")
-db.createCollection("systemSettings")
-db.createCollection("adminRoles")
-
-//----------DUMMY VALUES---------------------//
+db.createCollection("events")
+db.createCollection("settings")
+db.createCollection("admins")
 
 
+// CREATE ID's for every cardHolder  (need to create before anything else so that RFID's can use, in real situation in rfids cardholder_id can be null//
+cardHolder1_id = ObjectId()
+cardHolder2_id = ObjectId()
+cardHolder3_id = ObjectId()
 
-//-----------USERS---------------------------//
 
-// CREATE ID's for every user //
-user1_id = ObjectId()
-user2_id = ObjectId()
-user3_id = ObjectId()
+//-----------------------DEVICES--------------------------------------//
+//device
+//{ _id: id,
+//name : name, 
+//type : type
+//zone_id : zone_id // CANNOT Create zone_id before zone which references back device?
+//}
+// CREATE DEVICE's  ID's //
 
-// CREATE USER OBJECTS
-user1 = {_id: user1_id, name: "Anatolijs Spektors", email: "aspektors@senecacollege.ca", phone: "222 222 222", userRole: "su"}
-user2= { _id: user2_id, name: "Hunter Jansen", email: "hunter.jansen@senecacollege.ca", phone: "647 231 333", userRole: "su"}
-user3 = { _id : user3_id, name: "Alex D'Amico", email: "ralex.damico@senecacollege.ca", phone: "416 543 986", userRole: "su"}
+device1_id = ObjectId()
+device2_id = ObjectId()
+device3_id = ObjectId()
 
-// INSERT USERS TO DB //
-db.users.insert(user1)
-db.users.insert(user2)
-db.users.insert(user3) 
 
-//------------------RFID---------------------//
 
-// CREATE RFID's //
-rfid1 = { user : user1,  rfidNo : 123456 }
-rfid2 = { user : user2,  rfidNo : 23456 }
-rfid3 = { user : user3,  rfidNo : 12387 }
+// CREATE DEVICES //
+device1 = { _id: device1_id, name : "Lock1 Main", type : 12 }
+device2 = { _id: device2_id, name :  "Lock2 Secondary", type : 13 }
+device3 = { _id: device3_id, name :  "Lock3 Secondary", type : 14 }
 
-// INSERT RFIDs TO DB //
-db.userRFIDs.insert(rfid1)
-db.userRFIDs.insert(rfid2)
-db.userRFIDs.insert(rfid3) 
+// INSERT Devices TO DB //
+db.devices.insert(device1)
+db.devices.insert(device2)
+db.devices.insert(device3)
 
-//----------------------ZONES---------------//
 
+//----------------------ZONES (need to create Devices first)---------------//
+
+//zone
+//{ _id: id,
+//name: name,
+//devices: [{device_id: device_id}]
+//}.
+
+
+// CREATE ZONE's  ID's //
+
+zone1_id = ObjectId()
+zone2_id = ObjectId()
 
 // CREATE ZONES //
-zone1 = { alias : "Main Office" }
-zone2 = { alias :  "Secondary Office" }
+zone1 = { _id: zone1_id, name : "Main Office", devices: [{device_id: device2_id}] } // TIME LIMIT
+zone2 = { _id: zone2_id, name :  "Private Office", devices: [{device_id: device3_id}] } // TIME LIMIT
 
 // INSERT ZONES TO DB //
 db.zones.insert(zone1)
 db.zones.insert(zone2)
 
 
-//-------------------- USER ZONES ------------------//
-// CREATE USER ZONES //
-user1Zone = { user : user1,  zone : zone1 }
-user2Zone = { user : user2,  zone : zone1 }
-user3Zone = { user : user3,  zone : zone2 }
+//------------------RFID---------------------//
 
-// INSERT USERZONES TO DB //
-db.userZones.insert(user1Zone)
-db.userZones.insert(user2Zone)
-db.userZones.insert(user3Zone) 
+// CREATE RFID's  ID's //
 
-//--------------DEVICES--------------//
+rfid1_id = ObjectId()
+rfid2_id = ObjectId()
+rfid3_id = ObjectId()
 
+//Create RDIF's //
+rfid1 = { _id : rfid1_id,  rfidNo : 123456, status: "a", cardHolder_id: cardHolder1_id }
+rfid2 = { _id : rfid2_id,  rfidNo : 23456, status: "a", cardHolder_id: cardHolder2_id }
+rfid3 = { _id : rfid3_id,  rfidNo : 12387, status: "n", cardHolder_id: cardHolder3_id }
 
-// CREATE DEVICES //
-device1 = { alias : "Lock1 Main", type : 12 }
-device2 = { alias :  "Lock2 Secondary", type : 13 }
-device3 = { alias :  "Lock3 Secondary", type : 14 }
+// INSERT RFIDs TO DB //
+db.rfids.insert(rfid1)
+db.rfids.insert(rfid2)
+db.rfids.insert(rfid3) 
 
-// INSERT Devices TO DB //
-db.devices.insert(device1)
-db.devices.insert(device2)
+// --------------------CARDHOLDER---------------//
 
 
-//-------------USER_DEVICE---------------//
-// CREATE USER DEVICES //
-user1Device = { user : user1,  device : device1 }
-user2Device = { user : user2,  device : device1 }
-user3Device = { user : user3,  device : device2 }
-
-// INSERT USERZONES TO DB //
-db.userDevices.insert(user1Device)
-db.userDevices.insert(user2Device)
-db.userDevices.insert(user3Device) 
-
-//-------------DEVICE_ZONE---------------//
-// CREATE DEVICE_ZONE //
-device1Zone = { device : device1,  zone : zone1   }
-device2Zone = { device : device2,  zone : zone1 }
-device3Zone = { device : device3,  zone : zone2 }
-
-// INSERT USERZONES TO DB //
-db.zoneDevices.insert(device1Zone)
-db.zoneDevices.insert(device2Zone)
-db.zoneDevices.insert(device3Zone) 
-
-// INSERT USERZONES TO DB //
-db.zoneDevices.insert(device1Zone)
-db.zoneDevices.insert(device2Zone)
-db.zoneDevices.insert(device3Zone) 
+//cardHolder
+//{_id: id, 
+//first: first,
+//last: last,
+//email: email,
+//phone: phone,
+//userRole: role,
+//cards: [{rfid_id: rfid_id}]
+//zones: [{zone_id: zone_id}]
+//}
 
 
-//-------------EVENTS---------------//
-// CREATE DEVICE_ZONE //
-event1 = { user : user1,  device : device1, alias : 1,  "created_on" : new Date(), status : 11 }
-event2 = { user : user3,  zone : device2, alias : 2, "created_on" : new Date(), status : 42 }
-
-db.events.insert(event1);
-db.events.insert(event2);
+// CREATE CardHolder OBJECTS//
 
 
-//------------SYSTEM SETTINGS -------------//
-ss = { backup : "5", sa_password : "P@ssw0rd"}
-db.systemSettings.insert(ss);
+cardHolder1 = {_id: cardHolder1_id , first: "Anatolijs", last: "Spektors", email: "anatolijs.spektors@senecacollege.ca", phone: "222 222 222", userRole: "su", cards:[{rfid_id: rfid2_id}], zones:[{zone_id: zone2_id}] }
+
+cardHolder2 = { _id: cardHolder2_id , first: "Hunter", last: "Jansen", email: "hunter.jansen@senecacollege.ca", phone: "647 231 333", userRole: "su", cards:[{rfid_id: rfid2_id}], zones:[{zone_id: zone2_id}] }
+
+cardHolder3 = { _id : cardHolder3_id , first: "Alex", last: "D'Amico", email: "alex.damico@senecacollege.ca", phone: "416 543 986", userRole: "su", cards:[{rfid_id: rfid1_id}], zones:[{zone_id: zone1_id}] }
+
+// INSERT USERS TO DB //
+db.cardHolders.insert(cardHolder1)
+db.cardHolders.insert(cardHolder2)
+db.cardHolders.insert(cardHolder3)
 
 
-//------------ ADMIN ROLES -----------------//
-superAdmin = { name : "Default SuperAdmin", username: "admin", password: "P@ssw0rd", canManageUsers : true, canManageDevices : true, canManageZones : true, canGenerateReports : true, canManageBackups : true, canManageSettings : true }
+// ------------------Events------------------------- //
 
-db.adminRoles.insert(superAdmin);
+//event   // HOW ABOUT USER WHO ENTERED? OR RFID ?
+//{ _id: id,
+//device_id: device_id,
+//entry_time: date/time,
+//status: status
+//}
+
+
+// CREATE Event Id's//
+event1_id = ObjectId()
+event2_id = ObjectId()
+event3_id = ObjectId()
+
+
+// CREATE EVENT Objects //
+event1 = { _id : event1_id,  device_id : device1_id, rfid_id: rfid1_id, alias : 1, entry_time:  new Date(), status : 11 }
+event2 = { _id : event2_id,  device_id : device2_id, rfid_id: rfid3_id, alias : 2, entry_time:  new Date(), status : 42 }
+
+// INSERT events to db //
+db.events.insert(event1)
+db.events.insert(event2)
+
+
+// ------------------Settings------------------------- //
+//setting
+//{ _id: id,
+//name: name,
+//value: value
+//}
+// Create ID //
+setting1_id = event1_id = ObjectId()
+// Create Object //
+setting1 = { _id: setting1_id, name: "Backup Time", value: 5 }
+// Insert Object //
+db.settings.insert(setting1)
+
+// ------------------Admin------------------------- //
+//admin
+//{ _id: id,
+//name: name,
+//username: username,
+//password: password,
+//canManageUsers : bool, 
+//canManageDevices : bool, 
+//canManageZones : bool, 
+//canGenerateReports : bool, 
+//canManageBackups : bool, 
+//canManageSettings : bool 
+//}
+
+admin1_id = ObjectId()
+admin2_id = ObjectId()
+
+superAdmin = { _id: admin1_id, name : "Default SuperAdmin", username: "admin", password: "P@ssw0rd", canManageUsers : true, canManageDevices : true, canManageZones : true, canGenerateReports : true, canManageBackups : true, canManageSettings : true }
+db.admins.insert(superAdmin);
+
+secondAdmin = { _id: admin2_id, name : "Anatolijs Spektors", username: "aspektor", password: "P@ssw0rd", canManageUsers : true, canManageDevices : true, canManageZones : false, canGenerateReports : true, canManageBackups : false, canManageSettings : false }
+db.admins.insert(secondAdmin);
+
 
 
 
 //-------DISPLAY ALL--------//
 
-//db.users.find().pretty();
-
-//db.userRFIDs.find().pretty();
-
-//db.zones.find().pretty();
-
-//db.userZones.find().pretty();
-
-//db.devices.find().pretty();
-
-//db.userDevices.find().pretty();
-
-//db.zoneDevices.find().pretty();
-
-//db.systemSettings.find().pretty();
-
-//db.events.find().pretty();
-
-//db.adminRoles.find().pretty();
-
-
+db.rfids.find().pretty();
+db.zones.find().pretty();
+db.cardHolders.find().pretty();
+db.devices.find().pretty();
+db.events.find().pretty();
+db.settings.find().pretty();
+db.admins.find().pretty();

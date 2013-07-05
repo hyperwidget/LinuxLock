@@ -6,15 +6,9 @@
 # Needed to check if mongo succesfully set up all the collections
 # @author: Anatoly Spektor
 
-#How to use it ?
-# with mongo_setup: mongo < mongo_setup | ./mongo_test
-# If you want to see all collections:
-# with mongo_setup: mongo < mongo_setup | ./mongo_test -show
-
-
 # Specify Number of existing collections (can be checked with " show collections " in mongo console)
 # after running mongo_startup script
-NUM_COLLECTIONS=11
+NUM_COLLECTIONS=7
 
 # if you pipe this script to mongo_setup, we need to make sure mongo_scrip finished
 sleep 2
@@ -24,12 +18,12 @@ mongo  << ~ > output.json
 use linux_lock
 show collections
 ~
-collection_num=$(cat output.json | tail -n +4 | head -n -1 | wc -l)
-show_cols=$(cat output.json | tail -n +4 | head -n -1)
+collection_num=$(cat output.json |  sed "/system.indexes/d" | tail -n +4 | head -n -1  | wc -l)
+show_cols=$(cat output.json | tail -n +4 | head -n -1 |  sed "/system.indexes/d" )
 
 rm -r output.json > /dev/null
 # use -show as an argument to show the collection list
-if [[ $1 == '-show' ]]
+if [[ $1 == '--show' ]]
  then
  echo "$show_cols"  
 fi
