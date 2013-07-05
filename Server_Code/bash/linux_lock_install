@@ -1,34 +1,50 @@
-# Script supposed to install required packages for our system. (in progress)
-
-
+#!/bin/bash
+# This script suppose to generate db and objects (I will add validation later)
+# author: Anatoly Spektor
+# 
+# Need to be done:
+#  - create collections for each table
+#  - make sure mogno is installed before doing "mongo" (using rpm)
+#  - drop db and collection and than recreate
+#  - put more dummy values
 
 #Fine distribution and install Mongo depending on distro
 distro=$(cat /etc/*-release |  grep "^ID=" | awk -F'=' '{print $2}')
 arch=$(uname -m)
 
 # Make sure only root can run our script
-if [ "$(id -u)" != "0" ]; then
-   echo "This script must be run as root" 1>&2
-   exit 1
-fi
+#if [ "$(id -u)" != "0" ]; then
+#   echo "This script must be run as root" 1>&2
+#   exit 1
+#fi
 # ...
 
 
 if [ "$distro" = "fedora" ]
- then
-	if [ "$arch" = "x86_64" ]
-	   then
-		sudo touch /etc/yum.repos.d/10gen.repo
-		sudo chmod 744 /etc/yum.repos.d/10gen.repo
-   	 	 echo -e "[10gen]\nname=10gen Repository\nbaseurl=http://downloads-distro.mongodb.org/repo/redhat/os/x86_64\ngpgcheck=0\nenabled=1" > /etc/yum.repos.d/10gen.repo
-		 sudo yum install -y mongo-10gen mongo-10gen-server
-	else
-    		  echo -e "[10gen]\nname=10gen Repository\nbaseurl=http://downloads-distro.mongodb.org/repo/redhat/os/i686\ngpgcheck=0\nenabled=1" > /etc/yum.repos.d/10gen.repo
-		sudo yum install -y mongo-10gen mongo-10gen-server
-	fi
-elif [[ $distro = "ubuntu" ]]
- then
-   echo "Installing Mongo for Ubuntu"
+ then	
+	#Installing Mongo Dependencies (like git)
+	sudo yum -y install git-core scons gcc-c++ glibc-devel 2>/dev/null
+else if [[ $distro = "ubuntu" ]]
+   then
+	#Installing Mongo Dependencies (like git)
+	sudo apt-get install git-core build-essential scons 2> /dev/null
+else exit 134
 fi
- exit 1
-
+		
+  if [ $? == "0" ]
+      then
+			#Installing Mongo
+			type mongo >/dev/null 2>&1 || { git clone git://github.com/mongodb/mongo.git; cd mongo; git checkout r2.4.0; scons all }
+			#Installing Node
+			type node >/dev/null 2>&1 || { git clone git://github.com/joyent/node.git; cd node; ./configure;make; sudo make install }
+			#Installing LinuxLock
+			mkdir ~/linux_lock; cd linux_lock
+			#Pseudocode
+				#Clone Repo (need to be public)
+				#go to Server do npm install
+				#do mongo setup and mongo_test
+				#allow user to do some congif
+	
+			
+		fi
+exit 0
