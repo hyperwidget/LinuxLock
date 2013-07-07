@@ -129,7 +129,7 @@ app.get('/logout', function(req, res){
   res.redirect('/');
 });
 
-app.get('/console', ensureAuthenticated,
+app.get('/console', //ensureAuthenticated,
     function(req,res){
     console.log('console');
     res.render('console.jade', {
@@ -140,7 +140,7 @@ app.get('/console', ensureAuthenticated,
     });
 });
 
-app.get('/templates/:name', ensureAuthenticated,
+app.get('/templates/:name', //ensureAuthenticated,
   function(req,res){
     console.log('template' + req.params.name);
     res.render('partials/' + req.params.name + '.jade', {

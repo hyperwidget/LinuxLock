@@ -1,7 +1,7 @@
 'use strict';
 
 adminConsoleApp.controller('DevicesController',
-    function DevicesController ($scope) {
+    function DevicesController ($scope, dataManager) {
 
     }
 );

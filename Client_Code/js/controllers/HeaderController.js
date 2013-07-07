@@ -1,7 +1,7 @@
 'use strict';
 
 adminConsoleApp.controller('HeaderController',
-    function HeaderController ($scope) {
+    function HeaderController ($scope, dataManager) {
        $scope.navbarItems = [
            { name: 'Users' },
            { name: 'Devices' },

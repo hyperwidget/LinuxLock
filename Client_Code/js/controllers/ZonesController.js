@@ -1,7 +1,7 @@
 'use strict';
 
 adminConsoleApp.controller('ZonesController',
-    function ZonesController ($scope) {
+    function ZonesController ($scope, dataManager) {
 
     }
 );

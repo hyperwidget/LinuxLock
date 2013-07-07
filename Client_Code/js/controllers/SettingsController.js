@@ -1,7 +1,7 @@
 'use strict';
 
 adminConsoleApp.controller('SettingsController',
-    function SettingsController ($scope) {
+    function SettingsController ($scope, dataManager) {
 
     }
 );

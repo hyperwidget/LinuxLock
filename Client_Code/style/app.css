@@ -108,3 +108,56 @@ html, body {
 .row0 {
     background: lightgray;
 }
+/* Popup styles */
+#popup {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    text-align: center;
+    display: none;
+}
+#popup .mask {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: black;
+    opacity: .5;
+}
+#popup .content {
+    position: absolute;
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+#popup .content .window {
+    display: inline-block;
+    background-color: white;
+    height: 600px;
+    width: 400px;
+    border-radius: 5px;
+    margin-top: 10%;
+}
+#popup .content .window .windowHeader {
+    background-color: darkgray;
+    text-align: center;
+    font-weight: bold;
+    height: 40px;
+    line-height: 40px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+#popup .content .window .windowContent {
+    height: 520px;
+    text-align: left;
+}
+#popup .content .window .windowFooter {
+    height: 40px;
+    line-height: 40px;
+}
+/* end Popup styles */
