@@ -156,6 +156,22 @@ app.get('/cardHolders', ensureAuthenticated,
   })
 });
 
+app.post('/cardHolder', ensureAuthenticated,
+  function(req, res){
+    console.log('add cardHolder');
+    cardHolders.add(req, function(err){
+
+  });
+});
+
+app.post('/cardHolder/:id', ensureAuthenticated,
+  function(req, res){
+    console.log('edit cardHolder');
+    cardHolders.edit(req, function(err){
+
+  });
+});
+
 app.get('/events', ensureAuthenticated,
   function(req, res){
     console.log('get events');

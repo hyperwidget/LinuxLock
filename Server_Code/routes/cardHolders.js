@@ -55,11 +55,11 @@ exports.findAll = function(done) {
     });
 };
 
-exports.findByEmail = function(email, done) {
-    var err;
-    console.log('findByEmail: ' + email);
+exports.findById = function(id, done) {
+    var err,  o_id = new BSON.ObjectID.createFromHexString(id.toString());
+    console.log('findZoneById: ' + id);
     db.collection('cardHolders', function(err, collection) {
-        collection.find({'email': email}).toArray(function(err, items) {
+        collection.find({'_id': o_id}).toArray(function(err, items) {
             if(!err){
                 return done(null, items);
             } else{ 
@@ -69,10 +69,44 @@ exports.findByEmail = function(email, done) {
     });
 };
 
-var validPassword = function(password){
-    var retval = false;
+exports.add = function(req, done){
+    var err;
+    console.log('cardholder add ' + req);
+    cardsArray = [];
+    zonesArray = [];
 
-    return retval;
-}
+    newCardHolder = {'first': req.body.firstName, 'last': req.body.lastName, 'email': req.body.email, 'phone': req.body.phoneNumber, 'userRole': "u", 'cards': cardsArray, 'zones': zonesArray};
 
-exports.validPassword = validPassword;
+    db.collection('cardHolders', function(err, collection){
+        collection.insert(newCardHolder, {safe:true},function(err, doc){
+            if(!err){
+                done(null, doc);
+            } else {
+                done(err, doc);
+            }
+        });
+    });
+};
+
+exports.edit = function(req, done){
+    var err, o_id = new BSON.ObjectID.createFromHexString(id.toString());;
+    console.log('cardholder edit ' + req);
+
+    cardHolder = findById(req.body.id);
+
+    newCardHolder = {first: req.body.firstName, last: req.body.lastName, email: req.body.email, phone: req.body.phoneNumber, cards: req.body.cards, zones: req.body.zones};
+
+    db.collection('cardHolders', function(err, collection){
+        collection.update('_id': o_id,
+        {
+            $set: {'first': req.body.firstName},
+            $set: {'last': req.body.lastName},
+            $set: {'email': req.body.email},
+            $set: {'phone': req.body.phoneNumber},
+            $set: {'userRole': req.body.userRole},
+            $set: {'cards': req.body.cards},
+            $set: {'zones': req.body.zones},
+
+        });
+    });
+};
