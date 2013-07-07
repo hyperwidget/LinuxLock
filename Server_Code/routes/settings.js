@@ -1,7 +1,7 @@
 require('./mongo_connect.js');
 
 exports.findAll = function(callback) {
-    db.collection('userZones', function(err, collection) {
+    db.collection('settings', function(err, collection) {
         collection.find().toArray(function(err, items) {
             if(err){
                 callback(err, items);
@@ -11,10 +11,11 @@ exports.findAll = function(callback) {
         });
     });
 };
-exports.findById = function(id, done) {
+
+exports.findByEmail = function(id, done) {
     var err;
-    console.log('findUserRfidById: ' + rfidId);
-    db.collection('userZones', function(err, collection) {
+    console.log('findSettingById: ' + id);
+    db.collection('settings', function(err, collection) {
         collection.find({'_id': 'ObjectId("' + id + '")'}).toArray(function(err, items) {
             console.log(items);
             if(!err){

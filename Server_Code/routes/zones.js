@@ -13,11 +13,10 @@ exports.findAll = function(callback) {
 };
 
 exports.findById = function(id, done) {
-    var err;
-    console.log('findZoneById: ' + email);
+    var err,  o_id = new BSON.ObjectID.createFromHexString(id.toString());
+    console.log('findZoneById: ' + id);
     db.collection('zones', function(err, collection) {
-        collection.find({'_id': 'ObjectId("' + id + '")'}).toArray(function(err, items) {
-            console.log(items);
+        collection.find({'_id': o_id}).toArray(function(err, items) {
             if(!err){
                 return done(null, items);
             } else{ 

@@ -1,7 +1,7 @@
 require('./mongo_connect.js');
 
 exports.findAll = function(callback) {
-    db.collection('systemSettings', function(err, collection) {
+    db.collection('rfids', function(err, collection) {
         collection.find().toArray(function(err, items) {
             if(err){
                 callback(err, items);
@@ -12,12 +12,11 @@ exports.findAll = function(callback) {
     });
 };
 
-exports.findByEmail = function(id, done) {
-    var err;
-    console.log('findSettingById: ' + id);
-    db.collection('systemSettings', function(err, collection) {
-        collection.find({'_id': 'ObjectId("' + id + '")'}).toArray(function(err, items) {
-            console.log(items);
+exports.findById = function(id, done) {
+    var err,  o_id = new BSON.ObjectID.createFromHexString(id.toString());
+    console.log('findUserRfidById: ' + id);
+    db.collection('rfids', function(err, collection) {
+        collection.find({'_id': o_id}).toArray(function(err, items) {
             if(!err){
                 return done(null, items);
             } else{ 
