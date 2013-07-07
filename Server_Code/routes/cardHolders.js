@@ -95,7 +95,7 @@ exports.edit = function(req, done){
     cardHolder = findById(req.body.id);
 
     db.collection('cardHolders', function(err, collection){
-        collection.update('_id': o_id,
+        collection.update({'_id': o_id},
         {
             $set: {'first': req.body.firstName,
             'last': req.body.lastName,

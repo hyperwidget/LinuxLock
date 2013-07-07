@@ -50,7 +50,7 @@ exports.edit = function(req, done){
     rfid = findById(req.body.id);
 
     db.collection('rfids', function(err, collection){
-        collection.update('_id': o_id,
+        collection.update({'_id': o_id},
         {
             $set: {'rfidNo': req.body.rfidNo,
             'status': req.body.status,

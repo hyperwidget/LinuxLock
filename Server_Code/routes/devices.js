@@ -65,7 +65,7 @@ exports.edit = function(req, done){
     device = findById(req.body.id);
 
     db.collection('devices', function(err, collection){
-        collection.update('_id': o_id,
+        collection.update({'_id': o_id},
         {
             $set: {'name': req.body.name,
             'type': req.body.type}

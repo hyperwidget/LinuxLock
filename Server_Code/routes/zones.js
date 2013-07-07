@@ -52,7 +52,7 @@ exports.edit = function(req, done){
     zone = findById(req.body.id);
 
     db.collection('zones', function(err, collection){
-        collection.update('_id': o_id,
+        collection.update({'_id': o_id},
         {
             $set: {'name': req.body.name,
             'devices': req.body.devices}

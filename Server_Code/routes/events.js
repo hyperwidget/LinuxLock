@@ -54,7 +54,7 @@ exports.edit = function(req, done){
     event = findById(req.body.id);
 
     db.collection('events', function(err, collection){
-        collection.update('_id': o_id,
+        collection.update({'_id': o_id},
         {
             $set: {'device_id': req.body.device_id, 
                 'rfid_id': req.body.rfid_id, 

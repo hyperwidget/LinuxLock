@@ -51,7 +51,7 @@ exports.edit = function(req, done){
     setting = findById(req.body.id);
 
     db.collection('settings', function(err, collection){
-        collection.update('_id': o_id,
+        collection.update({'_id': o_id},
         {
             $set: {'name': req.body.settingNo,
             'value': req.body.status}

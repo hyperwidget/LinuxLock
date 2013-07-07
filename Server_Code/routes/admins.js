@@ -86,7 +86,7 @@ exports.edit = function(req, done){
     admin = findById(req.body.id);
 
     db.collection('admins', function(err, collection){
-        collection.update('_id': o_id,
+        collection.update({'_id': o_id},
         {
             $set: {'name': req.body.name, 
             'username': req.body.username,

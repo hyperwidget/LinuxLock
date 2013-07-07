@@ -148,6 +148,31 @@ app.get('/templates/:name', //ensureAuthenticated,
     });
 });
 
+// Admins
+app.get('/admins', ensureAuthenticated,
+  function(req, res){
+    console.log('get admins');
+    admins.findAll(function(err, items){
+      res.jsonp(items);
+  })
+});
+
+app.post('/admin', ensureAuthenticated,
+  function(req, res){
+    console.log('add admins');
+    adminss.add(req, function(err){
+
+  });
+});
+
+app.post('/admin/:id', ensureAuthenticated,
+  function(req, res){
+    console.log('edit admins');
+    admins.edit(req, function(err){
+  });
+});
+
+// Card Holders
 app.get('/cardHolders', ensureAuthenticated,
   function(req, res){
     console.log('get cardHolders');
@@ -168,26 +193,10 @@ app.post('/cardHolder/:id', ensureAuthenticated,
   function(req, res){
     console.log('edit cardHolder');
     cardHolders.edit(req, function(err){
-
   });
 });
 
-app.get('/events', ensureAuthenticated,
-  function(req, res){
-    console.log('get events');
-    events.findAll(function(err, items){
-      res.jsonp(items);
-  })
-});
-
-app.get('/zones', ensureAuthenticated,
-  function(req, res){
-    console.log('get zones');
-    zones.findAll(function(err, items){
-      res.jsonp(items);
-  })
-});
-
+//Devices
 app.get('/devices', ensureAuthenticated,
   function(req, res){
     console.log('get devices');
@@ -196,22 +205,46 @@ app.get('/devices', ensureAuthenticated,
   })
 });
 
+app.post('/device', ensureAuthenticated,
+  function(req, res){
+    console.log('add device');
+    devices.add(req, function(err){
+
+  });
+});
+
+app.post('/device/:id', ensureAuthenticated,
+  function(req, res){
+    console.log('edit device');
+    devices.edit(req, function(err){
+  });
+});
+
+//Events
 app.get('/events', ensureAuthenticated,
   function(req, res){
     console.log('get events');
     events.findAll(function(err, items){
-     res.jsonp(items);
-  })
-});
-
-app.get('/settings', ensureAuthenticated,
-  function(req, res){
-    console.log('get settings');
-    systemSettings.findAll(function(err, items){
       res.jsonp(items);
   })
 });
 
+app.post('/event', ensureAuthenticated,
+  function(req, res){
+    console.log('add event');
+    events.add(req, function(err){
+
+  });
+});
+
+app.post('/event/:id', ensureAuthenticated,
+  function(req, res){
+    console.log('edit event');
+    events.edit(req, function(err){
+  });
+});
+
+//RFIDs
 app.get('/rfids', ensureAuthenticated,
   function(req, res){
     console.log('get rfids');
@@ -220,13 +253,72 @@ app.get('/rfids', ensureAuthenticated,
   })
 });
 
-app.get('/admins', ensureAuthenticated,
+app.post('/rfid', ensureAuthenticated,
   function(req, res){
-    console.log('get admins');
-    admins.findAll(function(err, items){
+    console.log('add rfid');
+    rfids.add(req, function(err){
+
+  });
+});
+
+app.post('/rfid/:id', ensureAuthenticated,
+  function(req, res){
+    console.log('edit rfid');
+    rfids.edit(req, function(err){
+  });
+});
+
+//Settings
+app.get('/settings', ensureAuthenticated,
+  function(req, res){
+    console.log('get settings');
+    settings.findAll(function(err, items){
       res.jsonp(items);
   })
 });
+
+app.post('/setting', ensureAuthenticated,
+  function(req, res){
+    console.log('add setting');
+    settings.add(req, function(err){
+
+  });
+});
+
+app.post('/setting/:id', ensureAuthenticated,
+  function(req, res){
+    console.log('edit setting');
+    settings.edit(req, function(err){
+  });
+});
+
+//Zones
+app.get('/zones', ensureAuthenticated,
+  function(req, res){
+    console.log('get zones');
+    zones.findAll(function(err, items){
+      res.jsonp(items);
+  })
+});
+
+app.post('/zone', ensureAuthenticated,
+  function(req, res){
+    console.log('add zone');
+    zones.add(req, function(err){
+
+  });
+});
+
+app.post('/zone/:id', ensureAuthenticated,
+  function(req, res){
+    console.log('edit zone');
+    zones.edit(req, function(err){
+  });
+});
+
+
+
+
 
 //A Route for Creating a 500 Error (Useful to keep around)
 app.get('/500', function(req, res){
