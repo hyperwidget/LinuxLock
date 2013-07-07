@@ -94,19 +94,25 @@ exports.edit = function(req, done){
 
     cardHolder = findById(req.body.id);
 
-    newCardHolder = {first: req.body.firstName, last: req.body.lastName, email: req.body.email, phone: req.body.phoneNumber, cards: req.body.cards, zones: req.body.zones};
-
     db.collection('cardHolders', function(err, collection){
         collection.update('_id': o_id,
         {
-            $set: {'first': req.body.firstName},
-            $set: {'last': req.body.lastName},
-            $set: {'email': req.body.email},
-            $set: {'phone': req.body.phoneNumber},
-            $set: {'userRole': req.body.userRole},
-            $set: {'cards': req.body.cards},
-            $set: {'zones': req.body.zones},
-
+            $set: {'first': req.body.firstName,
+            'last': req.body.lastName,
+            'email': req.body.email,
+            'phone': req.body.phoneNumber,
+            'userRole': req.body.userRole,
+            'cards': req.body.cards,
+            'zones': req.body.zones}
         });
+    });
+};
+
+exports.delete = function(id, done){
+    var err, o_id = new BSON.ObjectID.createFromHexString(id.toString());;
+    console.log('cardholder delete ' + id);
+
+    db.collection('cardHolders', function(err, collection){
+        collection.delete({'_id': o_id});
     });
 };

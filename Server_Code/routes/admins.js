@@ -53,3 +53,59 @@ exports.validPassword = function(username, password, done){
         });
     });
 };
+
+exports.add = function(req, done){
+    var err;
+    console.log('admin add ' + req);
+
+    newAdmin = {'name': req.body.name, 
+        'username': req.body.username,
+        'password': req.body.password,
+        'canManageUsers': req.body.canManageUsers,
+        'canManageDevices': req.body.canManageDevices,
+        'canManageZones': req.body.canManageZones,
+        'canGenerateReports': req.body.canGenerateReports,
+        'canManageBackups': req.body.canManageBackups,
+        'canManageSettings': req.body.canManageSettings};
+
+    db.collection('admins', function(err, collection){
+        collection.insert(newAdmin, {safe:true}, function(err, doc){
+            if(!err){
+                done(null, doc);
+            } else {
+                done(err, doc);
+            }
+        });
+    });
+};
+
+exports.edit = function(req, done){
+    var err, o_id = new BSON.ObjectID.createFromHexString(id.toString());;
+    console.log('admin edit ' + req);
+
+    admin = findById(req.body.id);
+
+    db.collection('admins', function(err, collection){
+        collection.update('_id': o_id,
+        {
+            $set: {'name': req.body.name, 
+            'username': req.body.username,
+            'password': req.body.password,
+            'canManageUsers': req.body.canManageUsers,
+            'canManageDevices': req.body.canManageDevices,
+            'canManageZones': req.body.canManageZones,
+            'canGenerateReports': req.body.canGenerateReports,
+            'canManageBackups': req.body.canManageBackups,
+            'canManageSettings': req.body.canManageSettings }
+         });
+    });
+};
+
+exports.delete = function(id, done){
+    var err, o_id = new BSON.ObjectID.createFromHexString(id.toString());;
+    console.log('admin delete ' + id);
+
+    db.collection('admins', function(err, collection){
+        collection.delete({'_id': o_id});
+    });
+};
