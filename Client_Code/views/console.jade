@@ -13,36 +13,7 @@ block content
             span.item.logout Logout
         div.content
             ng-view
-        #popup(ng-controller="PopupController")
-            div.mask
-            div.content
-                div.window
-                    div.windowHeader
-                    div.windowContent
-                        span.item
-                            label(for="FirstName") First Name
-                            input.searchBox(type="text", id="FirstName")
-                        span.item
-                            label(for="LastName") Last Name
-                            input.searchBox(type="text", id="LastName")
-                        span.item
-                            label(for="CardNumber") Card Number
-                            input.searchBox(type="text", id="CardNumber")
-                        span.item
-                            label(for="Email") Email
-                            input.searchBox(type="text", id="Email")
-                        span.item
-                            label(for="PhoneNumber") Phone Number
-                            input.searchBox(type="text", id="PhoneNumber")
-                        span.item
-                            label(for="Zone") Zone
-                            input.searchBox(type="text", id="Zone")
-                        span.item
-                            label(for="Device") Device
-                            input.searchBox(type="text", id="Device")
-                    div.windowFooter
-                        button Save
-                        button Cancel
+        popup
 block footer
     script(src="js/lib/angular.js")
     script(src="js/app.js")
@@ -55,3 +26,6 @@ block footer
     script(src="js/controllers/SettingsController.js")
     script(src="js/controllers/PopupController.js")
     script(src="js/services/DataManager.js")
+    script(src="js/services/ViewManager.js")
+    script(src="js/directives/popup.js")
+    script(src="js/directives/windowContent.js")

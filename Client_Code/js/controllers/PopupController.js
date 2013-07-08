@@ -1,7 +1,7 @@
 'use strict';
 
 adminConsoleApp.controller('PopupController',
-    function PopupController ($scope) {
-
+    function PopupController ($scope, dataManager, viewManager) {
+        $scope.hidePopup = viewManager.hidePopup;
     }
 );
