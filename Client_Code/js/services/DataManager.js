@@ -61,10 +61,22 @@ adminConsoleApp.factory('dataManager', function () {
             { alias: 'Office Door',
                 type: 'RFID'
             }
+        ],
+        zonesData = [
+            { alias: 'Public Access',
+                devices: 'Front Door'
+            },
+            { alias: 'Access All',
+                devices: 'Front Door, Back Door, Offices'
+            },
+            { alias: 'Guest Access',
+                type: 'Offices'
+            }
         ]
     ;
     return {
         dataUsers: usersData,
-        dataDevices: devicesData
+        dataDevices: devicesData,
+        dataZones: zonesData
     };
 });

@@ -14,7 +14,7 @@ var adminConsoleApp = angular.module('adminConsoleApp', [])
             });
         $routeProvider.when('/Zones',
             {
-                templateUrl: 'templates/zones.html',
+                templateUrl: 'templates/zones',
                 controller: 'ZonesController'
             })
         $routeProvider.when('/Reports',

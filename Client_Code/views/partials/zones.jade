@@ -1,0 +1,25 @@
+div.leftPanel
+    span.item
+        span Search By:
+    span.item
+        label(for="byZoneAlias") Zone Alias
+        input.searchBox(type="text", id="byZoneAlias")
+        button.goButton Go
+    span.item
+        label(for="byDevice") Device Alias
+        input.searchBox(type="text", id="byDevice")
+        button.goButton Go
+div.mainPanel
+    span.item Results for...
+    span.item
+        button(ng-click="addZone()") Add
+        button Edit
+        button Delete
+    span.item
+        table
+            tr
+                th Alias
+                th Devices
+            tr(ng-repeat="zone in zones", class="{{'row' + $index % 2 }}")
+                td {{zone.alias}}
+                td {{zone.devices}}
