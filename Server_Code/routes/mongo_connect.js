@@ -23,11 +23,17 @@ mongoClient.open(function(err, mongoClient) {
 
     db = mongoClient.db('linux_lock');
     // Check if every collection exists if any of them does not exist will show critical error to console
-    db.collection('adminRoles', {strict:true}, function(err, collection){
+    db.collection('admins', {strict:true}, function(err, collection){
         if(err){
-            console.log("Critical-Error: can't find adminRoles collection");
+            console.log("Critical-Error: can't find admins collection");
         }
     });
+
+   db.collection('cardHolders', {strict:true}, function(err, collection){
+        if(err){
+            console.log("Critical-Error: can't find cardHolders collection");
+        }
+    });   
 
     db.collection('devices', {strict:true}, function(err, collection){
         if(err){
@@ -41,40 +47,15 @@ mongoClient.open(function(err, mongoClient) {
         }
     });
 
-
-    db.collection('systemSettings', {strict:true}, function(err, collection){
+   db.collection('rfids', {strict:true}, function(err, collection){
         if(err){
-            console.log("Critical-Error: can't find systemSettings collection");
+            console.log("Critical-Error: can't find rfids collection");
         }
     });
 
-   db.collection('userDevices', {strict:true}, function(err, collection){
+    db.collection('settings', {strict:true}, function(err, collection){
         if(err){
-            console.log("Critical-Error: can't find userDevices collection");
-        }
-    });
-
-   db.collection('userRFIDs', {strict:true}, function(err, collection){
-        if(err){
-            console.log("Critical-Error: can't find userRFIDs collection");
-        }
-    });
-
-  db.collection('userZones', {strict:true}, function(err, collection){
-        if(err){
-            console.log("Critical-Error: can't find userZones collection");
-        }
-    });
-
-   db.collection('users', {strict:true}, function(err, collection){
-        if(err){
-            console.log("Critical-Error: can't find Users collection");
-        }
-    });   
-
-    db.collection('zoneDevices', {strict:true}, function(err, collection){
-        if(err){
-            console.log("Critical-Error: can't find zoneDevices collection");
+            console.log("Critical-Error: can't find settings collection");
         }
     });
 
@@ -83,9 +64,6 @@ mongoClient.open(function(err, mongoClient) {
             console.log("Critical-Error: can't find Zones collection");
         }
     });
-
-
-
 	
   } else {
     return console.dir(err);

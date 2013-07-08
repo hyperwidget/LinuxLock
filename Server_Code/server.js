@@ -6,15 +6,12 @@ var connect = require('connect'),
   flash = require('connect-flash');
 //Setup Express
 var app = express();
-var users = require('./routes/users');
-var adminRoles = require('./routes/adminRoles');
+var cardHolders = require('./routes/cardHolders');
+var admins = require('./routes/admins');
 var zones = require('./routes/zones');
 var devices = require('./routes/devices');
-var systemSettings = require('./routes/systemSettings');
-var userRFIDs = require('./routes/userRFIDs');
-var userZones = require('./routes/userZones')
-var userDevices = require('./routes/userDevices')
-var zoneDevices = require('./routes/zoneDevices')
+var settings = require('./routes/settings');
+var rfids = require('./routes/rfids');
 var events = require('./routes/events')
 
 var passport = require('passport'),
@@ -71,7 +68,7 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(id, done) {
-  adminRoles.findById(id, function(err, user) {
+  admins.findById(id, function(err, user) {
     done(err, user);
   });
 });
@@ -80,7 +77,7 @@ passport.deserializeUser(function(id, done) {
 
 passport.use(new LocalStrategy(
   function(username, password, done) {
-    adminRoles.findByUserName(username, function(err, user) {
+    admins.findByUserName(username, function(err, user) {
       if (err) { 
         return done(err); 
       }
@@ -151,30 +148,55 @@ app.get('/templates/:name', ensureAuthenticated,
     });
 });
 
-app.get('/users', ensureAuthenticated,
+// Admins
+app.get('/admins', ensureAuthenticated,
   function(req, res){
-    console.log('get users');
-    users.findAll(function(err, items){
+    console.log('get admins');
+    admins.findAll(function(err, items){
       res.jsonp(items);
   })
 });
 
-app.get('/events', ensureAuthenticated,
+app.post('/admin', ensureAuthenticated,
   function(req, res){
-    console.log('get events');
-    events.findAll(function(err, items){
+    console.log('add admins');
+    adminss.add(req, function(err){
+
+  });
+});
+
+app.post('/admin/:id', ensureAuthenticated,
+  function(req, res){
+    console.log('edit admins');
+    admins.edit(req, function(err){
+  });
+});
+
+// Card Holders
+app.get('/cardHolders', ensureAuthenticated,
+  function(req, res){
+    console.log('get cardHolders');
+    cardHolders.findAll(function(err, items){
       res.jsonp(items);
   })
 });
 
-app.get('/zones', ensureAuthenticated,
+app.post('/cardHolder', ensureAuthenticated,
   function(req, res){
-    console.log('get zones');
-    zones.findAll(function(err, items){
-      res.jsonp(items);
-  })
+    console.log('add cardHolder');
+    cardHolders.add(req, function(err){
+
+  });
 });
 
+app.post('/cardHolder/:id', ensureAuthenticated,
+  function(req, res){
+    console.log('edit cardHolder');
+    cardHolders.edit(req, function(err){
+  });
+});
+
+//Devices
 app.get('/devices', ensureAuthenticated,
   function(req, res){
     console.log('get devices');
@@ -183,61 +205,120 @@ app.get('/devices', ensureAuthenticated,
   })
 });
 
+app.post('/device', ensureAuthenticated,
+  function(req, res){
+    console.log('add device');
+    devices.add(req, function(err){
+
+  });
+});
+
+app.post('/device/:id', ensureAuthenticated,
+  function(req, res){
+    console.log('edit device');
+    devices.edit(req, function(err){
+  });
+});
+
+//Events
 app.get('/events', ensureAuthenticated,
   function(req, res){
     console.log('get events');
     events.findAll(function(err, items){
-     res.jsonp(items);
-  })
-});
-
-app.get('/systemSettings', ensureAuthenticated,
-  function(req, res){
-    console.log('get systemSettings');
-    systemSettings.findAll(function(err, items){
       res.jsonp(items);
   })
 });
 
-app.get('/userRFIDs', ensureAuthenticated,
+app.post('/event', ensureAuthenticated,
   function(req, res){
-    console.log('get userRFIDs');
-    userRFIDs.findAll(function(err, items){
+    console.log('add event');
+    events.add(req, function(err){
+
+  });
+});
+
+app.post('/event/:id', ensureAuthenticated,
+  function(req, res){
+    console.log('edit event');
+    events.edit(req, function(err){
+  });
+});
+
+//RFIDs
+app.get('/rfids', ensureAuthenticated,
+  function(req, res){
+    console.log('get rfids');
+    rfids.findAll(function(err, items){
       res.jsonp(items);
   })
 });
 
-app.get('/userZones', ensureAuthenticated,
+app.post('/rfid', ensureAuthenticated,
   function(req, res){
-    console.log('get userZones');
-    userZones.findAll(function(err, items){
+    console.log('add rfid');
+    rfids.add(req, function(err){
+
+  });
+});
+
+app.post('/rfid/:id', ensureAuthenticated,
+  function(req, res){
+    console.log('edit rfid');
+    rfids.edit(req, function(err){
+  });
+});
+
+//Settings
+app.get('/settings', ensureAuthenticated,
+  function(req, res){
+    console.log('get settings');
+    settings.findAll(function(err, items){
       res.jsonp(items);
   })
 });
 
-app.get('/userDevices', ensureAuthenticated,
+app.post('/setting', ensureAuthenticated,
   function(req, res){
-    console.log('get userDevices');
-    userDevices.findAll(function(err, items){
+    console.log('add setting');
+    settings.add(req, function(err){
+
+  });
+});
+
+app.post('/setting/:id', ensureAuthenticated,
+  function(req, res){
+    console.log('edit setting');
+    settings.edit(req, function(err){
+  });
+});
+
+//Zones
+app.get('/zones', ensureAuthenticated,
+  function(req, res){
+    console.log('get zones');
+    zones.findAll(function(err, items){
       res.jsonp(items);
   })
 });
 
-app.get('/zoneDevices', ensureAuthenticated,
+app.post('/zone', ensureAuthenticated,
   function(req, res){
-    console.log('get zoneDevices');
-    zoneDevices.findAll(function(err, items){
-      res.jsonp(items);
-  })
+    console.log('add zone');
+    zones.add(req, function(err){
+
+  });
 });
 
-app.get('/adminRoles', ensureAuthenticated,
+app.post('/zone/:id', ensureAuthenticated,
   function(req, res){
-    console.log('get adminRoles');
-    adminRoles.findAll(function(err, items){
-      res.jsonp(items);
-  })
+    console.log('edit zone');
+    zones.edit(req, function(err){
+  });
 });
+
+
+
+
 
 //A Route for Creating a 500 Error (Useful to keep around)
 app.get('/500', function(req, res){

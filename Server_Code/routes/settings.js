@@ -1,7 +1,7 @@
 require('./mongo_connect.js');
 
 exports.findAll = function(callback) {
-    db.collection('zones', function(err, collection) {
+    db.collection('settings', function(err, collection) {
         collection.find().toArray(function(err, items) {
             if(err){
                 callback(err, items);
@@ -12,11 +12,12 @@ exports.findAll = function(callback) {
     });
 };
 
-exports.findById = function(id, done) {
-    var err,  o_id = new BSON.ObjectID.createFromHexString(id.toString());
-    console.log('findZoneById: ' + id);
-    db.collection('zones', function(err, collection) {
-        collection.find({'_id': o_id}).toArray(function(err, items) {
+exports.findByEmail = function(id, done) {
+    var err;
+    console.log('findSettingById: ' + id);
+    db.collection('settings', function(err, collection) {
+        collection.find({'_id': 'ObjectId("' + id + '")'}).toArray(function(err, items) {
+            console.log(items);
             if(!err){
                 return done(null, items);
             } else{ 
@@ -28,14 +29,12 @@ exports.findById = function(id, done) {
 
 exports.add = function(req, done){
     var err;
-    console.log('zone add ' + req);
-    cardsArray = [];
-    devicesArray = [];
+    console.log('setting add ' + req);
 
-    newZone = {'name': req.body.name, 'devices': devicesArray};
+    newSetting = {'name': req.body.name, 'value': req.body.value};
 
-    db.collection('zones', function(err, collection){
-        collection.insert(newZone, {safe:true}, function(err, doc){
+    db.collection('settings', function(err, collection){
+        collection.insert(newSetting, {safe:true}, function(err, doc){
             if(!err){
                 done(null, doc);
             } else {
@@ -47,24 +46,24 @@ exports.add = function(req, done){
 
 exports.edit = function(req, done){
     var err, o_id = new BSON.ObjectID.createFromHexString(id.toString());;
-    console.log('zone edit ' + req);
+    console.log('setting edit ' + req);
 
-    zone = findById(req.body.id);
+    setting = findById(req.body.id);
 
-    db.collection('zones', function(err, collection){
+    db.collection('settings', function(err, collection){
         collection.update({'_id': o_id},
         {
-            $set: {'name': req.body.name,
-            'devices': req.body.devices}
+            $set: {'name': req.body.settingNo,
+            'value': req.body.status}
          });
     });
 };
 
 exports.delete = function(id, done){
     var err, o_id = new BSON.ObjectID.createFromHexString(id.toString());;
-    console.log('zone delete ' + id);
+    console.log('setting delete ' + id);
 
-    db.collection('zones', function(err, collection){
+    db.collection('settings', function(err, collection){
         collection.delete({'_id': o_id});
     });
 };
