@@ -1,7 +1,7 @@
 'use strict';
 
 adminConsoleApp.controller('UsersController',
-    function UsersController ($http, $compile, $scope, dataManager, viewManager) {
+    function UsersController ($scope, dataManager, viewManager) {
         $scope.users = dataManager.dataUsers;
         $scope.addUser = function () {
             viewManager.showPopup('users', $scope);

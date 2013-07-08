@@ -12,7 +12,7 @@ div.leftPanel
 div.mainPanel
     span.item Results for...
     span.item
-        button Add
+        button(ng-click="addDevice()") Add
         button Edit
         button Delete
     span.item
@@ -20,12 +20,6 @@ div.mainPanel
             tr
                 th Alias
                 th Type
-            tr.row0
-                td Front Door
-                td RFID
-            tr
-                td Music Door
-                td RFID
-            tr.row0
-                td Random Door
-                td RFID
+            tr(ng-repeat="device in devices", class="{{'row' + $index % 2 }}")
+                td {{device.alias}}
+                td {{device.type}}

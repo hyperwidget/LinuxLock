@@ -51,21 +51,20 @@ adminConsoleApp.factory('dataManager', function () {
                 devices: ['-']
             }
         ],
-        addUser = function () {
-            usersData.push(
-                { firstName: 'Fname' + usersData.length,
-                    lastName: 'Lname' + usersData.length,
-                    email: 'email' + usersData.length,
-                    phoneNumber: usersData.length,
-                    cards: [10005 + usersData.length],
-                    zones: ['Company - Main Floor', 'Public Areas'],
-                    devices: ['-']
-                }
-            )
-        }
+        devicesData = [
+            { alias: 'Front Door',
+                type: 'RFID'
+            },
+            { alias: 'Back Door',
+                type: 'RFID'
+            },
+            { alias: 'Office Door',
+                type: 'RFID'
+            }
+        ]
     ;
     return {
         dataUsers: usersData,
-        addUsers: addUser
+        dataDevices: devicesData
     };
 });
