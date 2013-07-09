@@ -3,6 +3,7 @@
 adminConsoleApp.controller('UsersController',
     function UsersController ($scope, dataManager, viewManager) {
         $scope.users = dataManager.dataUsers;
+        $scope.zones = dataManager.datazones;
         $scope.addUser = function () {
             viewManager.showPopup('users', $scope);
         };

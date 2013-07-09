@@ -21,5 +21,6 @@ div.mainPanel
                 th Alias
                 th Devices
             tr(ng-repeat="zone in zones", class="{{'row' + $index % 2 }}")
-                td {{zone.alias}}
-                td {{zone.devices}}
+                td {{zone.name}}
+                td 
+                    div(ng-repeat="device in zone.devices"){{device.name}}

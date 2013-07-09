@@ -1,7 +1,10 @@
 'use strict';
 
 adminConsoleApp.factory('dataManager', function () {
-    var usersData = [
+    var usersData = 
+        $.getJSON('cardHolders')
+        /*
+    [
             { firstName: 'John',
                 lastName: 'Smith',
                 email: 'jsmith@company.com',
@@ -50,8 +53,11 @@ adminConsoleApp.factory('dataManager', function () {
                 zones: ['Company - Main Floor', 'Company - Floor 2', 'Company - Floor 3', 'Public Areas'],
                 devices: ['-']
             }
-        ],
-        devicesData = [
+        ]
+        */
+        ,
+        devicesData = $.getJSON('devices')
+        /*[
             { alias: 'Front Door',
                 type: 'RFID'
             },
@@ -61,8 +67,10 @@ adminConsoleApp.factory('dataManager', function () {
             { alias: 'Office Door',
                 type: 'RFID'
             }
-        ],
-        zonesData = [
+        ]*/
+        ,
+        zonesData = $.getJSON('zones')
+        /*[
             { alias: 'Public Access',
                 devices: 'Front Door'
             },
@@ -72,7 +80,7 @@ adminConsoleApp.factory('dataManager', function () {
             { alias: 'Guest Access',
                 type: 'Offices'
             }
-        ]
+        ]*/
     ;
     return {
         dataUsers: usersData,

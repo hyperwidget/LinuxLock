@@ -25,10 +25,6 @@ div.leftPanel
         label(for="byZone") Zone
         input.searchBox(type="text", id="byZone")
         button.goButton Go
-    span.item
-        label(for="byDevice") Device
-        input.searchBox(type="text", id="byDevice")
-        button.goButton Go
 div.mainPanel
     span.item Results for...
     span.item
@@ -44,12 +40,12 @@ div.mainPanel
                 th Phone
                 th Cards
                 th Zones
-                th Devices
             tr(ng-repeat="user in users", class="{{'row' + $index % 2 }}")
-                td {{user.firstName}}
-                td {{user.lastName}}
+                td {{user.first}}
+                td {{user.last}}
                 td {{user.email}}
-                td {{user.phoneNumber}}
-                td {{user.cards}}
-                td {{user.zones}}
-                td {{user.devices}}
+                td {{user.phone}}
+                td 
+                    div(ng-repeat="card in user.cards"){{card.rfidNo}}
+                td 
+                    div(ng-repeat="zone in user.zones"){{zone.name}}

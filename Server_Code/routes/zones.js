@@ -1,12 +1,27 @@
 require('./mongo_connect.js');
+devices = require('./devices.js');
 
-exports.findAll = function(callback) {
+exports.findAll = function(done) {
     db.collection('zones', function(err, collection) {
         collection.find().toArray(function(err, items) {
             if(err){
-                callback(err, items);
+                done(err, items);
             } else {
-                callback(null, items);
+                items.forEach(function(zone){
+                    if(zone.devices.length > 0){
+                        var deviceCount = 0;
+                        zone.devices.forEach(function(device){
+                            devices.findById(device.device_id, function(err, deviceInfo){
+                                device.name = deviceInfo[0].name;
+                                if((++deviceCount == zone.devices.length) && (items[items.length - 1]._id == zone._id)){
+                                    done(null, items);
+                                }
+                            });
+                        });
+                    } else {
+                        done(null, items);
+                    }
+                });
             }
         });
     });
