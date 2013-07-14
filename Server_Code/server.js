@@ -152,7 +152,7 @@ app.get('/templates/:name', ensureAuthenticated,
 app.get('/admins', ensureAuthenticated,
   function(req, res){
     console.log('get admins');
-    admins.findAll(function(err, items){
+    admins.findAll(req, res, function(err, items){
       res.jsonp(items);
   })
 });
@@ -176,7 +176,7 @@ app.post('/admin/:id', ensureAuthenticated,
 app.get('/cardHolders', ensureAuthenticated,
   function(req, res){
     console.log('get cardHolders');
-    cardHolders.findAll(function(err, items){
+    cardHolders.findAll(req, res, function(err, items){
       res.jsonp(items);
   })
 });
@@ -200,7 +200,7 @@ app.post('/cardHolder/:id', ensureAuthenticated,
 app.get('/devices', ensureAuthenticated,
   function(req, res){
     console.log('get devices');
-    devices.findAll(function(err, items){
+    devices.findAll(req, res, function(err, items){
       res.jsonp(items);
   })
 });
@@ -248,7 +248,7 @@ app.post('/event/:id', ensureAuthenticated,
 app.get('/rfids', ensureAuthenticated,
   function(req, res){
     console.log('get rfids');
-    rfids.findAll(function(err, items){
+    rfids.findAll(req, res, function(err, items){
       res.jsonp(items);
   })
 });
@@ -296,7 +296,7 @@ app.post('/setting/:id', ensureAuthenticated,
 app.get('/zones', ensureAuthenticated,
   function(req, res){
     console.log('get zones');
-    zones.findAll(function(err, items){
+    zones.findAll(req, res, function(err, items){
       res.jsonp(items);
   })
 });

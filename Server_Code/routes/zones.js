@@ -2,8 +2,19 @@ require('./mongo_connect.js');
 devices = require('./devices.js');
 
 exports.findAll = function(done) {
+    if(req.query.alias !== undefined){
+        findAllWithParams({name: req.query.alias}, done);
+    } else if(req.query.device !== undefined){
+        o_id = new BSON.ObjectID.createFromHexString(req.query.device.toString());
+        findAllWithParams({"devices.device_id": oid}, done);
+    } else {
+        findAllWithParams('', done);
+    }
+};
+
+function findAllWithParams(searchValue, done){   
     db.collection('zones', function(err, collection) {
-        collection.find().toArray(function(err, items) {
+        collection.find(searchValue).toArray(function(err, items) {
             if(err){
                 done(err, items);
             } else {

@@ -1,16 +1,40 @@
 require('./mongo_connect.js');
 
-exports.findAll = function(callback) {
+exports.findAll = function(req, res, done) {
+    console.log('get all rfidsssss');
+    if(req.query.rfidNo !== undefined){
+        findAllWithParams({rfidNo: req.query.rfidNo}, done);
+    } else {
+        findAllWithParams('', done);
+    }
+};
+
+exports.findByRfidNo = function(rfid, done){
     db.collection('rfids', function(err, collection) {
-        collection.find().toArray(function(err, items) {
+        searchValue = {rfidNo: rfid};
+        console.log(searchValue);
+        collection.find(searchValue).toArray(function(err, items) {
             if(err){
-                callback(err, items);
+                done(err, items);
             } else {
-                callback(null, items);
+                done(null, items);
             }
         });
-    });
+    }); 
 };
+
+function findAllWithParams(searchValue, done){   
+    db.collection('rfids', function(err, collection) {
+        collection.find(searchValue).toArray(function(err, items) {
+            if(err){
+                done(err, items);
+            } else {
+                done(null, items);
+            }
+        });
+    }); 
+};
+
 
 exports.findById = function(id, done) {
     var err,  o_id = new BSON.ObjectID.createFromHexString(id.toString());
