@@ -116,7 +116,7 @@ app.get('/', function(req,res){
 
 app.post('/login',
   passport.authenticate('local', { 
-    successRedirect: '/console',
+    successRedirect: '/console#/Users',
     failureRedirect: '/',
     failureFlash: true })
 );

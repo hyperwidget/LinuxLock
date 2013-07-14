@@ -24,7 +24,7 @@ var adminConsoleApp = angular.module('adminConsoleApp', [])
             })
         $routeProvider.when('/Admin',
             {
-                templateUrl: 'templates/admin.html',
+                templateUrl: 'templates/admin',
                 controller: 'AdminController'
             })
         $routeProvider.when('/Settings',

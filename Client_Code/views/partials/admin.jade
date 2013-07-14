@@ -1,0 +1,38 @@
+div.leftPanel
+    span.item
+        span Search By:
+    span.item
+        label(for="byName") Name
+        input.searchBox(type="text", id="byName")
+        button.goButton Go
+    span.item
+        label(for="byUserName") User Name
+        input.searchBox(type="text", id="byUserName")
+        button.goButton Go
+div.mainPanel
+    span.item
+        Results Results for...
+    span.item
+        button(ng-click="addAdmin()") Add
+        button Edit
+        button Delete
+    span.item
+        table
+            tr
+                th Name
+                th User Name
+                th Manage Users
+                th Manage Devices
+                th Manage Zones
+                th Generate Reports
+                th Manage Backups
+                th Manage Settings
+            tr(ng-repeat="admin in admins", class="{{'row' + $index % 2 }}")
+                td {{admin.name}}
+                td {{admin.username}}
+                td {{admin.canManageUsers}}
+                td {{admin.canManageDevices}}
+                td {{admin.canManageZones}}
+                td {{admin.canGenerateReports}}
+                td {{admin.canManageBackups}}
+                td {{admin.canManageSettings}}

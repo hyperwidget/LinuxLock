@@ -81,10 +81,13 @@ adminConsoleApp.factory('dataManager', function () {
                 type: 'Offices'
             }
         ]*/
+        ,
+        adminsData = $.getJSON('admins')
     ;
     return {
         dataUsers: usersData,
         dataDevices: devicesData,
-        dataZones: zonesData
+        dataZones: zonesData,
+        dataAdmins: adminsData
     };
 });
