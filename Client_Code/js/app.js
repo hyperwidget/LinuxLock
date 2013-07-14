@@ -16,20 +16,25 @@ var adminConsoleApp = angular.module('adminConsoleApp', [])
             {
                 templateUrl: 'templates/zones',
                 controller: 'ZonesController'
-            })
+            });
         $routeProvider.when('/Reports',
             {
                 templateUrl: 'templates/reports.html',
                 controller: 'ReportsController'
-            })
+            });
         $routeProvider.when('/Admin',
             {
                 templateUrl: 'templates/admin',
                 controller: 'AdminController'
-            })
+            });
         $routeProvider.when('/Settings',
             {
                 templateUrl: 'templates/settings.html',
                 controller: 'SettingsController'
+            });
+        $routeProvider.when('/Cards',
+            {
+                templateUrl: 'templates/rfids',
+                controller: 'RFIDController'
             })
     });

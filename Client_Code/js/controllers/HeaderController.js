@@ -4,6 +4,7 @@ adminConsoleApp.controller('HeaderController',
     function HeaderController ($scope, dataManager) {
        $scope.navbarItems = [
            { name: 'Users' },
+           { name: 'Cards' },
            { name: 'Devices' },
            { name: 'Zones' },
            { name: 'Reports' },
