@@ -19,7 +19,7 @@ var adminConsoleApp = angular.module('adminConsoleApp', [])
             });
         $routeProvider.when('/Reports',
             {
-                templateUrl: 'templates/reports.html',
+                templateUrl: 'templates/reports',
                 controller: 'ReportsController'
             });
         $routeProvider.when('/Admin',
@@ -29,7 +29,7 @@ var adminConsoleApp = angular.module('adminConsoleApp', [])
             });
         $routeProvider.when('/Settings',
             {
-                templateUrl: 'templates/settings.html',
+                templateUrl: 'templates/settings',
                 controller: 'SettingsController'
             });
         $routeProvider.when('/Cards',
