@@ -85,12 +85,15 @@ adminConsoleApp.factory('dataManager', function () {
         adminsData = $.getJSON('admins')
         ,
         rfidsData = $.getJSON('rfids')
+        ,
+        settingsData = $.getJSON('settings')
     ;
     return {
         dataUsers: usersData,
         dataDevices: devicesData,
         dataZones: zonesData,
         dataAdmins: adminsData,
-        dataRfids: rfidsData
+        dataRfids: rfidsData,
+        dataSettings: settingsData
     };
 });

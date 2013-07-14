@@ -2,12 +2,12 @@
 
 adminConsoleApp.controller('RFIDController',
     function DevicesController ($scope, dataManager, viewManager) {
-        $scope.rfid = dataManager.dataRfids;
+        $scope.rfids = dataManager.dataRfids;
         $scope.addRfid = function () {
             viewManager.showPopup('rfids', $scope);
         };
         $scope.saveData = function () {
-            $scope.devices.push({
+            $scope.rfids.push({
                 rfidNo: $scope.newRfid.rfidNo,
                 status: $scope.newRfid.status
             });

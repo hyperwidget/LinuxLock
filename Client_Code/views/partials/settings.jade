@@ -1,0 +1,7 @@
+div.leftPanel
+div.mainPanel
+    span.item(ng-repeat="setting in settings")
+        div {{setting.name}}
+        input(type="text", ng-model="setting.value")
+    span.item
+        button save
