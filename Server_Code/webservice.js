@@ -5,7 +5,7 @@ var restify = require('restify'),
      	name: "linux-lock-services",
      	version: "1.0.0"
     })
-
+var lock_email = require('./lock_email.js');
 mongoose.connect("mongodb://localhost:27017/linux_lock")
 
 mongoose.connection.db.on('open',function(ref){
@@ -44,6 +44,7 @@ server.get('/auth/:type/:id', function(req,res,next) {
         // However if there ARE duplicates, and any single duplicate
         // is unauthorized, then deny access.
         res.send({auth: true})
+        lock_email.sendMail();
       } else {
         res.send({auth: false})
       }
