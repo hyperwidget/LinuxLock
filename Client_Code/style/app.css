@@ -4,6 +4,13 @@ html, body {
     margin: 0;
     font-family: sans-serif;
 }
+table {
+    width: 100%;
+}
+td, th {
+    text-align: left;
+    padding: 3px 5px;
+}
 #container {
     width: 100%;
     height: 100%;
@@ -107,6 +114,17 @@ html, body {
 }
 .row0 {
     background: lightgray;
+    cursor: pointer;
+ }
+
+.row1 {
+    background: white;
+    cursor: pointer;
+}
+
+.row0.selected, .row1.selected {
+    background: orange;
+    color: #ffffff;
 }
 /* Popup styles */
 #popup {

@@ -29,10 +29,10 @@ div.mainPanel
     span.item Results for...
     span.item
         button(ng-click="addUser()") Add
-        button Edit
+        button(ng-click="editUser()") Edit
         button Delete
     span.item
-        table
+        table(cellspacing="0")
             tr
                 th First Name
                 th Last Name
@@ -40,7 +40,7 @@ div.mainPanel
                 th Phone
                 th Cards
                 th Zones
-            tr(ng-repeat="user in users", class="{{'row' + $index % 2 }}")
+            tr(ng-repeat="user in users", class="{{'row' + $index % 2 }}", ng-click="changeCurrentUser($event, $index)")
                 td {{user.first}}
                 td {{user.last}}
                 td {{user.email}}

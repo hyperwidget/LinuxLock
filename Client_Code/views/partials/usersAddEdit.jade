@@ -1,19 +1,19 @@
 span.item
-    label(for="FirstName") First Name
-    input.searchBox(type="text", id="first", ng-model="newUser.first")
+    label(for="first") First Name
+    input.searchBox(type="text", id="first", ng-model="currentUser.first")
 span.item
-    label(for="LastName") Last Name
-    input.searchBox(type="text", id="last", ng-model="newUser.last")
+    label(for="last") Last Name
+    input.searchBox(type="text", id="last", ng-model="currentUser.last")
 span.item
     label(for="CardNumber") Card Number
-    input.searchBox(type="text", id="CardNumber", ng-model="newUser.cards")
+    input.searchBox(type="text", id="CardNumber", ng-model="currentUser.cards")
 span.item
-    label(for="Email") Email
-    input.searchBox(type="text", id="email", ng-model="newUser.email")
+    label(for="email") Email
+    input.searchBox(type="text", id="email", ng-model="currentUser.email")
 span.item
-    label(for="PhoneNumber") Phone Number
-    input.searchBox(type="text", id="phone", ng-model="newUser.phone")
+    label(for="phone") Phone Number
+    input.searchBox(type="text", id="phone", ng-model="currentUser.phone")
 span.item
-    label(for="Zone") Zone
-    select(id = "zone", ng-model="newUser.zone")
+    label(for="zone") Zone
+    select(id = "zone", ng-model="currentUser.zone")
         option(ng-repeat="zone in zones", value = "{{zone.id}}"){{zone.name}}
