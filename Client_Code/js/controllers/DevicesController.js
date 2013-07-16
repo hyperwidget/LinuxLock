@@ -32,5 +32,50 @@ adminConsoleApp.controller('DevicesController',
             $(event.target.parentElement).addClass('selected');
             $scope.currentIndex = index;
         };
+        $scope.searchByDeviceName = function(){
+            if($scope.name !== undefined && $scope.name !== ''){
+                $http.get('device?name=' + $scope.name).success(
+                    function(data, status, headers, config){
+                        $scope.devices = data;
+                    }
+                );
+            } else if($scope.name == '') {
+                $http.get('device').success(
+                    function(data, status, headers, config){
+                        $scope.devices = data;
+                    }
+                );
+            }
+        }
+        $scope.searchByDeviceType = function(){
+            if($scope.type !== undefined && $scope.type !== ''){
+                $http.get('device?type=' + $scope.type).success(
+                    function(data, status, headers, config){
+                        $scope.devices = data;
+                    }
+                );
+            } else if($scope.type == '') {
+                $http.get('device').success(
+                    function(data, status, headers, config){
+                        $scope.devices = data;
+                    }
+                );
+            }
+        }
+        $scope.searchByHostName = function(){
+            if($scope.hostname !== undefined && $scope.hostname !== ''){
+                $http.get('device?hostname=' + $scope.hostname).success(
+                    function(data, status, headers, config){
+                        $scope.devices = data;
+                    }
+                );
+            } else if($scope.hostname == '') {
+                $http.get('device').success(
+                    function(data, status, headers, config){
+                        $scope.devices = data;
+                    }
+                );
+            }
+        }
     }
 );

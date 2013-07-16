@@ -2,17 +2,17 @@
 	span.item
 		span Search By:
 	span.item
-		label(for="byFirstName") Device Name
-		input#byDeviceName.searchBox(type="text",name="byDeviceName")
-		button.goButton Go
+		label(for="byDeviceName") Device Name
+		input#byDeviceName.searchBox(type="text", ng-model="name", name="byDeviceName")
+		button.goButton(ng-click="searchByDeviceName()") Go
 	span.item
 		label(for="byDeviceType") Device Type
-		input#byDeviceType.searchBox(type="text",name="byDeviceType")
-		button.goButton Go
+		input#byDeviceType.searchBox(type="text", ng-model="type", name="byDeviceType")
+		button.goButton(ng-click="searchByDeviceType()") Go
 	span.item
 		label(for="byDeviceHostname") Device Hostname
-		input#byDeviceHostname.searchBox(type="text",name="byDeviceHostname")
-		button.goButton Go
+		input#byDeviceHostname.searchBox(type="text", ng-model="hostname", name="byDeviceHostname")
+		button.goButton(ng-click="searchByHostName()") Go
 .mainPanel
 	span.item Results for...
 	span.item

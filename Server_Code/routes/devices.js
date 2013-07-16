@@ -1,10 +1,12 @@
 require('./mongo_connect.js');
 
 exports.findAll = function(req, res, done) {
-    if(req.query.alias !== undefined){
-        findAllWithParams({name: req.query.alias}, done);
+    if(req.query.name !== undefined){
+        findAllWithParams({name: req.query.name}, done);
     } else if(req.query.type !== undefined){
-        findAllWithParams({type: req.query.type}, done);
+        findAllWithParams({type: parseInt(req.query.type)}, done);
+    } else if(req.query.hostname !== undefined){
+        findAllWithParams({hostname: req.query.hostname}, done);
     } else {
         findAllWithParams('', done);
     }
