@@ -1,25 +1,25 @@
-div.leftPanel
+.leftPanel
     span.item
         span Search By:
     span.item
-        label(for="byCarNumber") Card Number
-        input.searchBox(type="text", id="byCarNumber")
+        label(for="byCardNumber") Card Number
+        input.searchBox(type="text", id="byCardNumber")
         button.goButton Go
     span.item
         label(for="byStatus") Status
         input.searchBox(type="text", id="byStatus")
         button.goButton Go
-div.mainPanel
+.mainPanel
     span.item Results for...
     span.item
-        button(ng-click="addRfid()") Add
-        button Edit
-        button Delete
+        button(ng-click="addRFID()") Add
+        button(ng-click="editRFID()") Edit
+        button(ng-click="deleteRFID()") Delete
     span.item
         table
             tr
                 th Card Number
                 th Status
-            tr(ng-repeat="rfid in rfids", class="{{'row' + $index % 2 }}")
+            tr(ng-repeat="rfid in rfids", class="{{'row' + $index % 2 }}", ng-click="changeCurrentRFID($event, $index)")
                 td {{rfid.rfidNo}}
                 td {{rfid.status}}

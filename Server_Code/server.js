@@ -261,7 +261,7 @@ app.post('/event/:id', ensureAuthenticated,
 });
 
 //RFIDs
-app.get('/rfids', ensureAuthenticated,
+app.get('/rfid', ensureAuthenticated,
   function(req, res){
     console.log('get rfids');
     rfids.findAll(req, res, function(err, items){
@@ -283,6 +283,15 @@ app.post('/rfid/:id', ensureAuthenticated,
     rfids.edit(req, function(err){
   });
 });
+
+app.delete('/rfid/:id', ensureAuthenticated,
+  function(req, res){
+    console.log('delete rfid');
+    rfids.delete(req.params.id, function(err){
+      console.log(err);
+  });
+});
+
 
 //Settings
 app.get('/settings', ensureAuthenticated,

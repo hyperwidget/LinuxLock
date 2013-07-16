@@ -4,6 +4,8 @@ exports.findAll = function(req, res, done) {
     console.log('get all rfidsssss');
     if(req.query.rfidNo !== undefined){
         findAllWithParams({rfidNo: req.query.rfidNo}, done);
+    } else if (req.query.status !== undefined){
+        findAllWithParams({status: req.query.status}, done);
     } else {
         findAllWithParams('', done);
     }
@@ -88,6 +90,8 @@ exports.delete = function(id, done){
     console.log('rfid delete ' + id);
 
     db.collection('rfids', function(err, collection){
-        collection.delete({'_id': o_id});
+        collection.remove({'_id': o_id}, function(err, items){
+            done(null);
+        });
     });
 };
