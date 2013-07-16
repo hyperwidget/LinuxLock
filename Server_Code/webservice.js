@@ -42,7 +42,8 @@ server.get('/auth/:type/:id',
         console.log(item);
         res.send({auth: item.auth})
         // Notify via email that access was granted
-        lock_email.sendMail()
+        if(item.auth)
+          lock_email.sendMail()
       }
     });
   } else {
