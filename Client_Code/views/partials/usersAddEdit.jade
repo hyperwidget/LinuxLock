@@ -14,6 +14,6 @@ span.item
     label(for="phone") Phone Number
     input.searchBox(type="text", id="phone", ng-model="currentUser.phone")
 span.item
-    label(for="zone") Zone
-    select(id = "zone", ng-model="currentUser.zone")
-        option(ng-repeat="zone in zones", value = "{{zone.id}}"){{zone.name}}
+    label(for="Zones") Zone
+    select(id="Zones", ng-model="currentUser.zone")
+        option(ng-repeat="zone in zones", value="{{zone.id}}") {{zone.name}}

@@ -1,8 +1,9 @@
 'use strict';
 
-adminConsoleApp.factory('dataManager', function () {
-    var usersData = 
-        $.getJSON('cardHolders')
+adminConsoleApp.factory('dataManager', function ($resource) {
+    var User = $resource('cardHolder/:userId', {userId: '@_id'}),
+        usersData = User.query()
+
     /*
     [
             { first: 'John',
@@ -94,6 +95,7 @@ adminConsoleApp.factory('dataManager', function () {
         dataZones: zonesData,
         dataAdmins: adminsData,
         dataRfids: rfidsData,
-        dataSettings: settingsData
+        dataSettings: settingsData,
+        User: User
     };
 });

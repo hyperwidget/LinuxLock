@@ -173,7 +173,7 @@ app.post('/admin/:id', ensureAuthenticated,
 });
 
 // Card Holders
-app.get('/cardHolders', ensureAuthenticated,
+app.get('/cardHolder', ensureAuthenticated,
   function(req, res){
     console.log('get cardHolders');
     cardHolders.findAll(req, res, function(err, items){

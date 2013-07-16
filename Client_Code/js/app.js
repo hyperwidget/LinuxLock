@@ -1,6 +1,6 @@
 'use strict';
 
-var adminConsoleApp = angular.module('adminConsoleApp', [])
+var adminConsoleApp = angular.module('adminConsoleApp', ['ngResource'])
     .config(function ($routeProvider) {
         $routeProvider.when('/Users',
             {
