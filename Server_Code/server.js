@@ -196,6 +196,14 @@ app.post('/cardHolder/:id', ensureAuthenticated,
   });
 });
 
+app.delete('/cardHolder/:id', ensureAuthenticated,
+  function(req, res){
+    console.log('edit cardHolder');
+    cardHolders.delete(req.params.id, function(err){
+      console.log(err);
+  });
+});
+
 //Devices
 app.get('/devices', ensureAuthenticated,
   function(req, res){

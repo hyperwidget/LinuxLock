@@ -16,9 +16,14 @@ adminConsoleApp.controller('UsersController',
         };
         $scope.saveData = function () {
             $scope.currentUser.$save();
+            $scope.userspush(currentUser);
         };
         $scope.cancelSave = function () {
 
+        };
+        $scope.deleteUser = function() {
+            $scope.currentUser = $scope.users[$scope.currentIndex];
+            $scope.currentUser.$delete();
         };
         $scope.changeCurrentUser = function (event, index) {
             $('.selected').removeClass('selected');

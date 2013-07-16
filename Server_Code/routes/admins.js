@@ -1,6 +1,6 @@
 mongo = require('./mongo_connect.js');
 
-exports.findAll = function(req, res, callback) {
+exports.findAll = function(req, res, done) {
     if(req.query.name !== undefined){
         findAllWithParams({name: req.query.name}, done);
     } else if(req.query.username !== undefined){
@@ -14,9 +14,9 @@ function findAllWithParams(searchValue, done){
     db.collection('admins', function(err, collection) {
         collection.find(searchValue).toArray(function(err, items) {
             if(err){
-                callback(err, items);
+                done(err, items);
             } else {
-                callback(null, items);
+                done(null, items);
             }
         });
     });

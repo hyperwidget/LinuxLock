@@ -1,6 +1,6 @@
 require('./mongo_connect.js');
 
-exports.findAll = function(callback) {
+exports.findAll = function(req, res, done) {
     if(req.query.alias !== undefined){
         findAllWithParams({name: req.query.alias}, done);
     } else if(req.query.type !== undefined){
@@ -14,9 +14,9 @@ function findAllWithParams(searchValue, done){
     db.collection('devices', function(err, collection) {
         collection.find(searchValue).toArray(function(err, items) {
             if(err){
-                callback(err, items);
+                done(err, items);
             } else {
-                callback(null, items);
+                done(null, items);
             }
         });
     });

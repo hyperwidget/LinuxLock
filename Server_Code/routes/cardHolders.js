@@ -103,9 +103,15 @@ exports.add = function(req, done){
     var err;
     console.log('cardholder add ' + req);
     cardsArray = [];
-    zonesArray = [];
+    zonesArray = [];  
 
-    newCardHolder = {'first': req.body.firstName, 'last': req.body.lastName, 'email': req.body.email, 'phone': req.body.phoneNumber, 'userRole': "u", 'cards': cardsArray, 'zones': zonesArray};
+    newCardHolder = {'first': req.body.first,
+        'last': req.body.last, 
+        'email': req.body.email, 
+        'phone': req.body.phone, 
+        'userRole': "u", 
+        'cards': cardsArray, 
+        'zones': zonesArray};
 
     db.collection('cardHolders', function(err, collection){
         collection.insert(newCardHolder, {safe:true},function(err, doc){
@@ -127,10 +133,10 @@ exports.edit = function(req, done){
     db.collection('cardHolders', function(err, collection){
         collection.update({'_id': o_id},
         {
-            $set: {'first': req.body.firstName,
-            'last': req.body.lastName,
+            $set: {'first': req.body.first,
+            'last': req.body.last,
             'email': req.body.email,
-            'phone': req.body.phoneNumber,
+            'phone': req.body.phone,
             'userRole': req.body.userRole,
             'cards': req.body.cards,
             'zones': req.body.zones}
@@ -143,6 +149,10 @@ exports.delete = function(id, done){
     console.log('cardholder delete ' + id);
 
     db.collection('cardHolders', function(err, collection){
-        collection.delete({'_id': o_id});
+        collection.remove({'_id': o_id}, function(err, items){
+            done(null);
+        });
     });
+
+    
 };
