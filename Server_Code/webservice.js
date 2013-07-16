@@ -26,19 +26,20 @@ server.use(restify.acceptParser(server.acceptable))
 server.use(restify.queryParser())
 server.use(restify.bodyParser())
 
-server.get('/auth/:device/:type/:id',
+server.get('/auth/:type/:id',
   function(req,res,next) {
   if(req.params.type === "rfid") {
     RFID.isAuthorizedForDevice({
-      device: req.params.device,
+      hostname: req.connection.remoteAddress,
       rfidNo: req.params.id
-    }, function(err, zone, item) {
+    }, function(err, item) {
       if(err) {
         // TODO: Send this to Log API?
         console.log(err)
         res.send({auth: false})
       } else {
         // TODO: Log this access.
+        console.log(item);
         res.send({auth: item.auth})
         // Notify via email that access was granted
         lock_email.sendMail()
