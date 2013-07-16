@@ -21,8 +21,7 @@ var smtpTransport = nodemailer.createTransport("SMTP",{
 });
 
 module.exports = {
-sendMail: function(addresses){
-
+sendMail: function(addresses, name, lock, time){
     if(!addresses)
         addresses="kaleidus.code@gmail.com";
 
@@ -31,7 +30,11 @@ sendMail: function(addresses){
         to: addresses,
         subject: "Linux Lock",
         text: "The lock has been triggered."
-    }      
+    }
+    // Hack to send more meaningful info
+    if(name && lock && time) {
+        mailOptions.text = "User '" + name + "'' has triggered Lock '" + lock + "'' (" + time + ")"
+    }
 
     smtpTransport.sendMail(mailOptions, function(error, response){
         if(error){
