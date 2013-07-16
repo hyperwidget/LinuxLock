@@ -6,13 +6,21 @@
         <span>Search By:</span>
     </span>
     <span class="item">
-        <label for="byFirstName">Device Alias</label>
-        <input type="text" id="byFirstName" class="searchBox">
+        <label for="byDeviceAlias">Device Alias</label>
+        <input type="text" id="byDeviceAlias" name="byDeviceAlias"
+               class="searchBox" />
         <button class="goButton">Go</button>
     </span>
     <span class="item">
-        <label for="byLastName">Device Type</label>
-        <input type="text" id="byLastName" class="searchBox">
+        <label for="byDeviceType">Device Type</label>
+        <input type="text" id="byDeviceType" name="byDeviceType"
+               class="searchBox" />
+        <button class="goButton">Go</button>
+    </span>
+    <span class="item">
+        <label for="byDeviceHostname">Device Hostname</label>
+        <input type="text" id="byDeviceHostname" name="byDeviceHostname"
+            class="searchBox" />
         <button class="goButton">Go</button>
     </span>
 </div><div class="mainPanel">
@@ -28,6 +36,7 @@
             <tr>
                 <th>Alias</th>
                 <th>Type</th>
+                <th>Hostname</th>
             </tr>
             <tr class="lightgray">
                 <td>Front Door</td>

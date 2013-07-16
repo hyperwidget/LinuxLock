@@ -55,7 +55,7 @@ exports.add = function(req, done){
     var err;
     console.log('device add ' + req);
 
-    newDevice = {'name': req.body.name, 'type': req.body.type};
+    newDevice = {'name': req.body.name, 'type': req.body.type, 'hostname': req.body.hostname};
 
     db.collection('devices', function(err, collection){
         collection.insert(newDevice, {safe:true},function(err, doc){
@@ -78,7 +78,8 @@ exports.edit = function(req, done){
         collection.update({'_id': o_id},
         {
             $set: {'name': req.body.name,
-            'type': req.body.type}
+            'type': req.body.type,
+            'hostname': req.body.hostname}
         });
     });
 };
