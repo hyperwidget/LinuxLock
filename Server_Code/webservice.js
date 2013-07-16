@@ -6,6 +6,7 @@ var restify = require('restify'),
     Device = require('./models/Device'),
     RFID = require('./models/RFID'),
     Zone = require('./models/Zone'),
+    Event = require('./models/Event')
     // WebServer:
     server = restify.createServer({
      	name: "linux-lock-services",
@@ -28,6 +29,7 @@ server.use(restify.bodyParser())
 
 server.get('/auth/:type/:id',
   function(req,res,next) {
+  var time = new Date()
   if(req.params.type === "rfid") {
     RFID.isAuthorizedForDevice({
       hostname: req.connection.remoteAddress,
@@ -36,17 +38,27 @@ server.get('/auth/:type/:id',
       if(err) {
         // TODO: Send this to Log API?
         console.log(err)
+        // Error occurred, use error status!
+        // [ lol :( ]
+        var rfid = null, device = null
+        if(item) rfid = item.rfid, device = item.device
+        Event.log(rfid, device, false, "error", time)
         res.send({auth: false})
       } else {
         // TODO: Log this access.
         console.log(item);
         res.send({auth: item.auth})
+        var status = null
+        if(!item.device) status = "unknown-device"
+        else if(!item.rfid) status = "unknown-rfid"
+        Event.log(item.rfid, item.device, item.auth, status, time)
         // Notify via email that access was granted
         if(item.auth)
           lock_email.sendMail()
       }
     });
   } else {
+    Event.log(null, null, false, "bad-protocol", time)
     res.send({auth: false})
   }
   return next()

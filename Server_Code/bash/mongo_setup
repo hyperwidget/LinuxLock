@@ -130,9 +130,13 @@ db.cardHolders.insert(cardHolder3)
 
 //event   // HOW ABOUT USER WHO ENTERED? OR RFID ?
 //{ _id: id,
-//device_id: device_id,
-//entry_time: date/time,
-//status: status
+//device_id: {type:ObjectId, ref:"Device"},
+//rfid_id: {type:ObjectId, ref:"RFID"},
+//alias: {type:WAT}, // Is this always a Number? Maybe a String? WAT does it even 
+                     // represent?
+//entry_time: {type:Date, required:true},
+//status: {type:WAT} // Is this always a Number? Maybe a String? WAT
+                     // The heck does '42' vs '11' mean? :(
 //}
 
 
