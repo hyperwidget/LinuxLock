@@ -1,6 +1,12 @@
 var restify = require('restify'),
     fs = require('fs'),
     mongoose = require('mongoose'),
+    // Models:
+    CardHolder = require('./models/CardHolder'),
+    Device = require('./models/Device'),
+    RFID = require('./models/RFID'),
+    Zone = require('./models/Zone'),
+    // WebServer:
     server = restify.createServer({
      	name: "linux-lock-services",
      	version: "1.0.0"
@@ -16,39 +22,28 @@ mongoose.connection.db.on('error',function(err){
   console.log(err)
 })
 
-// Bootstrap models
-var modelsPath = __dirname + '/models';
-
-// Not-very-clever model-import strategy
-fs.readdirSync(modelsPath).forEach(function(name){
-  var obj = require(modelsPath + '/' + name),
-      modelName = obj.name,
-      schemaName = obj.name+"Schema"
-  this[schemaName] = obj.schema;
-  this[modelName] = mongoose.model(modelName,this[schemaName],obj.collection)
-  console.log(this[modelName].modelName)
-})
-
 server.use(restify.acceptParser(server.acceptable))
 server.use(restify.queryParser())
 server.use(restify.bodyParser())
 
-server.get('/auth/:type/:id', function(req,res,next) {
+server.get('/auth/:device/:type/:id',
+  function(req,res,next) {
   if(req.params.type === "rfid") {
-    UserRFID.find({'rfidNo': req.params.id},
-      function(err,items){
-      if(err) console.log(err), res.send({auth: false})
-      else if(items.length > 0) {
-        // TODO:
-        // There should not be duplicate RFID numbers in the system.
-        // However if there ARE duplicates, and any single duplicate
-        // is unauthorized, then deny access.
-        res.send({auth: true})
-        lock_email.sendMail();
-      } else {
+    RFID.isAuthorizedForDevice({
+      device: req.params.device,
+      rfidNo: req.params.id
+    }, function(err, zone, item) {
+      if(err) {
+        // TODO: Send this to Log API?
+        console.log(err)
         res.send({auth: false})
+      } else {
+        // TODO: Log this access.
+        res.send({auth: item.auth})
+        // Notify via email that access was granted
+        lock_email.sendMail()
       }
-    })
+    });
   } else {
     res.send({auth: false})
   }

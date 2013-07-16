@@ -1,6 +1,9 @@
 span.item
-    label(for="Alias") Alias
-    input.searchBox(type="text", id="Alias", ng-model="newDevice.alias")
+	label(for="Alias") Alias
+	input#Alias.searchBox(type="text",name="Alias",ng-model="newDevice.alias")
 span.item
-    label(for="Type") Type
-    input.searchBox(type="text", id="Type", ng-model="newDevice.type")
+	label(for="Type") Type
+	input#Type.searchBox(type="text",name="Type",ng-model="newDevice.type")
+span.item
+	label(for="Hostname") Hostname
+	input#Hostname.searchBox(type="text",name="Hostname",ng-model="newDevice.hostname")

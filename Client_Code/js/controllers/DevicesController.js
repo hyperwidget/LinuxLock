@@ -9,14 +9,16 @@ adminConsoleApp.controller('DevicesController',
         $scope.saveData = function () {
             $scope.devices.push({
                 alias: $scope.newDevice.alias,
-                type: $scope.newDevice.type
+                type: $scope.newDevice.type,
+                hostname: $scope.newDevice.hostname
             });
             $scope.resetNewDevice();
         };
         $scope.resetNewDevice = function () {
             $scope.newDevice = {
                 alias: '',
-                type: ''
+                type: '',
+                hostname: ''
             }
         };
         $scope.cancelSave = function () {
@@ -24,7 +26,8 @@ adminConsoleApp.controller('DevicesController',
         };
         $scope.newDevice = {
             alias: '',
-            type: ''
+            type: '',
+            hostname: ''
         };
     }
 );

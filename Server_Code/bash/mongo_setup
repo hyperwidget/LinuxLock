@@ -62,6 +62,8 @@ zone1_id = ObjectId()
 zone2_id = ObjectId()
 
 // CREATE ZONES //
+// Why is `devices` an object? It should just be [ObjectId], to make
+// querying simpler.
 zone1 = { _id: zone1_id, name : "Main Office", devices: [{device_id: device2_id}] } // TIME LIMIT
 zone2 = { _id: zone2_id, name :  "Private Office", devices: [{device_id: device3_id}] } // TIME LIMIT
 
@@ -77,16 +79,22 @@ db.zones.insert(zone2)
 rfid1_id = ObjectId()
 rfid2_id = ObjectId()
 rfid3_id = ObjectId()
+rfid4_id = ObjectId()
+rfid5_id = ObjectId()
 
 //Create RDIF's //
-rfid1 = { _id : rfid1_id,  rfidNo : 123456, status: "a", cardHolder_id: cardHolder1_id }
-rfid2 = { _id : rfid2_id,  rfidNo : 23456, status: "a", cardHolder_id: cardHolder2_id }
-rfid3 = { _id : rfid3_id,  rfidNo : 12387, status: "n", cardHolder_id: cardHolder3_id }
+rfid1 = { _id : rfid1_id,  rfidNo : "0200D17485", status: "a", cardHolder_id: cardHolder1_id }
+rfid2 = { _id : rfid2_id,  rfidNo : "0200D14D3E", status: "a", cardHolder_id: cardHolder2_id }
+rfid3 = { _id : rfid3_id,  rfidNo : "0200D15473", status: "n", cardHolder_id: cardHolder3_id }
+rfid4 = { _id : rfid4_id,  rfidNo : "0200D2881A", status: "n", cardHolder_id: cardHolder1_id }
+rfid5 = { _id : rfid5_id,  rfidNo : "0200D1423F", status: "n", cardHolder_id: cardHolder2_id }
 
 // INSERT RFIDs TO DB //
 db.rfids.insert(rfid1)
 db.rfids.insert(rfid2)
-db.rfids.insert(rfid3) 
+db.rfids.insert(rfid3)
+db.rfids.insert(rfid4)
+db.rfids.insert(rfid5)
 
 // --------------------CARDHOLDER---------------//
 
