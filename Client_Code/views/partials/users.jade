@@ -3,24 +3,24 @@ div.leftPanel
         span Search By:
     span.item
         label(for="byFirstName") First Name
-        input.searchBox(type="text", id="byFirstName")
-        button.goButton Go
+        input.searchBox(type="text", ng-model="first", id="byFirstName")
+        button.goButton(ng-click="searchByFirstName()") Go
     span.item
         label(for="byLastName") Last Name
-        input.searchBox(type="text", id="byLastName")
-        button.goButton Go
+        input.searchBox(type="text", ng-model="last", id="byLastName")
+        button.goButton(ng-click="searchByLastName()") Go
     span.item
         label(for="byCardNumber") Card Number
         input.searchBox(type="text", id="byCardNumber")
         button.goButton Go
     span.item
         label(for="byEmail") Email
-        input.searchBox(type="text", id="byEmail")
-        button.goButton Go
+        input.searchBox(type="text", ng-model="email", id="byEmail")
+        button.goButton(ng-click="searchByEmail()") Go
     span.item
         label(for="byCardNumber") Phone Number
-        input.searchBox(type="text", id="byPhoneNumber")
-        button.goButton Go
+        input.searchBox(type="text", ng-model="phone", id="byPhoneNumber")
+        button.goButton(ng-click="searchByPhone()") Go
     span.item
         label(for="byZone") Zone
         input.searchBox(type="text", id="byZone")

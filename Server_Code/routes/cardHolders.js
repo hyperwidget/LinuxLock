@@ -10,7 +10,7 @@ exports.findAll = function(req, res, done) {
     } else if(req.query.email !== undefined){
         findAllWithParams({email: req.query.email}, done);
     } else if(req.query.phone !== undefined){
-        searchValue = {phone: req.query.phone};
+        findAllWithParams({phone: req.query.phone.toString()}, done);
     } else if(req.query.card !== undefined){
         rfids.findByRfidNo(req.query.card, function(err, rfid){
             if(rfid.length > 0){

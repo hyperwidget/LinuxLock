@@ -1,7 +1,7 @@
 require('./mongo_connect.js');
 devices = require('./devices.js');
 
-exports.findAll = function(done) {
+exports.findAll = function(req, res, done) {
     if(req.query.alias !== undefined){
         findAllWithParams({name: req.query.alias}, done);
     } else if(req.query.device !== undefined){
