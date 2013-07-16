@@ -53,8 +53,14 @@ server.get('/auth/:type/:id',
         else if(!item.rfid) status = "unknown-rfid"
         Event.log(item.rfid, item.device, item.auth, status, time)
         // Notify via email that access was granted
+        fullName = null
+        deviceName = null
+        if(item.user)
+          fullName = item.user.fullName;
+        if(item.device)
+          deviceName = item.device.name;
         if(item.auth)
-          lock_email.sendMail()
+          lock_email.sendMail(null,fullName,deviceName,time)
       }
     });
   } else {
