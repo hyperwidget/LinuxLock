@@ -1,25 +1,31 @@
-div.leftPanel
-    span.item
-        span Search By:
-    span.item
-        label(for="byFirstName") Device Alias
-        input.searchBox(type="text", id="byDeviceAlias")
-        button.goButton Go
-    span.item
-        label(for="byDeviceType") Device Type
-        input.searchBox(type="text", id="byDeviceType")
-        button.goButton Go
-div.mainPanel
-    span.item Results for...
-    span.item
-        button(ng-click="addDevice()") Add
-        button Edit
-        button Delete
-    span.item
-        table
-            tr
-                th Alias
-                th Type
-            tr(ng-repeat="device in devices", class="{{'row' + $index % 2 }}")
-                td {{device.name}}
-                td {{device.type}}
+.leftPanel
+	span.item
+		span Search By:
+	span.item
+		label(for="byFirstName") Device Alias
+		input#byDeviceAlias.searchBox(type="text",name="byDeviceAlias")
+		button.goButton Go
+	span.item
+		label(for="byDeviceType") Device Type
+		input#byDeviceType.searchBox(type="text",name="byDeviceType")
+		button.goButton Go
+	span.item
+		label(for="byDeviceHostname") Device Hostname
+		input#byDeviceHostname.searchBox(type="text",name="byDeviceHostname")
+		button.goButton Go
+.mainPanel
+	span.item Results for...
+	span.item
+		button(ng-click="addDevice()") Add
+		button Edit
+		button Delete
+	span.item
+		table
+			tr
+				th Alias
+				th Type
+				th Hostname
+			tr(ng-repeat="device in devices", class="{{'row' + $index % 3 }}")
+				td {{device.name}}
+				td {{device.type}}
+				td {{device.hostname}}
