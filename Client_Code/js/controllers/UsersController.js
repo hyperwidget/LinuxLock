@@ -6,7 +6,6 @@ adminConsoleApp.controller('UsersController',
         $scope.zones = dataManager.dataZones;
         $scope.currentUser = null;
         $scope.currentIndex = -1;
-        $scope.$watch($scope.users, function(){}, true);
 
         $scope.addUser = function () {
                 $scope.currentUser = new dataManager.User();

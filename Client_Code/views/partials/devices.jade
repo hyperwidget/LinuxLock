@@ -2,8 +2,8 @@
 	span.item
 		span Search By:
 	span.item
-		label(for="byFirstName") Device Alias
-		input#byDeviceAlias.searchBox(type="text",name="byDeviceAlias")
+		label(for="byFirstName") Device Name
+		input#byDeviceName.searchBox(type="text",name="byDeviceName")
 		button.goButton Go
 	span.item
 		label(for="byDeviceType") Device Type
@@ -17,15 +17,15 @@
 	span.item Results for...
 	span.item
 		button(ng-click="addDevice()") Add
-		button Edit
-		button Delete
+		button(ng-click="editDevice()") Edit
+		button(ng-click="deleteDevice()") Delete
 	span.item
 		table
 			tr
-				th Alias
+				th Name
 				th Type
 				th Hostname
-			tr(ng-repeat="device in devices", class="{{'row' + $index % 3 }}")
+			tr(ng-repeat="device in devices", class="{{'row' + $index % 2 }}", ng-click="changeCurrentDevice($event, $index)")
 				td {{device.name}}
 				td {{device.type}}
 				td {{device.hostname}}

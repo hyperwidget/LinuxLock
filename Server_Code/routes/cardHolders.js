@@ -152,7 +152,5 @@ exports.delete = function(id, done){
         collection.remove({'_id': o_id}, function(err, items){
             done(null);
         });
-    });
-
-    
+    });    
 };

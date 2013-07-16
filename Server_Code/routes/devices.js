@@ -39,7 +39,7 @@ exports.findById = function(id, done) {
 
 exports.findById = function(id, done) {
     var err,  o_id = new BSON.ObjectID.createFromHexString(id.toString());
-    console.log('findZoneById: ' + id);
+    console.log('findDeviceById: ' + id);
     db.collection('devices', function(err, collection) {
         collection.find({'_id': o_id}).toArray(function(err, items) {
             if(!err){
@@ -55,7 +55,7 @@ exports.add = function(req, done){
     var err;
     console.log('device add ' + req);
 
-    newDevice = {'name': req.body.name, 'type': req.body.type, 'hostname': req.body.hostname};
+    newDevice = {'name': req.body.alias, 'type': req.body.type, 'hostname': req.body.hostname};
 
     db.collection('devices', function(err, collection){
         collection.insert(newDevice, {safe:true},function(err, doc){
@@ -69,10 +69,8 @@ exports.add = function(req, done){
 };
 
 exports.edit = function(req, done){
-    var err, o_id = new BSON.ObjectID.createFromHexString(id.toString());;
-    console.log('device edit ' + req);
-
-    device = findById(req.body.id);
+    var err, o_id = new BSON.ObjectID.createFromHexString(req.body._id.toString());;
+    console.log('device edit ' + req.toString());
 
     db.collection('devices', function(err, collection){
         collection.update({'_id': o_id},
@@ -80,7 +78,8 @@ exports.edit = function(req, done){
             $set: {'name': req.body.name,
             'type': req.body.type,
             'hostname': req.body.hostname}
-        });
+        }, function(err, doc){
+            done(null)});
     });
 };
 
@@ -89,6 +88,8 @@ exports.delete = function(id, done){
     console.log('device delete ' + id);
 
     db.collection('devices', function(err, collection){
-        collection.delete({'_id': o_id});
+        collection.remove({'_id': o_id}, function(err, items){
+            done(null);
+        });
     });
 };

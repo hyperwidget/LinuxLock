@@ -205,7 +205,7 @@ app.delete('/cardHolder/:id', ensureAuthenticated,
 });
 
 //Devices
-app.get('/devices', ensureAuthenticated,
+app.get('/device', ensureAuthenticated,
   function(req, res){
     console.log('get devices');
     devices.findAll(req, res, function(err, items){
@@ -225,6 +225,14 @@ app.post('/device/:id', ensureAuthenticated,
   function(req, res){
     console.log('edit device');
     devices.edit(req, function(err){
+  });
+});
+
+app.delete('/device/:id', ensureAuthenticated,
+  function(req, res){
+    console.log('delete device');
+    devices.delete(req.params.id, function(err){
+      console.log(err);
   });
 });
 

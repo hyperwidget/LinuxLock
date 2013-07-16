@@ -2,8 +2,9 @@
 
 adminConsoleApp.factory('dataManager', function ($resource) {
     var User = $resource('cardHolder/:userId', {userId: '@_id'}),
+    Device = $resource('device/:deviceId', {deviceId: '@_id'}),
         usersData = User.query(),
-        devicesData = $.getJSON('devices'),
+        devicesData = Device.query(),
         zonesData = $.getJSON('zones'),
         adminsData = $.getJSON('admins'),
         rfidsData = $.getJSON('rfids'),
@@ -16,6 +17,7 @@ adminConsoleApp.factory('dataManager', function ($resource) {
         dataAdmins: adminsData,
         dataRfids: rfidsData,
         dataSettings: settingsData,
-        User: User
+        User: User,
+        Device: Device
     };
 });
