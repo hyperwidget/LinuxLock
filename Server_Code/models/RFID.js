@@ -69,13 +69,13 @@ RFID.statics.isAuthorizedForDevice = function(options,done) {
   }
   function findZones(done) {
     if(device && user) {
-      Zone.find(
+      Zone.findOne(
         { $and : [ { _id: { $in : userZones } }, 
         { devices : { $elemMatch : device._id } } ] },
         //{ $and : [ {_id: { $in : user.zones }}, 
         //{devices: {$elemMatch : device._id} } ] },
-      function(err, items) {
-        zones = items
+      function(err, item) {
+        zone = item
         done(err)
       })
     }
@@ -91,7 +91,7 @@ RFID.statics.isAuthorizedForDevice = function(options,done) {
         findZones(function(err) {
           if(err) console.log(err);
           var item = {
-            zones: zones,
+            zone: zone,
             device: device,
             user: user,
             rfid: rfid,
@@ -108,7 +108,7 @@ RFID.statics.isAuthorizedForDevice = function(options,done) {
           // Do we have a user associated with the card?
           else if(!user) item.auth = false;
           // Is that user authorized for any zones that contain the device?
-          else if(!zones || !zones.length) item.auth = false;
+          else if(!zone) item.auth = false;
           // TODO: Make an array of errors, and pass them all back
           // to the caller
           done(err, item);
