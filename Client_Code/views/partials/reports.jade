@@ -3,16 +3,37 @@ div.leftPanel
         span Search By:
     span.item
         label(for="byCardNumber") Card Number
-        input.searchBox(type="text", id="byCardNumber")
+        input#byCardNumber.searchBox(type="text", data-ng-model="rfid", name="byCardNumber")
     span.item
         label(for="byDevice") Device
-        input.searchBox(type="text", id="byDevice")
+        input#byDevice.searchBox(type="text", data-ng-model="dev", name="byDevice")
+    span.item
+        label(for="byCardHolder") User
+        input#byCardHolder.searchBox(type="text", data-ng-model="who", name="byCardHolder")
     span.item
         label(for="byFromDate") From
-        input.searchBox(type="text", id="byFromDate")
+        input#byFromDate.searchBox.date-picker(type="input", data-ng-model="from", name="byFromDate")
     span.item
         label(for="byToDate") To
-        input.searchBox(type="text", id="byToDate")
+        input#byToDate.searchBox.date-picker(type="input", data-ng-model="to", name="byToDate")
     span.item
-        button Generate Report
+        button(data-ng-click="updateReport()") Generate Report
 div.mainPanel
+    span.item
+        table
+            tr
+                th Date
+                th Time
+                th Status
+                th Device
+                th Hostname
+                th User
+                th RFID
+            tr(data-ng-repeat="event in events", class="{{'row' + $index % 2 }}", data-ng-click="changeCurrentDevice($ev, $index)")
+                td {{event.entryTime | date:'yyyy-MM-dd'}}
+                td {{event.entryTime | date:'HH:mm:ss'}}
+                td {{event.status}}
+                td {{event.device}}
+                td {{event.hostname}}
+                td {{event.cardHolder}}
+                td {{event.rfid}}
