@@ -239,10 +239,33 @@ app.delete('/device/:id', ensureAuthenticated,
 //Events
 app.get('/events', ensureAuthenticated,
   function(req, res){
-    console.log('get events');
-    events.findAll(function(err, items){
+    console.log('get events (' + req.params + ')');
+    // validate query if any
+    var from = req.param('from',null),
+        to = req.param('to',null),
+        who = req.param('who',null),
+        rfid = req.param('rfid',null),
+        dev = req.param('dev',null),
+        params = {}
+    if(from) {
+      // For some reason goddamned browser keeps sending these with
+      // surrounding quotes -- if they're present, remove them
+      from = from.replace(/^"/,'').replace(/"$/,'')
+      params.from = new Date(from)
+    }
+    if(to) {
+      // Same deal here...
+      to = to.replace(/^"/,'').replace(/"$/,'')
+      params.to = new Date(to)
+    }
+    if(who) params.who = who
+    if(rfid) params.rfid = rfid
+    if(dev) params.dev = dev
+    events.findWithParams(params, function(err, items) {
+      if(err) console.log(err)
+      if(!items) items=[]
       res.jsonp(items);
-  })
+    })
 });
 
 app.post('/event', ensureAuthenticated,
