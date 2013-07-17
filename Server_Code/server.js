@@ -247,8 +247,17 @@ app.get('/events', ensureAuthenticated,
         rfid = req.param('rfid',null),
         dev = req.param('dev',null),
         params = {}
-    if(from) params.from = from
-    if(to) params.to = to
+    if(from) {
+      // For some reason goddamned browser keeps sending these with
+      // surrounding quotes -- if they're present, remove them
+      from = from.replace(/^"/,'').replace(/"$/,'')
+      params.from = new Date(from)
+    }
+    if(to) {
+      // Same deal here...
+      to = to.replace(/^"/,'').replace(/"$/,'')
+      params.to = new Date(to)
+    }
     if(who) params.who = who
     if(rfid) params.rfid = rfid
     if(dev) params.dev = dev

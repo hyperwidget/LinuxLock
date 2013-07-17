@@ -3,33 +3,35 @@ div.leftPanel
         span Search By:
     span.item
         label(for="byCardNumber") Card Number
-        input#byCardNumber.searchBox(type="text", ng-model="rfid", name="byCardNumber")
+        input#byCardNumber.searchBox(type="text", data-ng-model="rfid", name="byCardNumber")
     span.item
         label(for="byDevice") Device
-        input#byDevice.searchBox(type="text", ng-model="dev", name="byDevice")
+        input#byDevice.searchBox(type="text", data-ng-model="dev", name="byDevice")
     span.item
         label(for="byCardHolder") User
-        input#byCardHolder.searchBox(type="text", ng-model="who", name="byCardHolder")
+        input#byCardHolder.searchBox(type="text", data-ng-model="who", name="byCardHolder")
     span.item
         label(for="byFromDate") From
-        input#byFromDate.searchBox(type="text", ng-model="from", name="byFromDate")
+        input#byFromDate.searchBox.date-picker(type="input", data-ng-model="from", name="byFromDate")
     span.item
         label(for="byToDate") To
-        input#byToDate.searchBox(type="text", ng-model="to", name="byToDate")
+        input#byToDate.searchBox.date-picker(type="input", data-ng-model="to", name="byToDate")
     span.item
-        button.goButton(ng-click="updateReport()") Generate Report
+        button(data-ng-click="updateReport()") Generate Report
 div.mainPanel
     span.item
         table
             tr
+                th Date
                 th Time
                 th Status
                 th Device
                 th Hostname
                 th User
                 th RFID
-            tr(ng-repeat="event in events", class="{{'row' + $index % 2 }}", ng-click="changeCurrentDevice($ev, $index)")
-                td {{event.entryTime}}
+            tr(data-ng-repeat="event in events", class="{{'row' + $index % 2 }}", data-ng-click="changeCurrentDevice($ev, $index)")
+                td {{event.entryTime | date:'yyyy-MM-dd'}}
+                td {{event.entryTime | date:'HH:mm:ss'}}
                 td {{event.status}}
                 td {{event.device}}
                 td {{event.hostname}}
