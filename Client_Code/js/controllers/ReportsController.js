@@ -7,27 +7,16 @@ adminConsoleApp.controller('ReportsController',
     $scope.pageNo = 0
     $scope.totalEntries = 0
     $scope.filter = { }
-    $scope.update = function(filter) {
-      if(!filter) filter = $scope.filter
-      if(!("pg" in filter)) filter.pg = $scope.pageNo
-      if(!("n") in filter) filter.n = $scope.pageSize
-      $scope.filter = filter
-      if(data && data.length) url = url + "?" + data
-
-    }
-
-    $scope.setFilter = function(rfidNo, device, startTime, endTime) {
-      var filter = {}, data, url = "Reports";
-      if(rfidNo && rfidNo instanceof String && rfidNo.length)
-        filter.rfid = rfidNo
-      if(device && device instanceof String && device.length)
-        filter.dev = device
-      if(startTime && startTime instanceof Date)
-        filter.from = startTime
-      if(endTime && endTime instanceof Date)
-        filter.to = endTime
-      // Update using this filter
-      $scope.update(filter)
+    $scope.updateReport = function(filter) {
+      // No pagination yet :(
+      var params = {
+        rfid: $scope.rfid,
+        dev: $scope.dev,
+        who: $scope.who,
+        from: $scope.from,
+        to: $scope.to
+      }
+      $scope.events = dataManager.Event.query(params)
     }
   }
 );

@@ -20,35 +20,47 @@ exports.findAll = function(callback) {
 //
 // TODO: rename 'rfid' to 'tag'? 'tag' seems more versatile, and it's also shorter!
 exports.findWithParams = function(params,done) {
+    console.log(params)
     db.collection('events', function(err, collection) {
+        var esc = new RegExp(/([.\^$*+?()[{\\|\-\]])/g)
+
         if(!collection) return done(err,[])
         // Build query -- Is this all OKAY? test this with Mocha damnit!
         var q = []
         if("from" in params && params.from instanceof Date) q.push({entryTime: {$gte: params.from}})
         if("to" in params && params.to instanceof Date) q.push({entryTime: {$lte: params.to}})
-        if("who" in params) {
+        if("who" in params && params.who.length) {
             // simulate SQL 'LIKE' in a really stupid way
             params.who = params.who.replace(/[^a-zA-Z0-9]+/,'.*').replace(/\s+/,'\s*')
             q.push({cardHolder: {$regex: '.*'+params.who+'.*', $options: 'i' }})
         }
-        if("dev" in params) {
-            exactMatch = params.dev
-            params.dev = params.dev.replace(/\./,'\\.').replace(/[^a-zA-Z0-9.:]+/,'.*')
+        if("dev" in params && params.dev.length) {
+            console.log('Before regex: "' + params.dev + '"')
+            var match = params.dev.replace(esc,"\\$1")
+            //exactMatch = params.dev.replace(/\//,'\\/').replace(/\./,'\\.')
+            //params.dev = exactMatch.replace(/[,\-\[\](){}!@#$%\^&*)]+/g,'.*')
             // Ugh this is horrible :(
-            q.push({$or: [{hostname: {$regex: '^'+exactMatch, $options: 'i'}},
-                          {device: {$regex: '.*'+params.dev+'.*', $options: 'i'}}]})
+            q.push({$or: [
+                {hostname: {$regex: '.*'+match+'.*', $options: 'i'}},
+                {device: {$regex: '.*'+match+'.*', $options: 'i'}}
+            ]})
         }
-        if("rfid" in params) {
+        if("rfid" in params && params.rfid.length) {
             // Just make it an exact match.
-            q.push({rfid: params.rfid})
+            var match = params.rfid.replace(esc,"\\$1")
+            q.push({rfid: {$regex: '.*'+match+'.*'}})
         }
-        if(q.length > 1) q={$and: [q]}
-        else if(q.length < 1) q = {}
+        if(q.length > 1) q = { $and: q }
+        else if(q.length > 0) q = q[0]
+        else q = {}
+        console.log("Query: " + JSON.stringify(q))
         collection.find(q).toArray(function(err, items) {
             // Do we need to filter this more for pagination?
             // Can we even do this efficiently in this case?
             // Whatever, for now don't even bother...
-            done(err, items)
+            console.log('Finished Events.findWithParams()!\n' + items)
+            if(err) done(err, items)
+            else done(null, items)
         })
     })
 }

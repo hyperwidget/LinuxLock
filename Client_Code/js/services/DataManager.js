@@ -11,7 +11,7 @@ adminConsoleApp.factory('dataManager', function ($resource) {
         adminsData = $.getJSON('admins'),
         rfidsData = RFID.query(),
         settingsData = $.getJSON('settings'),
-        eventsData = Event.query({n:50})
+        eventsData = Event.query()
     ;
     return {
         dataUsers: usersData,

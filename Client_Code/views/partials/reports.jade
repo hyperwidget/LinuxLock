@@ -3,21 +3,21 @@ div.leftPanel
         span Search By:
     span.item
         label(for="byCardNumber") Card Number
-        input#byCardNumber.searchBox(type="text", name="byCardNumber")
+        input#byCardNumber.searchBox(type="text", ng-model="rfid", name="byCardNumber")
     span.item
         label(for="byDevice") Device
-        input#byDevice.searchBox(type="text", name="byDevice")
+        input#byDevice.searchBox(type="text", ng-model="dev", name="byDevice")
     span.item
         label(for="byCardHolder") User
-        input#byCardHolder.searchBox(type="text", name="byCardHolder")
+        input#byCardHolder.searchBox(type="text", ng-model="who", name="byCardHolder")
     span.item
         label(for="byFromDate") From
-        input#byFromDate.searchBox(type="text", name="byFromDate")
+        input#byFromDate.searchBox(type="text", ng-model="from", name="byFromDate")
     span.item
         label(for="byToDate") To
-        input#byToDate.searchBox(type="text", name="byToDate")
+        input#byToDate.searchBox(type="text", ng-model="to", name="byToDate")
     span.item
-        button Generate Report
+        button.goButton(ng-click="updateReport()") Generate Report
 div.mainPanel
     span.item
         table
