@@ -128,15 +128,31 @@ db.cardHolders.insert(cardHolder3)
 
 // ------------------Events------------------------- //
 
-//event   // HOW ABOUT USER WHO ENTERED? OR RFID ?
+// device == device.name (assigned device name)
+// hostname == device.hostname (network address of lock device)
+// rfid == rfid.rfidNo (string representation of RFID tag)
+// cardHolder == cardHolder.fullName (see models/CardHolder.js, it's a virtual field)
+// entryTime == Date of entry -- converted to camelcase for consistency
+// status == string describing access type. Current values used include:
+//           "authorized" -- Tag is authorized for zone, auth is granted
+//           "unauthorized" -- User is not authorized for zone, or RFID is not active
+//           "unknown-device" -- The device that asked to unlock the door is not known?
+//           "unknown-rfid" -- The RFID tag used for the request is not known
+//           "bad-protocol" -- An unsupported authentication protocol is requested (Currently
+//                             only RFID is supported)
+//           "error" -- A miscelaneous error, perhaps a database failure
+//
+//           Additional error strings may be added later on, or these may be replaced with
+//           numbers to save space, who knows.
+//
+//event
 //{ _id: id,
-//device_id: {type:ObjectId, ref:"Device"},
-//rfid_id: {type:ObjectId, ref:"RFID"},
-//alias: {type:WAT}, // Is this always a Number? Maybe a String? WAT does it even 
-                     // represent?
-//entry_time: {type:Date, required:true},
-//status: {type:WAT} // Is this always a Number? Maybe a String? WAT
-                     // The heck does '42' vs '11' mean? :(
+//  device: {type:String, index:true, required:true, default:""},
+//  hostname: {type:String, index:true, required:true, default:""},
+//  rfid: {type:String, index:true, required:false},
+//  cardHolder: {type:String, index:true, required:false},
+//  entryTime: {type:Date, index:true, required:true},
+//  status: {type:String, required:true, default:""},
 //}
 
 
@@ -147,8 +163,23 @@ event3_id = ObjectId()
 
 
 // CREATE EVENT Objects //
-event1 = { _id : event1_id,  device_id : device1_id, rfid_id: rfid1_id, alias : 1, entry_time:  new Date(), status : 11 }
-event2 = { _id : event2_id,  device_id : device2_id, rfid_id: rfid3_id, alias : 2, entry_time:  new Date(), status : 42 }
+event1 = { _id : event1_id, 
+  device: "Lock3 Secondary", 
+  hostname: "192.168.0.26",
+  rfid: "0200D14D3E",
+  cardHolder: "Hunter Jansen",
+  entryTime: new Date(),
+  status : "authorized"
+}
+
+event2 = { _id : event2_id, 
+  device: "Lock3 Secondary",
+  hostname: "192.168.0.26",
+  rfid: "0200D17485",
+  cardHolder: "Alex D'Amico",
+  entryTime: new Date(),
+  status: "unauthorized"
+}
 
 // INSERT events to db //
 db.events.insert(event1)

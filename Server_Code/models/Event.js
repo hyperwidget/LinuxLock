@@ -2,10 +2,11 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     ObjectId = Schema.ObjectId,
     Event = new Schema({
-      device_id : {type:ObjectId, ref: "Device"},
-    	rfid_id: {type:ObjectId, ref: "RFID"},
-      alias: {type:String}, // What is this??? WAT. SHOULD IT BE INDEXED???
-      entry_time: {type:Date, required:true},
+      device: {type:String, index:true, required:true, default:""},
+      hostname: {type:String, index:true, required:true, default:""},
+    	rfid: {type:String, index:true, required:false},
+      cardHolder: {type:String, index:true, required:false},
+      entryTime: {type:Date, index:true, required:true},
       status: {type:String, required:true, default:""}, // WAT
   	});
 
@@ -13,7 +14,9 @@ Event.statics.log = function(rfid, device, authorized, status, time)
 {
   var RFID = require('./RFID'),
       Device = require('./Device'),
-      Event = mongoose.model('Event')
+      Event = mongoose.model('Event'),
+      user = "",
+      hostname = "",
   // status/time are both optional and may be passed in a weird order
   if(status && status instanceof Date) {
     var tmp = status
@@ -36,35 +39,63 @@ Event.statics.log = function(rfid, device, authorized, status, time)
     else status = "unauthorized"
   }
 
+  function getUserName(rfid) {
+    var result = null
+    // If we have an RFID object, use it to get the username.
+    mongoose.model('CardHolder').findOne({_id: rfid.cardHolder}, function(err, item) {
+      if(item) result = item.fullName
+      else result = ""
+    })
+    function sleep() {
+      if(result === null) setTimeout(sleep,0)
+    }
+    sleep()
+    return result
+  }
+
   // If rfid is instanceof RFID, use its _id, otherwise if it's
   // an instanceof ObjectId, use rfid, otherwise if it's a string,
   // convert string to ObjectId, otherwise null
   if(rfid instanceof RFID)
-    rfid = rfid._id;
+    rfid = rfid.rfidNo,
+    user = getUserName(item)
   else if(rfid instanceof ObjectId)
-    rfid = rfid // avoid lint-warnings
-  else if(rfid instanceof String)
-    // TODO: if this throws, make it null
-    rfid = new ObjectId(rfid)
+    mongoose.model('RFID').findOne({_id: rfid}, function(err, item) {
+      if(item) {
+        rfid = item.rfidNo
+        user = getUserName(item)
+      }
+      else rfid = ""
+    })
+  else if(rfid instanceof String) {}
   else
-    rfid = null
+    rfid = ""
 
   // Same deal for Device
-  if(device instanceof Device)
-    device = device._id
+  if(device instanceof Device ||
+  device instanceof Object &&
+  "device" in device && "hostname" in device) {
+    device = device.name
+    hostname = device.hostname
+  }
   else if(device instanceof ObjectId)
-    device = device // avoid lint-warnings
-  else if(device instanceof String)
-    // TODO: if this throws, make it null
-    device = new ObjectId(device)
+    mongoose.model('Device').findOne({_id: device}, function(err, item) {
+      if(!item) device = "", hostname = ""
+      else {
+        device = item.name
+        hostname = item.hostname
+      }
+    })
   else
-    device = null
+    device = "", hostname = ""
 
   Event.create({
-    device_id: device,
-    rfid_id: rfid,
+    device: device,
+    hostname: hostname,
+    rfid: rfid,
+    cardHolder: user,
     // Leave out alias by default, let the web app add them if they want to
-    entry_time: time,
+    entryTime: time,
     status: status
   }, function(err, item) {
     if(err) console.log('Error logging item: ' + err)

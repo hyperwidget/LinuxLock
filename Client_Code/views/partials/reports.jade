@@ -3,16 +3,35 @@ div.leftPanel
         span Search By:
     span.item
         label(for="byCardNumber") Card Number
-        input.searchBox(type="text", id="byCardNumber")
+        input#byCardNumber.searchBox(type="text", name="byCardNumber")
     span.item
         label(for="byDevice") Device
-        input.searchBox(type="text", id="byDevice")
+        input#byDevice.searchBox(type="text", name="byDevice")
+    span.item
+        label(for="byCardHolder") User
+        input#byCardHolder.searchBox(type="text", name="byCardHolder")
     span.item
         label(for="byFromDate") From
-        input.searchBox(type="text", id="byFromDate")
+        input#byFromDate.searchBox(type="text", name="byFromDate")
     span.item
         label(for="byToDate") To
-        input.searchBox(type="text", id="byToDate")
+        input#byToDate.searchBox(type="text", name="byToDate")
     span.item
         button Generate Report
 div.mainPanel
+    span.item
+        table
+            tr
+                th Time
+                th Status
+                th Device
+                th Hostname
+                th User
+                th RFID
+            tr(ng-repeat="event in events", class="{{'row' + $index % 2 }}", ng-click="changeCurrentDevice($ev, $index)")
+                td {{event.entryTime}}
+                td {{event.status}}
+                td {{event.device}}
+                td {{event.hostname}}
+                td {{event.cardHolder}}
+                td {{event.rfid}}

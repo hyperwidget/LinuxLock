@@ -12,6 +12,47 @@ exports.findAll = function(callback) {
     });
 };
 
+// 'from'       -- start Date
+// 'to'         -- end Date
+// 'who'        -- CardHolder for whom this Event concerns
+// 'rfid'       -- RFID tag for which this event concerns
+// 'dev'        -- Lock at which this Event occurred (name or hostname)
+//
+// TODO: rename 'rfid' to 'tag'? 'tag' seems more versatile, and it's also shorter!
+exports.findWithParams = function(params,done) {
+    db.collection('events', function(err, collection) {
+        if(!collection) return done(err,[])
+        // Build query -- Is this all OKAY? test this with Mocha damnit!
+        var q = []
+        if("from" in params && params.from instanceof Date) q.push({entryTime: {$gte: params.from}})
+        if("to" in params && params.to instanceof Date) q.push({entryTime: {$lte: params.to}})
+        if("who" in params) {
+            // simulate SQL 'LIKE' in a really stupid way
+            params.who = params.who.replace(/[^a-zA-Z0-9]+/,'.*').replace(/\s+/,'\s*')
+            q.push({cardHolder: {$regex: '.*'+params.who+'.*', $options: 'i' }})
+        }
+        if("dev" in params) {
+            exactMatch = params.dev
+            params.dev = params.dev.replace(/\./,'\\.').replace(/[^a-zA-Z0-9.:]+/,'.*')
+            // Ugh this is horrible :(
+            q.push({$or: [{hostname: {$regex: '^'+exactMatch, $options: 'i'}},
+                          {device: {$regex: '.*'+params.dev+'.*', $options: 'i'}}]})
+        }
+        if("rfid" in params) {
+            // Just make it an exact match.
+            q.push({rfid: params.rfid})
+        }
+        if(q.length > 1) q={$and: [q]}
+        else if(q.length < 1) q = {}
+        collection.find(q).toArray(function(err, items) {
+            // Do we need to filter this more for pagination?
+            // Can we even do this efficiently in this case?
+            // Whatever, for now don't even bother...
+            done(err, items)
+        })
+    })
+}
+
 exports.findById = function(id, done) {
     var err,  o_id = new BSON.ObjectID.createFromHexString(id.toString());
     console.log('findById: ' + id);

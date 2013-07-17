@@ -239,10 +239,24 @@ app.delete('/device/:id', ensureAuthenticated,
 //Events
 app.get('/events', ensureAuthenticated,
   function(req, res){
-    console.log('get events');
-    events.findAll(function(err, items){
+    console.log('get events (' + req.params + ')');
+    // validate query if any
+    var from = req.param('from',null),
+        to = req.param('to',null),
+        who = req.param('who',null),
+        rfid = req.param('rfid',null),
+        dev = req.param('dev',null),
+        params = {}
+    if(from) params.from = from
+    if(to) params.to = to
+    if(who) params.who = who
+    if(rfid) params.rfid = rfid
+    if(dev) params.dev = dev
+    events.findWithParams(params, function(err, items) {
+      if(err) console.log(err)
+      if(!items) items=[]
       res.jsonp(items);
-  })
+    })
 });
 
 app.post('/event', ensureAuthenticated,
