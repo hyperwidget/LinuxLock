@@ -236,6 +236,28 @@ app.delete('/device/:id', ensureAuthenticated,
   });
 });
 
+function dateify(str) {
+  // For some reason goddamned browser keeps sending these with
+  // surrounding quotes -- if they're present, remove them
+  str = str.replace(/^"/,'').replace(/"$/,'')
+  var time = Date.parse(str)
+  if(isNaN(time)) {
+      str = str.toLowerCase()
+      time = new Date()
+      if(str === "now") return time
+      else {
+        time.setHours(0,0,0,0)
+        if(str === "today") return time
+        else if(str === "yesterday") time.setDate(time.getDate() - 1)
+        else if(str === "last week") time.setDate(time.getDate() - 7)
+        else if(str === "last month") time.setDate(time.getDate() - 30)
+        else if(str === "last year") time.setDate(time.getDate() - 364)
+        else time = null // IDK
+        return time
+      }
+  } else return new Date(time)
+}
+
 //Events
 app.get('/events', ensureAuthenticated,
   function(req, res){
@@ -247,17 +269,8 @@ app.get('/events', ensureAuthenticated,
         rfid = req.param('rfid',null),
         dev = req.param('dev',null),
         params = {}
-    if(from) {
-      // For some reason goddamned browser keeps sending these with
-      // surrounding quotes -- if they're present, remove them
-      from = from.replace(/^"/,'').replace(/"$/,'')
-      params.from = new Date(from)
-    }
-    if(to) {
-      // Same deal here...
-      to = to.replace(/^"/,'').replace(/"$/,'')
-      params.to = new Date(to)
-    }
+    if(from) params.from = dateify(from)
+    if(to) params.to = dateify(to)
     if(who) params.who = who
     if(rfid) params.rfid = rfid
     if(dev) params.dev = dev

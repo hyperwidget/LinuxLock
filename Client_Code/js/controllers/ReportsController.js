@@ -6,7 +6,6 @@ adminConsoleApp.controller('ReportsController',
     $scope.pageSize = 50
     $scope.pageNo = 0
     $scope.totalEntries = 0
-    $scope.filter = { }
     $scope.updateReport = function(filter) {
       // No pagination yet :(
       var params = {
@@ -18,5 +17,6 @@ adminConsoleApp.controller('ReportsController',
       }
       $scope.events = dataManager.Event.query(params)
     }
+    $scope.updateReport()
   }
 );
