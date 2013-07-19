@@ -3,18 +3,18 @@ div.leftPanel
         span Search By:
     span.item
         label(for="byZoneAlias") Zone Alias
-        input.searchBox(type="text", id="byZoneAlias")
-        button.goButton Go
+        input.searchBox(type="text", ng-model="alias", id="byZoneAlias")
+        button.goButton(ng-click="searchByZoneAlias()") Go
     span.item
         label(for="byDevice") Device Alias
-        input.searchBox(type="text", id="byDevice")
-        button.goButton Go
+        input.searchBox(type="text", ng-model="device", id="byDevice")
+        button.goButton(ng-click="searchByDevice()") Go
 div.mainPanel
     span.item Results for...
     span.item
         button(ng-click="addZone()") Add
-        button Edit
-        button Delete
+        button(ng-click="editZone()") Edit
+        button(ng-click="deleteZone()") Delete
     span.item
         table
             tr

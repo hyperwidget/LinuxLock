@@ -20,9 +20,9 @@ exports.findAll = function(req, res, done) {
             }
         });
     } else if(req.query.zone !== undefined){
-        zones.findById(req.query.card, function(err, zone){
-            findAllWithParams({"cards.zone_id": zone[0]._id}, done);
-        });
+        o_id = new BSON.ObjectID.createFromHexString(req.query.zone.toString());
+        console.log(o_id);
+        findAllWithParams({"zones.zone_id": o_id}, done);
     } else {
         findAllWithParams('', done);
     }
@@ -125,18 +125,20 @@ exports.add = function(req, done){
 };
 
 exports.edit = function(req, done){
-    var err, o_id = new BSON.ObjectID.createFromHexString(req.body._id.toString());;
+    var err, o_id = new BSON.ObjectID.createFromHexString(req.body._id.toString());
+    zone_id = new BSON.ObjectID.createFromHexString(req.body.zone._id.toString());
 
     db.collection('cardHolders', function(err, collection){
         collection.update({'_id': o_id},
         {
-            $set: {'first': req.body.first,
-            'last': req.body.last,
-            'email': req.body.email,
-            'phone': req.body.phone,
-            'userRole': req.body.userRole,
-            'cards': req.body.cards,
-            'zones': req.body.zones}
+            first: req.body.first,
+            last: req.body.last,
+            email: req.body.email,
+            phone: req.body.phone,
+            userRole: req.body.userRole,
+            cards: req.body.cards,
+            zones: [{zone_id: zone_id}]
+        
         }, function(){
             done(null);
         });

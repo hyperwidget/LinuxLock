@@ -23,8 +23,8 @@ div.leftPanel
         button.goButton(ng-click="searchByPhone()") Go
     span.item
         label(for="byZone") Zone
-        input.searchBox(type="text", id="byZone")
-        button.goButton Go
+        select(id="byZone", ng-model="zone", ng-options="z as z.name for z in zones")
+        button.goButton(ng-click="searchByZone()") Go
 div.mainPanel
     span.item Results for...
     span.item

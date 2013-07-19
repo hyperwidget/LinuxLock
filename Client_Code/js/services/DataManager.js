@@ -4,15 +4,14 @@ adminConsoleApp.factory('dataManager', function ($resource) {
     var User = $resource('cardHolder/:userId', {userId: '@_id'}),
         Device = $resource('device/:deviceId', {deviceId: '@_id'}),
         RFID = $resource('rfid/:rfidId', {rfidId: '@_id'}),
+        Zone = $resource('zone/:zoneId', {rfidId: '@_id'}),
         Event = $resource('events'),
-        zonesData = $.getJSON('zones'),
         adminsData = $.getJSON('admins'),
         rfidsData = RFID.query(),
         settingsData = $.getJSON('settings'),
         eventsData = Event.query()
     ;
     return {
-        dataZones: zonesData,
         dataAdmins: adminsData,
         dataSettings: settingsData,
         dataEvents: eventsData,
@@ -20,5 +19,6 @@ adminConsoleApp.factory('dataManager', function ($resource) {
         Device: Device,
         RFID: RFID,
         Event: Event,
+        Zone: Zone,
     };
 });

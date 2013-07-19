@@ -2,29 +2,47 @@
 
 adminConsoleApp.controller('ZonesController',
     function ZonesController ($scope, dataManager, viewManager) {
-        $scope.zones = dataManager.dataZones;
+        $scope.zones = dataManager.Zone.query();
+        $scope.devices = dataManager.Device.query();
+        $scope.currentZone = null;
+        $scope.currentIndex = -1;
         $scope.addZone = function () {
+            $scope.currentZone = new dataManager.Zone();
             viewManager.showPopup('zones', $scope);
         };
         $scope.saveData = function () {
-            $scope.zones.push({
-                alias: $scope.newZone.alias,
-                devices: $scope.newZone.devices
-            });
-            $scope.resetNewZone();
+            $scope.currentZone.$save();
+            $scope.zones = dataManager.Zone.query();
         };
-        $scope.resetNewZone = function () {
-            $scope.newZone = {
-                alias: '',
-                devices: ''
+        $scope.editZone = function () {
+            if($scope.currentIndex !== -1){
+                $scope.currentZone =  $scope.zones[$scope.currentIndex];
+                viewManager.showPopup('zones', $scope);
             }
         };
-        $scope.cancelSave = function () {
-            $scope.resetNewZone();
+        $scope.deleteZone = function() {
+            $scope.currentZone = $scope.zones[$scope.currentIndex];
+            $scope.currentZone.$delete();
+            $scope.zones = dataManager.Zone.query();
         };
-        $scope.newZone = {
-            alias: '',
-            devices: ''
+        $scope.changeCurrentZone = function (event, index) {
+            $('.selected').removeClass('selected');
+            $(event.target.parentElement).addClass('selected');
+            $scope.currentIndex = index;
         };
+        $scope.searchByZoneAlias = function(){
+            if($scope.alias !== undefined && $scope.alias !== ''){
+                $scope.zones = dataManager.Zone.query({name: $scope.alias});
+            } else if($scope.alias == '') {
+                $scope.zones = dataManager.Zone.query();
+            }
+        }
+        $scope.searchByDevice = function(){
+            if($scope.device !== undefined && $scope.device !== ''){
+                $scope.zones = dataManager.Zone.query({device: $scope.device});
+            } else if($scope.device == '') {
+                $scope.zones = dataManager.Zone.query();
+            }
+        }        
     }
 );

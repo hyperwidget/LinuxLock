@@ -346,7 +346,7 @@ app.post('/setting/:id', ensureAuthenticated,
 });
 
 //Zones
-app.get('/zones', ensureAuthenticated,
+app.get('/zone', ensureAuthenticated,
   function(req, res){
     console.log('get zones');
     zones.findAll(req, res, function(err, items){

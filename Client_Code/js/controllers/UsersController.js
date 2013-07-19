@@ -3,7 +3,7 @@
 adminConsoleApp.controller('UsersController',
     function UsersController ($scope, dataManager, viewManager, $http) {
         $scope.users = dataManager.User.query();
-        $scope.zones = dataManager.dataZones;
+        $scope.zones = dataManager.Zone.query();
         $scope.currentUser = null;
         $scope.currentIndex = -1;
 
@@ -33,29 +33,37 @@ adminConsoleApp.controller('UsersController',
         };
         $scope.searchByFirstName = function(){
             if($scope.first !== undefined && $scope.first !== ''){
-                $scope.users = dataManager.User.query({first:  $scope.first});
+                $scope.users = dataManager.User.query({first: $scope.first});
             } else if($scope.first == '') {
                 $scope.users = dataManager.User.query();
             }
         }
         $scope.searchByLastName = function(){
             if($scope.last !== undefined && $scope.last !== ''){
-                $scope.users = dataManager.User.query({last:  $scope.last});
+                $scope.users = dataManager.User.query({last: $scope.last});
             } else if($scope.last == '') {
                 $scope.users = dataManager.User.query();
             }
         }
         $scope.searchByEmail = function(){
             if($scope.email !== undefined && $scope.email !== ''){
-                $scope.users = dataManager.User.query({email:  $scope.email});
+                $scope.users = dataManager.User.query({email: $scope.email});
             } else if($scope.email == '') {
                 $scope.users = dataManager.User.query();
             }
         }
         $scope.searchByPhone = function(){
             if($scope.phone !== undefined && $scope.phone !== ''){
-                $scope.users = dataManager.User.query({phone:  $scope.phone});
+                $scope.users = dataManager.User.query({phone: $scope.phone});
             } else if($scope.phone == '') {
+                $scope.users = dataManager.User.query();
+            }
+        }   
+        $scope.searchByZone = function(){
+            console.log($scope.zone._id);
+            if($scope.zone !== undefined && $scope.zone !== ''){
+                $scope.users = dataManager.User.query({zone: $scope.zone._id});
+            } else if($scope.zone == '') {
                 $scope.users = dataManager.User.query();
             }
         }      
