@@ -70,10 +70,8 @@ exports.add = function(req, done){
 };
 
 exports.edit = function(req, done){
-    var err, o_id = new BSON.ObjectID.createFromHexString(id.toString());;
+    var err, o_id = new BSON.ObjectID.createFromHexString(req.body._id.toString());;
     console.log('rfid edit ' + req);
-
-    rfid = findById(req.body.id);
 
     db.collection('rfids', function(err, collection){
         collection.update({'_id': o_id},
@@ -81,6 +79,8 @@ exports.edit = function(req, done){
             $set: {'rfidNo': req.body.rfidNo,
             'status': req.body.status,
             'cardHolder_id': req.body.cardHolder_id}
+         }, function(){
+            done(null);
          });
     });
 };

@@ -24,9 +24,6 @@ adminConsoleApp.controller('DevicesController',
             $scope.currentDevice.$delete();
             $scope.devices = dataManager.Device.query();
         };
-        $scope.cancelSave = function () {
-
-        };
         $scope.changeCurrentDevice = function (event, index) {
             $('.selected').removeClass('selected');
             $(event.target.parentElement).addClass('selected');

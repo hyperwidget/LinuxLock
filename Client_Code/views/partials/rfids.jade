@@ -3,12 +3,12 @@
         span Search By:
     span.item
         label(for="byCardNumber") Card Number
-        input.searchBox(type="text", id="byCardNumber")
-        button.goButton Go
+        input.searchBox(type="text", ng-model="rfidNo", id="byCardNumber")
+        button.goButton(ng-click="searchByRFIDNo()") Go
     span.item
         label(for="byStatus") Status
-        input.searchBox(type="text", id="byStatus")
-        button.goButton Go
+        input.searchBox(type="text", ng-model="status", id="byStatus")
+        button.goButton(ng-click="searchByRFIDStatus()") Go
 .mainPanel
     span.item Results for...
     span.item

@@ -2,7 +2,7 @@
 
 adminConsoleApp.controller('RFIDController',
     function RFIDsController ($scope, dataManager, viewManager) {
-        $scope.rfids = dataManager.dataRFIDs;
+        $scope.rfids = dataManager.RFID.query();
         $scope.currentRFID = null;
         $scope.currentIndex = -1;
         $scope.addRFID = function () {
@@ -11,7 +11,7 @@ adminConsoleApp.controller('RFIDController',
         };
         $scope.saveData = function () {
             $scope.currentRFID.$save();
-            $scope.rfids.push($scope.currentRFID);
+            $scope.rfids = dataManager.RFID.query();
         };
         $scope.editRFID = function () {
             if($scope.currentIndex !== -1){
@@ -22,10 +22,7 @@ adminConsoleApp.controller('RFIDController',
         $scope.deleteRFID = function() {
             $scope.currentRFID = $scope.rfids[$scope.currentIndex];
             $scope.currentRFID.$delete();
-            $scope.rfids.splice($scope.currentIndex, 1);
-        };
-        $scope.cancelSave = function () {
-
+            $scope.rfids = dataManager.RFID.query();
         };
         $scope.changeCurrentRFID = function (event, index) {
             $('.selected').removeClass('selected');
@@ -34,32 +31,16 @@ adminConsoleApp.controller('RFIDController',
         };
         $scope.searchByRFIDNo = function(){
             if($scope.rfidNo !== undefined && $scope.rfidNo !== ''){
-                $http.get('rfid?rfidNo=' + $scope.rfidNo).success(
-                    function(data, status, headers, config){
-                        $scope.rfids = data;
-                    }
-                );
+                $scope.rfids = dataManager.RFID.query({rfidNo: $scope.rfidNo});
             } else if($scope.rfidNo == '') {
-                $http.get('rfid').success(
-                    function(data, status, headers, config){
-                        $scope.rfids = data;
-                    }
-                );
+                $scope.rfids = dataManager.RFID.query();
             }
         }
         $scope.searchByRFIDStatus = function(){
             if($scope.status !== undefined && $scope.status !== ''){
-                $http.get('rfid?status=' + $scope.status).success(
-                    function(data, status, headers, config){
-                        $scope.rfids = data;
-                    }
-                );
+                $scope.rfids = dataManager.RFID.query({status: $scope.status});
             } else if($scope.status == '') {
-                $http.get('rfid').success(
-                    function(data, status, headers, config){
-                        $scope.rfids = data;
-                    }
-                );
+                $scope.rfids = dataManager.RFID.query();
             }
         }        
     }

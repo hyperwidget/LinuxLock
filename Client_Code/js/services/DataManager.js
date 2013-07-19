@@ -14,7 +14,6 @@ adminConsoleApp.factory('dataManager', function ($resource) {
     return {
         dataZones: zonesData,
         dataAdmins: adminsData,
-        dataRFIDs: rfidsData,
         dataSettings: settingsData,
         dataEvents: eventsData,
         User: User,
