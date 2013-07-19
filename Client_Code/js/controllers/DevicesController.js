@@ -2,7 +2,7 @@
 
 adminConsoleApp.controller('DevicesController',
     function DevicesController ($scope, dataManager, viewManager, $http) {
-        $scope.devices = dataManager.dataDevices;
+        $scope.devices = dataManager.Device.query();
         $scope.currentDevice = null;
         $scope.currentIndex = -1;
         $scope.addDevice = function () {
@@ -11,7 +11,7 @@ adminConsoleApp.controller('DevicesController',
         };
         $scope.saveData = function () {
             $scope.currentDevice.$save();
-            $scope.devices.push($scope.currentDevice);
+            $scope.devices = dataManager.Device.query();
         };
         $scope.editDevice = function () {
             if($scope.currentIndex !== -1){
@@ -22,7 +22,7 @@ adminConsoleApp.controller('DevicesController',
         $scope.deleteDevice = function() {
             $scope.currentDevice = $scope.devices[$scope.currentIndex];
             $scope.currentDevice.$delete();
-            $scope.devices.splice($scope.currentIndex, 1);
+            $scope.devices = dataManager.Device.query();
         };
         $scope.cancelSave = function () {
 
@@ -34,47 +34,23 @@ adminConsoleApp.controller('DevicesController',
         };
         $scope.searchByDeviceName = function(){
             if($scope.name !== undefined && $scope.name !== ''){
-                $http.get('device?name=' + $scope.name).success(
-                    function(data, status, headers, config){
-                        $scope.devices = data;
-                    }
-                );
+                $scope.devices = dataManager.Device.query({name: $scope.name});
             } else if($scope.name == '') {
-                $http.get('device').success(
-                    function(data, status, headers, config){
-                        $scope.devices = data;
-                    }
-                );
+                $scope.devices = dataManager.Device.query();
             }
         }
         $scope.searchByDeviceType = function(){
             if($scope.type !== undefined && $scope.type !== ''){
-                $http.get('device?type=' + $scope.type).success(
-                    function(data, status, headers, config){
-                        $scope.devices = data;
-                    }
-                );
+                $scope.devices = dataManager.Device.query({type: $scope.type});
             } else if($scope.type == '') {
-                $http.get('device').success(
-                    function(data, status, headers, config){
-                        $scope.devices = data;
-                    }
-                );
+                $scope.devices = dataManager.Device.query();
             }
         }
         $scope.searchByHostName = function(){
             if($scope.hostname !== undefined && $scope.hostname !== ''){
-                $http.get('device?hostname=' + $scope.hostname).success(
-                    function(data, status, headers, config){
-                        $scope.devices = data;
-                    }
-                );
+                $scope.devices = dataManager.Device.query({hostname: $scope.hostname});
             } else if($scope.hostname == '') {
-                $http.get('device').success(
-                    function(data, status, headers, config){
-                        $scope.devices = data;
-                    }
-                );
+                $scope.devices = dataManager.Device.query();
             }
         }
     }

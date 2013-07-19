@@ -201,7 +201,6 @@ app.delete('/cardHolder/:id', ensureAuthenticated,
   function(req, res){
     console.log('delete cardHolder');
     cardHolders.delete(req.params.id, function(err){
-      console.log(err);
       res.writeHead('200');
   });
 });
@@ -219,7 +218,7 @@ app.post('/device', ensureAuthenticated,
   function(req, res){
     console.log('add device');
     devices.add(req, function(err){
-
+      res.writeHead('200');
   });
 });
 
@@ -227,6 +226,7 @@ app.post('/device/:id', ensureAuthenticated,
   function(req, res){
     console.log('edit device');
     devices.edit(req, function(err){
+      res.writeHead('200');
   });
 });
 
@@ -234,7 +234,7 @@ app.delete('/device/:id', ensureAuthenticated,
   function(req, res){
     console.log('delete device');
     devices.delete(req.params.id, function(err){
-      console.log(err);
+      res.writeHead('200');
   });
 });
 
@@ -274,7 +274,7 @@ app.post('/event', ensureAuthenticated,
   function(req, res){
     console.log('add event');
     events.add(req, function(err){
-
+      res.writeHead('200');
   });
 });
 
@@ -282,6 +282,7 @@ app.post('/event/:id', ensureAuthenticated,
   function(req, res){
     console.log('edit event');
     events.edit(req, function(err){
+      res.writeHead('200');
   });
 });
 
@@ -298,7 +299,7 @@ app.post('/rfid', ensureAuthenticated,
   function(req, res){
     console.log('add rfid');
     rfids.add(req, function(err){
-
+      res.writeHead('200');
   });
 });
 
@@ -306,6 +307,7 @@ app.post('/rfid/:id', ensureAuthenticated,
   function(req, res){
     console.log('edit rfid');
     rfids.edit(req, function(err){
+      res.writeHead('200');
   });
 });
 
@@ -313,7 +315,7 @@ app.delete('/rfid/:id', ensureAuthenticated,
   function(req, res){
     console.log('delete rfid');
     rfids.delete(req.params.id, function(err){
-      console.log(err);
+      res.writeHead('200');
   });
 });
 
@@ -331,7 +333,7 @@ app.post('/setting', ensureAuthenticated,
   function(req, res){
     console.log('add setting');
     settings.add(req, function(err){
-
+      res.writeHead('200');
   });
 });
 
@@ -339,6 +341,7 @@ app.post('/setting/:id', ensureAuthenticated,
   function(req, res){
     console.log('edit setting');
     settings.edit(req, function(err){
+      res.writeHead('200');
   });
 });
 
@@ -355,7 +358,7 @@ app.post('/zone', ensureAuthenticated,
   function(req, res){
     console.log('add zone');
     zones.add(req, function(err){
-
+      res.writeHead('200');
   });
 });
 
@@ -363,12 +366,9 @@ app.post('/zone/:id', ensureAuthenticated,
   function(req, res){
     console.log('edit zone');
     zones.edit(req, function(err){
+      res.writeHead('200');
   });
 });
-
-
-
-
 
 //A Route for Creating a 500 Error (Useful to keep around)
 app.get('/500', function(req, res){
