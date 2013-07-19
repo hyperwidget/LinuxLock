@@ -2,7 +2,7 @@
 
 adminConsoleApp.controller('UsersController',
     function UsersController ($scope, dataManager, viewManager, $http) {
-        $scope.users = dataManager.dataUsers;
+        $scope.users = dataManager.User.query();
         $scope.zones = dataManager.dataZones;
         $scope.currentUser = null;
         $scope.currentIndex = -1;

@@ -125,10 +125,7 @@ exports.add = function(req, done){
 };
 
 exports.edit = function(req, done){
-    var err, o_id = new BSON.ObjectID.createFromHexString(id.toString());;
-    console.log('cardholder edit ' + req);
-
-    cardHolder = findById(req.body.id);
+    var err, o_id = new BSON.ObjectID.createFromHexString(req.body._id.toString());;
 
     db.collection('cardHolders', function(err, collection){
         collection.update({'_id': o_id},
@@ -140,6 +137,8 @@ exports.edit = function(req, done){
             'userRole': req.body.userRole,
             'cards': req.body.cards,
             'zones': req.body.zones}
+        }, function(){
+            done(null);
         });
     });
 };
