@@ -14,7 +14,6 @@ adminConsoleApp.factory('dataManager', function ($resource) {
         eventsData = Event.query()
     ;
     return {
-        dataUsers: usersData,
         dataDevices: devicesData,
         dataZones: zonesData,
         dataAdmins: adminsData,

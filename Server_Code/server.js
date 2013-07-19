@@ -185,7 +185,7 @@ app.post('/cardHolder', ensureAuthenticated,
   function(req, res){
     console.log('add cardHolder');
     cardHolders.add(req, function(err){
-
+      res.writeHead('200');
   });
 });
 
@@ -193,14 +193,16 @@ app.post('/cardHolder/:id', ensureAuthenticated,
   function(req, res){
     console.log('edit cardHolder');
     cardHolders.edit(req, function(err){
+      res.writeHead('200');
   });
 });
 
 app.delete('/cardHolder/:id', ensureAuthenticated,
   function(req, res){
-    console.log('edit cardHolder');
+    console.log('delete cardHolder');
     cardHolders.delete(req.params.id, function(err){
       console.log(err);
+      res.writeHead('200');
   });
 });
 
