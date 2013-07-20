@@ -17,20 +17,21 @@ adminConsoleApp.controller('UsersController',
         $scope.currentUser = null;
         $scope.currentIndex = -1;
         $scope.isAddZoneDisabled = true;
+        $scope.isRemoveZoneDisabled = true;
         $scope.selectedZoneToAdd = null;
-        $scope.selectedZonesToRemove = null;
+        $scope.selectedZoneToRemove = null;
 
         $scope.addUser = function () {
             $scope.selectedZoneToAdd = $scope.zones[0];
             $scope.currentUser = new dataManager.User();
-            $scope.selectedZonesToRemove = $scope.currentUser.zones[0];
+            $scope.selectedZoneToRemove = $scope.currentUser.zones[0];
             viewManager.showPopup('users', $scope);
         };
         $scope.editUser = function () {
             if($scope.currentIndex !== -1){
                 $scope.selectedZoneToAdd = $scope.zones[0];
                 $scope.currentUser =  $scope.users[$scope.currentIndex];
-                $scope.selectedZonesToRemove = $scope.currentUser.zones[0];
+                $scope.selectedZoneToRemove = $scope.currentUser.zones[0];
                 viewManager.showPopup('users', $scope);
             }
         };
@@ -38,11 +39,11 @@ adminConsoleApp.controller('UsersController',
             $scope.currentUser.$save();
             $scope.users = dataManager.User.query();
             $scope.selectedZoneToAdd = null;
-            $scope.selectedZonesToRemove = null;
+            $scope.selectedZoneToRemove = null;
         };
         $scope.cancelSave = function () {
             $scope.selectedZoneToAdd = null;
-            $scope.selectedZonesToRemove = null;
+            $scope.selectedZoneToRemove = null;
         };
         $scope.deleteUser = function() {
             $scope.currentUser = $scope.users[$scope.currentIndex];
@@ -95,11 +96,19 @@ adminConsoleApp.controller('UsersController',
             setAddZoneDisabled($scope.selectedZoneToAdd);
         };
         $scope.removeZone = function () {
-
+            var idx = -1;
+            var i = 0;
+            var zones = $scope.currentUser.zones;
+            while (idx == -1 && i < zones.length)
+                if (zones[i].zone_id == $scope.selectedZoneToRemove.zone_id) idx = i;
+            if (idx > -1) zones.splice(idx, 1);
+            $scope.selectedZoneToRemove = null;
         };
         $scope.$watch('selectedZoneToAdd', function (newValue, oldValue) {
             setAddZoneDisabled(newValue);
         });
-
+        $scope.$watch('selectedZoneToRemove', function (newValue, oldValue) {
+            $scope.isRemoveZoneDisabled = newValue == null;
+        });
     }
 );
