@@ -2,17 +2,31 @@
 
 adminConsoleApp.controller('UsersController',
     function UsersController ($scope, dataManager, viewManager, $http) {
+        var setAddZoneDisabled = function (newValue) {
+            var found = false;
+            if ($scope.currentUser != null) {
+                angular.forEach($scope.currentUser.zones, function(v, k) {
+                    if (v.zone_id == newValue._id) found = true;
+                });
+            }
+            $scope.isAddZoneDisabled = found;
+        };
+
         $scope.users = dataManager.User.query();
         $scope.zones = dataManager.Zone.query();
         $scope.currentUser = null;
         $scope.currentIndex = -1;
+        $scope.isAddZoneDisabled = true;
+        $scope.selectedZone = null;
 
         $scope.addUser = function () {
-                $scope.currentUser = new dataManager.User();
-                viewManager.showPopup('users', $scope);
+            $scope.selectedZone = $scope.zones[0];
+            $scope.currentUser = new dataManager.User();
+            viewManager.showPopup('users', $scope);
         };
         $scope.editUser = function () {
             if($scope.currentIndex !== -1){
+                $scope.selectedZone = $scope.zones[0];
                 $scope.currentUser =  $scope.users[$scope.currentIndex];
                 viewManager.showPopup('users', $scope);
             }
@@ -20,7 +34,11 @@ adminConsoleApp.controller('UsersController',
         $scope.saveData = function () {
             $scope.currentUser.$save();
             $scope.users = dataManager.User.query();
+            $scope.selectedZone = null;
         };
+        $scope.cancelSave = function () {
+            $scope.selectedZone = null;
+        }
         $scope.deleteUser = function() {
             $scope.currentUser = $scope.users[$scope.currentIndex];
             $scope.currentUser.$delete();
@@ -37,28 +55,28 @@ adminConsoleApp.controller('UsersController',
             } else if($scope.first == '') {
                 $scope.users = dataManager.User.query();
             }
-        }
+        };
         $scope.searchByLastName = function(){
             if($scope.last !== undefined && $scope.last !== ''){
                 $scope.users = dataManager.User.query({last: $scope.last});
             } else if($scope.last == '') {
                 $scope.users = dataManager.User.query();
             }
-        }
+        };
         $scope.searchByEmail = function(){
             if($scope.email !== undefined && $scope.email !== ''){
                 $scope.users = dataManager.User.query({email: $scope.email});
             } else if($scope.email == '') {
                 $scope.users = dataManager.User.query();
             }
-        }
+        };
         $scope.searchByPhone = function(){
             if($scope.phone !== undefined && $scope.phone !== ''){
                 $scope.users = dataManager.User.query({phone: $scope.phone});
             } else if($scope.phone == '') {
                 $scope.users = dataManager.User.query();
             }
-        }   
+        };
         $scope.searchByZone = function(){
             console.log($scope.zone._id);
             if($scope.zone !== undefined && $scope.zone !== ''){
@@ -66,6 +84,14 @@ adminConsoleApp.controller('UsersController',
             } else if($scope.zone == '') {
                 $scope.users = dataManager.User.query();
             }
-        }      
+        };
+        $scope.addZone = function () {
+            $scope.currentUser.zones.push({ zone_id: $scope.selectedZone._id, name: $scope.selectedZone.name });
+            setAddZoneDisabled($scope.selectedZone);
+        };
+        $scope.$watch('selectedZone', function (newValue, oldValue) {
+            setAddZoneDisabled(newValue);
+        });
+
     }
 );
