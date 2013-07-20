@@ -126,6 +126,10 @@ td, th {
     background: orange;
     color: #ffffff;
 }
+.list {
+    display: block;
+    width: 100%;
+}
 /* Popup styles */
 #popup {
     height: 100%;

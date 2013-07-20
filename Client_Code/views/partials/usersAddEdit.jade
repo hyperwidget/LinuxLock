@@ -15,8 +15,7 @@ span.item
     input.searchBox(type="text", id="phone", ng-model="currentUser.phone")
 span.item
     label(for="Zones") Zone
-    select(id="byZone", ng-model="selectedZone", ng-options="z as z.name for z in zones")
+    select(id="byZone", ng-model="selectedZoneToAdd", ng-options="z as z.name for z in zones")
     button(ng-disabled="isAddZoneDisabled", ng-click="addZone()") Add Zone
-    div
-        div(ng-repeat="zone in currentUser.zones") {{zone.zone_id}}
-    
+    select.list(ng-multiple="true", ng-model="selectedZonesToRemove", ng-options="userZone as userZone.zone_id for userZone in currentUser.zones")
+    button(ng-click="removeZone()") Remove Zones
