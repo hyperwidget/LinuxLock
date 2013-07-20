@@ -1,6 +1,6 @@
 require('./mongo_connect.js');
-rfids = require('./rfids');
-zones = require('./zones');
+Rfids = require('./rfids');
+Zones = require('./zones');
 
 exports.findAll = function(req, res, done) {
     if(req.query.first !== undefined){
@@ -40,14 +40,14 @@ function findAllWithParams(searchValue, done){
                         var cardCount = 0;
                         if(cardHolder.cards.length > 0){
                             cardHolder.cards.forEach(function(card){
-                                rfids.findById(card.rfid_id, function(err, cardInfo){
+                                Rfids.findById(card.rfid_id, function(err, cardInfo){
                                     card.rfidNo = cardInfo[0].rfidNo;
                                     if((++cardCount == cardHolder.cards.length) && (items[items.length - 1]._id == cardHolder._id)){
                                         items.forEach(function(cardHolder){
                                             if(cardHolder.zones.length > 0){
                                                 var zoneCount = 0;
                                                 cardHolder.zones.forEach(function(zone){
-                                                    zones.findById(zone.zone_id, function(err, zoneInfo){
+                                                    Zones.findById(zone.zone_id, function(err, zoneInfo){
                                                         zone.name = zoneInfo[0].name;
                                                         if((++zoneCount == cardHolder.zones.length) && (items[items.length - 1]._id == cardHolder._id)){
                                                             done(null, items);
@@ -65,7 +65,7 @@ function findAllWithParams(searchValue, done){
                             if(cardHolder.zones.length > 0){
                                 var zoneCount = 0;
                                 cardHolder.zones.forEach(function(zone){
-                                    zones.findById(zone.zone_id, function(err, zoneInfo){
+                                    Zones.findById(zone.zone_id, function(err, zoneInfo){
                                         zone.name = zoneInfo[0].name;
                                         if((++zoneCount == cardHolder.zones.length) && (items[items.length - 1]._id == cardHolder._id)){
                                             done(null, items);
@@ -103,10 +103,17 @@ exports.add = function(req, done){
     var err;
     console.log('cardholder add ' + req);
     o_id = new BSON.ObjectID();
-    zone_id = new BSON.ObjectID.createFromHexString(req.body.zone._id.toString());
-    card_id = new BSON.ObjectID.createFromHexString("51eadbf30a1ee1662d544ba2");
-    cardsArray = [];
-    zonesArray = [];  
+    zones = [];
+    cards = [];
+    for(i in req.body.zones) {
+        zone_id = new BSON.ObjectID.createFromHexString(req.body.zones[i].zone_id.toString());
+        zones.push({zone_id: zone_id});
+    }
+
+    for(i in req.body.cards) {
+        card_id = new BSON.ObjectID.createFromHexString(req.body.cards[i].card_id.toString());
+        cards.push({card_id: card_id});
+    }
 
     newCardHolder = {
         _id: o_id,
@@ -115,8 +122,8 @@ exports.add = function(req, done){
         email: req.body.email, 
         phone: req.body.phone, 
         userRole: "u", 
-        cards: [{rfid_id: card_id}], 
-        zones: [{zone_id: zone_id}]
+        cards: cards, 
+        zones: zones
     };
 
     db.collection('cardHolders', function(err, collection){
@@ -131,20 +138,32 @@ exports.add = function(req, done){
 };
 
 exports.edit = function(req, done){
+    console.log(req.body);
     var err, o_id = new BSON.ObjectID.createFromHexString(req.body._id.toString());
-    zone_id = new BSON.ObjectID.createFromHexString(req.body.zone._id.toString());
+    zones = [];
+    cards = [];
+    for(i in req.body.zones) {
+        zone_id = new BSON.ObjectID.createFromHexString(req.body.zones[i].zone_id.toString());
+        zones.push({zone_id: zone_id});
+    }
+
+    for(i in req.body.cards) {
+        rfid_id = new BSON.ObjectID.createFromHexString(req.body.cards[i].rfid_id.toString());
+        cards.push({rfid_id: rfid_id});
+    }
+
+    console.log(zones);
 
     db.collection('cardHolders', function(err, collection){
         collection.update({_id: o_id},
         {
             first: req.body.first,
-            last: req.body.last,
-            email: req.body.email,
-            phone: req.body.phone,
-            userRole: req.body.userRole,
-            cards: req.body.cards,
-            zones: [{zone_id: zone_id}]
-        
+            last: req.body.last, 
+            email: req.body.email, 
+            phone: req.body.phone, 
+            userRole: "u", 
+            cards: cards, 
+            zones: zones        
         }, function(){
             done(null);
         });

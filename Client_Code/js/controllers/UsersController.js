@@ -3,13 +3,15 @@
 adminConsoleApp.controller('UsersController',
     function UsersController ($scope, dataManager, viewManager, $http) {
         var setAddZoneDisabled = function (newValue) {
-            var found = false;
-            if ($scope.currentUser != null) {
-                angular.forEach($scope.currentUser.zones, function(v, k) {
-                    if (v.zone_id == newValue._id) found = true;
-                });
+            if(newValue !== null){
+                var found = false;
+                if ($scope.currentUser != null) {
+                    angular.forEach($scope.currentUser.zones, function(v, k) {
+                        if (v.zone_id == newValue._id) found = true;
+                    });
+                }
+                $scope.isAddZoneDisabled = found;
             }
-            $scope.isAddZoneDisabled = found;
         };
 
         $scope.users = dataManager.User.query();
@@ -24,7 +26,9 @@ adminConsoleApp.controller('UsersController',
         $scope.addUser = function () {
             $scope.selectedZoneToAdd = $scope.zones[0];
             $scope.currentUser = new dataManager.User();
-            $scope.selectedZoneToRemove = $scope.currentUser.zones[0];
+            if($scope.currentUser.zones !== undefined) {
+                $scope.selectedZoneToRemove = $scope.currentUser.zones[0];
+            }
             viewManager.showPopup('users', $scope);
         };
         $scope.editUser = function () {
@@ -92,7 +96,12 @@ adminConsoleApp.controller('UsersController',
             }
         };
         $scope.addZone = function () {
-            $scope.currentUser.zones.push({ zone_id: $scope.selectedZoneToAdd._id, name: $scope.selectedZoneToAdd.name });
+            if($scope.currentUser.zones !== undefined){
+                $scope.currentUser.zones.push({ zone_id: $scope.selectedZoneToAdd._id, name: $scope.selectedZoneToAdd.name });
+            } else {
+                $scope.currentUser.zones = [];
+                $scope.currentUser.zones.push({ zone_id: $scope.selectedZoneToAdd._id, name: $scope.selectedZoneToAdd.name });
+            }
             setAddZoneDisabled($scope.selectedZoneToAdd);
         };
         $scope.removeZone = function () {
