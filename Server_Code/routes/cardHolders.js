@@ -102,16 +102,22 @@ exports.findById = function(id, done) {
 exports.add = function(req, done){
     var err;
     console.log('cardholder add ' + req);
+    o_id = new BSON.ObjectID();
+    zone_id = new BSON.ObjectID.createFromHexString(req.body.zone._id.toString());
+    card_id = new BSON.ObjectID.createFromHexString("51eadbf30a1ee1662d544ba2");
     cardsArray = [];
     zonesArray = [];  
 
-    newCardHolder = {'first': req.body.first,
-        'last': req.body.last, 
-        'email': req.body.email, 
-        'phone': req.body.phone, 
-        'userRole': "u", 
-        'cards': cardsArray, 
-        'zones': zonesArray};
+    newCardHolder = {
+        _id: o_id,
+        first: req.body.first,
+        last: req.body.last, 
+        email: req.body.email, 
+        phone: req.body.phone, 
+        userRole: "u", 
+        cards: [{rfid_id: card_id}], 
+        zones: [{zone_id: zone_id}]
+    };
 
     db.collection('cardHolders', function(err, collection){
         collection.insert(newCardHolder, {safe:true},function(err, doc){
@@ -129,7 +135,7 @@ exports.edit = function(req, done){
     zone_id = new BSON.ObjectID.createFromHexString(req.body.zone._id.toString());
 
     db.collection('cardHolders', function(err, collection){
-        collection.update({'_id': o_id},
+        collection.update({_id: o_id},
         {
             first: req.body.first,
             last: req.body.last,
