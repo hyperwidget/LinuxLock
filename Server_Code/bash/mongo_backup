@@ -1,0 +1,59 @@
+#!/bin/bash
+
+#Receive 2 arguments
+#argument 1 - when to do backups
+#argument 2 - how many backups to do
+
+#NEED TO DO:
+  #figure out how to find  existing mongodump crontab and replace it
+  # figure out where to put crontabs
+  #figure out how to save max number to dv and compare with it
+  #figure out how to call script from Node.js
+  #figure out interface to restore
+
+#based on that create custom crontab amd pop the oldest file if there are too many files already
+if [[ $# = 0 ]]; then echo "Argument required (allowed: -w -d -m)"; exit 1; fi;
+
+while getopts :w:d:m: opt
+do
+   case $opt in
+       w) yflag=$OPTARG ;;
+       d) dflag=$OPTARG ;;
+       m) mflag=$OPTARG ;;
+       r) rflag=1 ;;
+       :) echo "$(basename $0): option -$OPTARG requires a value to specify amount of backups e.g -m 10" >&2
+          exit 2 ;;
+      \?) echo "$(basename $0): unknown option -$OPTARG available options: -m <max backup files> (monthly) -d <max backup files> (daily) -w <max weekly backup files>" >&2
+          exit 2 ;;
+   esac
+done
+
+#WEEKLY
+if [ "$wflag" != "" ]
+	#append to cronjob weekly mongodump	
+   then 
+	echo "You have chosen Weekly backup at 7:30 a.m every Monday with $wflag maximum amount of backups"
+	(crontab -l ; echo "30 7 * * 1 mongodump")| crontab -
+fi
+#DAILY
+if [ "$dflag" != "" ]
+	#append to cronjob daily mongodump
+   then 
+	echo "You have chosen Daily backup  at 7:30 a.m. Maximum amount of backups $dflag"
+		(crontab -l ; echo "30 7 * * * mongodump")| crontab -
+fi
+#MONTHLY
+if [ "$mflag" != "" ]
+	#append to cronjob monthly mongodump
+   then 
+	echo "You have chosen Monthly backup at 7:30 every 1st day of the month, with $mflag maximum amount of backups"
+	(crontab -l ; echo "30 7 1 * * mongodump")| crontab -
+	
+fi
+#RESTORE
+if [ "$rflag" = 1 ]
+	#call mongorestore on latest file!
+   then echo "Restored latest backup!"
+fi
+
+
