@@ -39,7 +39,7 @@ adminConsoleApp.controller('ZonesController',
         }
         $scope.searchByDevice = function(){
             if($scope.device !== undefined && $scope.device !== ''){
-                $scope.zones = dataManager.Zone.query({device: $scope.device});
+                $scope.zones = dataManager.Zone.query({device: $scope.device._id});
             } else if($scope.device == '') {
                 $scope.zones = dataManager.Zone.query();
             }

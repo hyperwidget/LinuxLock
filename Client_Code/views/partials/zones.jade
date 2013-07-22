@@ -6,8 +6,8 @@ div.leftPanel
         input.searchBox(type="text", ng-model="alias", id="byZoneAlias")
         button.goButton(ng-click="searchByZoneAlias()") Go
     span.item
-        label(for="byDevice") Device Alias
-        input.searchBox(type="text", ng-model="device", id="byDevice")
+        label(for="byDevice") Device
+        select(id="byDevice", ng-model="device", ng-options="d as d.name for d in devices")
         button.goButton(ng-click="searchByDevice()") Go
 div.mainPanel
     span.item Results for...
@@ -20,7 +20,7 @@ div.mainPanel
             tr
                 th Alias
                 th Devices
-            tr(ng-repeat="zone in zones", class="{{'row' + $index % 2 }}")
+            tr(ng-repeat="zone in zones", class="{{'row' + $index % 2 }}", ng-click="changeCurrentZone($event, $index)")
                 td {{zone.name}}
                 td 
                     div(ng-repeat="device in zone.devices"){{device.name}}

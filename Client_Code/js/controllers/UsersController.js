@@ -88,7 +88,6 @@ adminConsoleApp.controller('UsersController',
             }
         };
         $scope.searchByZone = function(){
-            console.log($scope.zone._id);
             if($scope.zone !== undefined && $scope.zone !== ''){
                 $scope.users = dataManager.User.query({zone: $scope.zone._id});
             } else if($scope.zone == '') {

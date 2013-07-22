@@ -21,7 +21,6 @@ exports.findAll = function(req, res, done) {
         });
     } else if(req.query.zone !== undefined){
         o_id = new BSON.ObjectID.createFromHexString(req.query.zone.toString());
-        console.log(o_id);
         findAllWithParams({"zones.zone_id": o_id}, done);
     } else {
         findAllWithParams('', done);

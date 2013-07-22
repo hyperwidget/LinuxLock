@@ -6,7 +6,7 @@ exports.findAll = function(req, res, done) {
         findAllWithParams({name: req.query.name}, done);
     } else if(req.query.device !== undefined){
         o_id = new BSON.ObjectID.createFromHexString(req.query.device.toString());
-        findAllWithParams({"devices.device_id": oid}, done);
+        findAllWithParams({"devices.device_id": o_id}, done);
     } else {
         findAllWithParams('', done);
     }
