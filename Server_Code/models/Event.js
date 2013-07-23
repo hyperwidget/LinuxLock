@@ -2,11 +2,11 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     ObjectId = Schema.ObjectId,
     Event = new Schema({
-      device: {type:String, index:true, required:true, default:""},
-      hostname: {type:String, index:true, required:true, default:""},
+      device: {type:String, index:true, required:false, default:"Unnamed Device"},
+      hostname: {type:String, index:true, required:false, default:""},
     	rfid: {type:String, index:true, required:false},
       cardHolder: {type:String, index:true, required:false},
-      entryTime: {type:Date, index:true, required:true},
+      entryTime: {type:Date, index:true, required:true, default: new Date()},
       status: {type:String, required:true, default:""}, // WAT
   	});
 
