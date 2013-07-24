@@ -16,7 +16,7 @@ adminConsoleApp.controller('ZonesController',
         };
         $scope.editZone = function () {
             if($scope.currentIndex !== -1){
-                $scope.currentZone =  $scope.zones[$scope.currentIndex];
+                $scope.currentZone = $scope.zones[$scope.currentIndex];
                 viewManager.showPopup('zones', $scope);
             }
         };

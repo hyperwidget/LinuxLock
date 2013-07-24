@@ -1,5 +1,6 @@
 require('./mongo_connect.js');
 devices = require('./devices.js');
+CardHolders = require('./cardholders');
 
 exports.findAll = function(req, res, done) {
     if(req.query.name !== undefined){
@@ -94,7 +95,19 @@ exports.delete = function(id, done){
 
     db.collection('zones', function(err, collection){
         collection.remove({'_id': o_id}, function(err, items){
-            done(null);
+            CardHolders.removeZoneFromCardHolders(id, done);
         });
+    });
+};
+
+exports.removeDeviceFromZones = function(id, done){
+    var err, o_id = new BSON.ObjectID.createFromHexString(id.toString());;
+    console.log('remove device ' + id + ' from zones');
+
+    db.collection('zones', function(err, collection){
+        collection.update({},
+            { $pull : { devices : { device_id : o_id } } }, {upsert:false, multi:true}, function(){
+                done(null);
+            } );
     });
 };

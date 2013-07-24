@@ -1,4 +1,5 @@
 require('./mongo_connect.js');
+CardHolders = require('./cardholders');
 
 exports.findAll = function(req, res, done) {
     console.log('get all rfidsssss');
@@ -91,7 +92,8 @@ exports.delete = function(id, done){
 
     db.collection('rfids', function(err, collection){
         collection.remove({'_id': o_id}, function(err, items){
-            done(null);
+            CardHolders.removeRFIDFromCardHolders(id, done);
         });
     });
+
 };

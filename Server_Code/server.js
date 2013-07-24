@@ -383,6 +383,15 @@ app.post('/zone/:id', ensureAuthenticated,
   });
 });
 
+app.delete('/zone/:id', ensureAuthenticated,
+  function(req, res){
+    console.log('delete zone');
+    zones.delete(req.params.id, function(err){
+      res.writeHead('200');
+  });
+});
+
+
 //A Route for Creating a 500 Error (Useful to keep around)
 app.get('/500', function(req, res){
     throw new Error('This is a 500 Error');

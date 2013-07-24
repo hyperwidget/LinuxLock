@@ -4,7 +4,7 @@ adminConsoleApp.factory('dataManager', function ($resource) {
     var User = $resource('cardHolder/:userId', {userId: '@_id'}),
         Device = $resource('device/:deviceId', {deviceId: '@_id'}),
         RFID = $resource('rfid/:rfidId', {rfidId: '@_id'}),
-        Zone = $resource('zone/:zoneId', {rfidId: '@_id'}),
+        Zone = $resource('zone/:zoneId', {zoneId: '@_id'}),
         Event = $resource('events'),
         adminsData = $.getJSON('admins'),
         rfidsData = RFID.query(),

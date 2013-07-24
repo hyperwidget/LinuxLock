@@ -179,3 +179,27 @@ exports.delete = function(id, done){
         });
     });    
 };
+
+exports.removeRFIDFromCardHolders = function(id, done){
+    var err, o_id = new BSON.ObjectID.createFromHexString(id.toString());;
+    console.log('remove RFID ' + id + ' from cardHolders');
+
+    db.collection('cardHolders', function(err, collection){
+        collection.update({},
+            { $pull : { cards : { rfid_id : o_id } } }, {upsert:false, multi:true}, function(){
+                done(null);
+            } );
+    });
+};
+
+exports.removeZoneFromCardHolders = function(id, done){
+    var err, o_id = new BSON.ObjectID.createFromHexString(id.toString());;
+    console.log('remove Zone ' + id + ' from cardHolders');
+
+    db.collection('cardHolders', function(err, collection){
+        collection.update({},
+            { $pull : { zones : { zone_id : o_id } } }, {upsert:false, multi:true}, function(){
+                done(null);
+            } );
+    });
+};
