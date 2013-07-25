@@ -1,6 +1,6 @@
 require('./mongo_connect.js');
 devices = require('./devices.js');
-CardHolders = require('./cardholders');
+CardHolders = require('./cardHolders');
 
 exports.findAll = function(req, res, done) {
     if(req.query.name !== undefined){

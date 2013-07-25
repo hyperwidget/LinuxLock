@@ -1,5 +1,5 @@
 require('./mongo_connect.js');
-CardHolders = require('./cardholders');
+CardHolders = require('./cardHolders');
 
 exports.findAll = function(req, res, done) {
     console.log('get all rfidsssss');
