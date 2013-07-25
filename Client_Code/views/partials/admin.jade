@@ -3,19 +3,19 @@ div.leftPanel
         span Search By:
     span.item
         label(for="byName") Name
-        input.searchBox(type="text", id="byName")
-        button.goButton Go
+        input.searchBox(type="text", ng-model="name", id="byName")
+        button.goButton(ng-click="searchByName()") Go
     span.item
         label(for="byUserName") User Name
-        input.searchBox(type="text", id="byUserName")
-        button.goButton Go
+        input.searchBox(type="text", ng-model="userName", id="byUserName")
+        button.goButton(ng-click="searchByUserName()") Go
 div.mainPanel
     span.item
         Results Results for...
     span.item
         button(ng-click="addAdmin()") Add
-        button Edit
-        button Delete
+        button(ng-click="editAdmin()") Edit
+        button(ng-click="deleteAdmin()") Delete
     span.item
         table
             tr
@@ -27,7 +27,7 @@ div.mainPanel
                 th Generate Reports
                 th Manage Backups
                 th Manage Settings
-            tr(ng-repeat="admin in admins", class="{{'row' + $index % 2 }}")
+            tr(ng-repeat="admin in admins", class="{{'row' + $index % 2 }}", ng-click="changeCurrentAdmin($event, $index)")
                 td {{admin.name}}
                 td {{admin.username}}
                 td {{admin.canManageUsers}}

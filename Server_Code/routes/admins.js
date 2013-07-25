@@ -68,15 +68,15 @@ exports.add = function(req, done){
     var err;
     console.log('admin add ' + req);
 
-    newAdmin = {'name': req.body.name, 
-        'username': req.body.username,
-        'password': req.body.password,
-        'canManageUsers': req.body.canManageUsers,
-        'canManageDevices': req.body.canManageDevices,
-        'canManageZones': req.body.canManageZones,
-        'canGenerateReports': req.body.canGenerateReports,
-        'canManageBackups': req.body.canManageBackups,
-        'canManageSettings': req.body.canManageSettings};
+    newAdmin = {name: req.body.name, 
+        username: req.body.username,
+        password: req.body.password,
+        canManageUsers: req.body.canManageUsers,
+        canManageDevices: req.body.canManageDevices,
+        canManageZones: req.body.canManageZones,
+        canGenerateReports: req.body.canGenerateReports,
+        canManageBackups: req.body.canManageBackups,
+        canManageSettings: req.body.canManageSettings};
 
     db.collection('admins', function(err, collection){
         collection.insert(newAdmin, {safe:true}, function(err, doc){
@@ -98,15 +98,17 @@ exports.edit = function(req, done){
     db.collection('admins', function(err, collection){
         collection.update({'_id': o_id},
         {
-            $set: {'name': req.body.name, 
-            'username': req.body.username,
-            'password': req.body.password,
-            'canManageUsers': req.body.canManageUsers,
-            'canManageDevices': req.body.canManageDevices,
-            'canManageZones': req.body.canManageZones,
-            'canGenerateReports': req.body.canGenerateReports,
-            'canManageBackups': req.body.canManageBackups,
-            'canManageSettings': req.body.canManageSettings }
+            $set: {name: req.body.name, 
+            username: req.body.username,
+            password: req.body.password,
+            canManageUsers: req.body.canManageUsers,
+            canManageDevices: req.body.canManageDevices,
+            canManageZones: req.body.canManageZones,
+            canGenerateReports: req.body.canGenerateReports,
+            canManageBackups: req.body.canManageBackups,
+            canManageSettings: req.body.canManageSettings }
+         }, function(){
+            done(null);
          });
     });
 };
@@ -116,6 +118,8 @@ exports.delete = function(id, done){
     console.log('admin delete ' + id);
 
     db.collection('admins', function(err, collection){
-        collection.delete({'_id': o_id});
+        collection.delete({'_id': o_id}, function(err, items){
+            done(null);
+        });
     });
 };

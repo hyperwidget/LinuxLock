@@ -1,27 +1,27 @@
 span.item
     label(for="name") Name
-    input.searchBox(type="text", id="name", ng-model="newAdmin.name")
+    input.searchBox(type="text", id="name", ng-model="currentAdmin.name")
 span.item
     label(for="username") User Name
-    input.searchBox(type="text", id="username", ng-model="newAdmin.username")
+    input.searchBox(type="text", id="username", ng-model="currentAdmin.username")
 span.item
     label(for="password") Password
-    input.searchBox(type="password", id="password", ng-model="newAdmin.password")
+    input.searchBox(type="password", id="password", ng-model="currentAdmin.password")
 span.item
     label(for="manageUsers") Manage Users
-    input(type="checkbox", id="manageUsers", ng-model="newAdmin.canManageUsers")
+    input(type="checkbox", id="manageUsers", ng-model="currentAdmin.canManageUsers")
 span.item
     label(for="manageDevices") Manage Devices
-    input(type="checkbox", id="manageDevices", ng-model="newAdmin.canManageDevices")
+    input(type="checkbox", id="manageDevices", ng-model="currentAdmin.canManageDevices")
 span.item
     label(for="manageZones") Manage Zones
-    input(type="checkbox", id="manageZones", ng-model="newAdmin.canManageZones")
+    input(type="checkbox", id="manageZones", ng-model="currentAdmin.canManageZones")
 span.item
     label(for="generateReports") Generate Reports
-    input(type="checkbox", id="generateReports", ng-model="newAdmin.canGenerateReports")
+    input(type="checkbox", id="generateReports", ng-model="currentAdmin.canGenerateReports")
 span.item
     label(for="manageBackups") Manage Backups
-    input(type="checkbox", id="manageBackups", ng-model="newAdmin.canManageBackups")
+    input(type="checkbox", id="manageBackups", ng-model="currentAdmin.canManageBackups")
 span.item
     label(for="manageSettings") Manage Settings
-    input(type="checkbox", id="manageSettings", ng-model="newAdmin.canManageSettings")
+    input(type="checkbox", id="manageSettings", ng-model="currentAdmin.canManageSettings")

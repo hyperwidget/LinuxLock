@@ -5,14 +5,13 @@ adminConsoleApp.factory('dataManager', function ($resource) {
         Device = $resource('device/:deviceId', {deviceId: '@_id'}),
         RFID = $resource('rfid/:rfidId', {rfidId: '@_id'}),
         Zone = $resource('zone/:zoneId', {zoneId: '@_id'}),
+        Admin = $resource('admin/:adminId', {adminId: '@_id'}),
         Event = $resource('events'),
-        adminsData = $.getJSON('admins'),
         rfidsData = RFID.query(),
         settingsData = $.getJSON('settings'),
         eventsData = []
     ;
     return {
-        dataAdmins: adminsData,
         dataSettings: settingsData,
         dataEvents: eventsData,
         User: User,
@@ -20,5 +19,6 @@ adminConsoleApp.factory('dataManager', function ($resource) {
         RFID: RFID,
         Event: Event,
         Zone: Zone,
+        Admin: Admin,
     };
 });

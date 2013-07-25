@@ -149,7 +149,7 @@ app.get('/templates/:name', ensureAuthenticated,
 });
 
 // Admins
-app.get('/admins', ensureAuthenticated,
+app.get('/admin', ensureAuthenticated,
   function(req, res){
     console.log('get admins');
     admins.findAll(req, res, function(err, items){
@@ -169,6 +169,14 @@ app.post('/admin/:id', ensureAuthenticated,
   function(req, res){
     console.log('edit admins');
     admins.edit(req, function(err){
+  });
+});
+
+app.delete('/admin/:id', ensureAuthenticated,
+  function(req, res){
+    console.log('delete admin');
+    cardHolders.delete(req.params.id, function(err){
+      res.writeHead('200');
   });
 });
 

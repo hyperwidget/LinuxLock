@@ -1,51 +1,50 @@
 'use strict';
 
 adminConsoleApp.controller('AdminController',
-    function AdminController ($scope, dataManager, viewManager) {
-        $scope.admins = dataManager.dataAdmins;
+    function AdminsController ($scope, dataManager, viewManager) {
+        $scope.admins = dataManager.Admin.query();
+        $scope.currentAdmin = null;
+        $scope.currentIndex = -1;
         $scope.addAdmin = function () {
+            $scope.currentAdmin = new dataManager.Admin();
             viewManager.showPopup('admin', $scope);
         };
         $scope.saveData = function () {
-            $scope.admins.push({
-                name: $scope.newAdmin.name,
-                username: $scope.newAdmin.username,
-                password: $scope.newAdmin.password,
-                canManageUsers: $scope.newAdmin.canManageUsers,
-                canManageDevices: $scope.newAdmin.canManageDevices,
-                canManageZones: $scope.newAdmin.canManageZones,
-                canGenerateReports: $scope.newAdmin.canGenerateReports,
-                canManageBackups: $scope.newAdmin.canManageBackups,
-                canManageSettings: $scope.newAdmin.canManageSettings
-            });
-            $scope.resetNewAdmin();
+            $scope.currentAdmin.$save();
+            $scope.admins = dataManager.Admin.query();
         };
-        $scope.resetNewAdmin = function () {
-            $scope.newAdmin = {
-                name: '',
-                username: '',
-                password: '',
-                canManageUsers: false,
-                canManageDevices: false,
-                canManageZones: false,
-                canGenerateReports: false,
-                canManageBackups: false,
-                canManageSettings: false
+        $scope.editAdmin = function () {
+            if($scope.currentIndex !== -1){
+                $scope.currentAdmin = $scope.admins[$scope.currentIndex];
+                viewManager.showPopup('admin', $scope);
             }
         };
-        $scope.cancelSave = function () {
-            $scope.resetNewAdmin();
+        $scope.deleteAdmin = function() {
+            $scope.confirm = confirm('Are you sure you want to delete this admin?');
+            if($scope.confirm === true){
+                $scope.currentAdmin = $scope.admins[$scope.currentIndex];
+                $scope.currentAdmin.$delete();
+                $scope.admins = dataManager.Admin.query();
+            }
         };
-        $scope.newAdmin = {
-            name: '',
-            username: '',
-            password: '',
-            canManageUsers: false,
-            canManageDevices: false,
-            canManageZones: false,
-            canGenerateReports: false,
-            canManageBackups: false,
-            canManageSettings: false
+        $scope.changeCurrentAdmin = function (event, index) {
+            $('.selected').removeClass('selected');
+            $(event.target.parentElement).addClass('selected');
+            $scope.currentIndex = index;
         };
+        $scope.searchByName = function(){
+            if($scope.name !== undefined && $scope.name !== ''){
+                $scope.admins = dataManager.Admin.query({name: $scope.name});
+            } else if($scope.name == '') {
+                $scope.admins = dataManager.Admin.query();
+            }
+        }
+        $scope.searchByUserName = function(){
+            if($scope.userName !== undefined && $scope.userName !== ''){
+                $scope.admins = dataManager.Admin.query({userName: $scope.userName});
+            } else if($scope.userName == '') {
+                $scope.admins = dataManager.Admin.query();
+            }
+        }        
     }
 );
