@@ -27,8 +27,10 @@ exports.findWithParams = function(params,done) {
         if(!collection) return done(err,[])
         // Build query -- Is this all OKAY? test this with Mocha damnit!
         var q = []
-        if("from" in params && params.from instanceof Date) q.push({entryTime: {$gte: params.from}})
-        if("to" in params && params.to instanceof Date) q.push({entryTime: {$lte: params.to}})
+        if("from" in params && params.from instanceof Date)
+          q.push({entryTime: {$gte: params.from}})
+        if("to" in params && params.to instanceof Date)
+          q.push({entryTime: {$lte: params.to}})
         if("who" in params && params.who.length) {
             // simulate SQL 'LIKE' in a really stupid way
             params.who = params.who.replace(/[^a-zA-Z0-9]+/,'.*').replace(/\s+/,'\s*')
@@ -53,12 +55,10 @@ exports.findWithParams = function(params,done) {
         if(q.length > 1) q = { $and: q }
         else if(q.length > 0) q = q[0]
         else q = {}
-        console.log("Query: " + JSON.stringify(q))
         collection.find(q).toArray(function(err, items) {
             // Do we need to filter this more for pagination?
             // Can we even do this efficiently in this case?
             // Whatever, for now don't even bother...
-            console.log('Finished Events.findWithParams()!\n' + items)
             if(err) done(err, items)
             else done(null, items)
         })
@@ -67,7 +67,7 @@ exports.findWithParams = function(params,done) {
 
 exports.findById = function(id, done) {
     var err,  o_id = new BSON.ObjectID.createFromHexString(id.toString());
-    console.log('findById: ' + id);
+    console.log('/event/:id findById: ' + id);
     db.collection('events', function(err, collection) {
         collection.find({'_id': o_id}).toArray(function(err, items) {
             if(!err){
@@ -81,7 +81,7 @@ exports.findById = function(id, done) {
 
 exports.add = function(req, done){
     var err;
-    console.log('event add ' + req);
+    console.log('/event add ' + req);
 
     newEvent = {'device_id': req.body.device_id, 
     'rfid_id': req.body.rfid_id, 
@@ -102,7 +102,7 @@ exports.add = function(req, done){
 
 exports.edit = function(req, done){
     var err, o_id = new BSON.ObjectID.createFromHexString(id.toString());;
-    console.log('event edit ' + req);
+    console.log('/event/:id edit ' + req);
 
     event = findById(req.body.id);
 

@@ -2,11 +2,11 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     ObjectId = Schema.ObjectId,
     Event = new Schema({
-      device: {type:String, index:true, required:true, default:""},
-      hostname: {type:String, index:true, required:true, default:""},
+      device: {type:String, index:true, required:false, default:"Unnamed Device"},
+      hostname: {type:String, index:true, required:false, default:""},
     	rfid: {type:String, index:true, required:false},
       cardHolder: {type:String, index:true, required:false},
-      entryTime: {type:Date, index:true, required:true},
+      entryTime: {type:Date, index:true, required:true, default: new Date()},
       status: {type:String, required:true, default:""}, // WAT
   	});
 
@@ -16,7 +16,7 @@ Event.statics.log = function(rfid, device, authorized, status, time)
       Device = require('./Device'),
       Event = mongoose.model('Event'),
       user = "",
-      hostname = "",
+      hostname = ""
   // status/time are both optional and may be passed in a weird order
   if(status && status instanceof Date) {
     var tmp = status
@@ -56,10 +56,10 @@ Event.statics.log = function(rfid, device, authorized, status, time)
   // If rfid is instanceof RFID, use its _id, otherwise if it's
   // an instanceof ObjectId, use rfid, otherwise if it's a string,
   // convert string to ObjectId, otherwise null
-  if(rfid instanceof RFID)
-    rfid = rfid.rfidNo,
-    user = getUserName(item)
-  else if(rfid instanceof ObjectId)
+  if(rfid instanceof RFID) {
+    rfid = rfid.rfidNo
+    user = getUserName(rfid)
+  } else if(rfid instanceof ObjectId)
     mongoose.model('RFID').findOne({_id: rfid}, function(err, item) {
       if(item) {
         rfid = item.rfidNo

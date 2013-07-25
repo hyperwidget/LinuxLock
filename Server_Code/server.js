@@ -20,6 +20,7 @@ var passport = require('passport'),
 app.configure(function(){
   app.set('views', './../Client_Code/views');
   app.set('view options', { layout: false });
+  app.use(express.logger('dev'));
   app.use(connect.bodyParser());
   app.use(express.cookieParser());
   app.use(express.session({ secret: "shhhhhhhhh!"}));
@@ -269,9 +270,8 @@ function dateify(str) {
 }
 
 //Events
-app.get('/events', ensureAuthenticated,
+app.get('/event', ensureAuthenticated,
   function(req, res){
-    console.log('get events (' + req.params + ')');
     // validate query if any
     var from = req.param('from',null),
         to = req.param('to',null),
