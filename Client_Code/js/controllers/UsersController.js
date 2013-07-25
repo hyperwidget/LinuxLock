@@ -50,9 +50,12 @@ adminConsoleApp.controller('UsersController',
             $scope.selectedZoneToRemove = null;
         };
         $scope.deleteUser = function() {
-            $scope.currentUser = $scope.users[$scope.currentIndex];
-            $scope.currentUser.$delete();
-            $scope.users = dataManager.User.query();
+            $scope.confirm = confirm('Are you sure you want to delete this user?');
+            if($scope.confirm === true){
+                $scope.currentUser = $scope.users[$scope.currentIndex];
+                $scope.currentUser.$delete();
+                $scope.users = dataManager.User.query();                
+            }
         };
         $scope.changeCurrentUser = function (event, index) {
             $('.selected').removeClass('selected');

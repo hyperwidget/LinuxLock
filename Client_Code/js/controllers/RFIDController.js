@@ -20,9 +20,12 @@ adminConsoleApp.controller('RFIDController',
             }
         };
         $scope.deleteRFID = function() {
-            $scope.currentRFID = $scope.rfids[$scope.currentIndex];
-            $scope.currentRFID.$delete();
-            $scope.rfids = dataManager.RFID.query();
+            $scope.confirm = confirm('Are you sure you want to delete this RFID card?');
+            if($scope.confirm === true){
+                $scope.currentRFID = $scope.rfids[$scope.currentIndex];
+                $scope.currentRFID.$delete();
+                $scope.rfids = dataManager.RFID.query();
+            }
         };
         $scope.changeCurrentRFID = function (event, index) {
             $('.selected').removeClass('selected');

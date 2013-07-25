@@ -21,9 +21,12 @@ adminConsoleApp.controller('ZonesController',
             }
         };
         $scope.deleteZone = function() {
-            $scope.currentZone = $scope.zones[$scope.currentIndex];
-            $scope.currentZone.$delete();
-            $scope.zones = dataManager.Zone.query();
+            $scope.confirm = confirm('Are you sure you want to delete this zone?');
+            if($scope.confirm === true){
+                $scope.currentZone = $scope.zones[$scope.currentIndex];
+                $scope.currentZone.$delete();
+                $scope.zones = dataManager.Zone.query();
+            }
         };
         $scope.changeCurrentZone = function (event, index) {
             $('.selected').removeClass('selected');

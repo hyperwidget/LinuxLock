@@ -20,9 +20,12 @@ adminConsoleApp.controller('DevicesController',
             }
         };
         $scope.deleteDevice = function() {
-            $scope.currentDevice = $scope.devices[$scope.currentIndex];
-            $scope.currentDevice.$delete();
-            $scope.devices = dataManager.Device.query();
+            $scope.confirm = confirm('Are you sure you want to delete this device?');
+            if($scope.confirm === true){
+                $scope.currentDevice = $scope.devices[$scope.currentIndex];
+                $scope.currentDevice.$delete();
+                $scope.devices = dataManager.Device.query();
+            }
         };
         $scope.changeCurrentDevice = function (event, index) {
             $('.selected').removeClass('selected');
