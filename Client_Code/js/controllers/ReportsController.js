@@ -22,7 +22,7 @@ adminConsoleApp.controller('ReportsController',
         from: $scope.from,
         to: $scope.to
       }
-      alert(JSON.stringify(params))
+      //alert(JSON.stringify(params))
       $scope.events = dataManager.Event.query(params)
     }
     $scope.updateReport({from: "Today", to: "Now"})
