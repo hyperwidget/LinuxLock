@@ -35,7 +35,7 @@ RFID.statics.isAuthorizedForDevice = function(options,done) {
       Zone = mongoose.model('Zone'),
       CardHolder = mongoose.model('CardHolder'),
       RFID = mongoose.model('RFID');
-  var zones = null, rfid = null, device = null, user = null;
+  var zone = null, rfid = null, device = null, user = null;
   var userZones = [];
 
   function findRFID(done) {
@@ -62,7 +62,8 @@ RFID.statics.isAuthorizedForDevice = function(options,done) {
   }
   function findDevice(done) {
     //console.log("Searching for device at " + options.hostname)
-    Device.findOne({hostname: options.hostname}, function(err, item) {
+    Device.findOne({hostname: options.hostname},
+    function(err, item) {
       device = item
       done(err)
     })

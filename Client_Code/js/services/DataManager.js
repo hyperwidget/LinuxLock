@@ -6,7 +6,7 @@ adminConsoleApp.factory('dataManager', function ($resource) {
         RFID = $resource('rfid/:rfidId', {rfidId: '@_id'}),
         Zone = $resource('zone/:zoneId', {zoneId: '@_id'}),
         Admin = $resource('admin/:adminId', {adminId: '@_id'}),
-        Event = $resource('events'),
+        Event = $resource('event/:eventId', {eventId: '@_id'}),
         rfidsData = RFID.query(),
         settingsData = $.getJSON('settings'),
         eventsData = []
