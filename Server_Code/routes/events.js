@@ -20,7 +20,8 @@ exports.findAll = function(callback) {
 //
 // TODO: rename 'rfid' to 'tag'? 'tag' seems more versatile, and it's also shorter!
 exports.findWithParams = function(params,done) {
-    console.log(params)
+    if(process.env.NODE_ENV === "development")
+      console.log(params)
     db.collection('events', function(err, collection) {
         var esc = new RegExp(/([.\^$*+?()[{\\|\-\]])/g)
 
@@ -37,7 +38,8 @@ exports.findWithParams = function(params,done) {
             q.push({cardHolder: {$regex: '.*'+params.who+'.*', $options: 'i' }})
         }
         if("dev" in params && params.dev.length) {
-            console.log('Before regex: "' + params.dev + '"')
+            if(process.env.NODE_ENV === "development")
+              console.log('Before regex: "' + params.dev + '"')
             var match = params.dev.replace(esc,"\\$1")
             //exactMatch = params.dev.replace(/\//,'\\/').replace(/\./,'\\.')
             //params.dev = exactMatch.replace(/[,\-\[\](){}!@#$%\^&*)]+/g,'.*')
@@ -67,7 +69,8 @@ exports.findWithParams = function(params,done) {
 
 exports.findById = function(id, done) {
     var err,  o_id = new BSON.ObjectID.createFromHexString(id.toString());
-    console.log('/event/:id findById: ' + id);
+    if(process.env.NODE_ENV === "development")
+      console.log('/event/:id findById: ' + id);
     db.collection('events', function(err, collection) {
         collection.find({'_id': o_id}).toArray(function(err, items) {
             if(!err){
@@ -81,7 +84,8 @@ exports.findById = function(id, done) {
 
 exports.add = function(req, done){
     var err;
-    console.log('/event add ' + req);
+    if(process.env.NODE_ENV === "development")
+      console.log('/event add ' + req);
 
     newEvent = {'device_id': req.body.device_id, 
     'rfid_id': req.body.rfid_id, 
@@ -102,7 +106,8 @@ exports.add = function(req, done){
 
 exports.edit = function(req, done){
     var err, o_id = new BSON.ObjectID.createFromHexString(id.toString());;
-    console.log('/event/:id edit ' + req);
+    if(process.env.NODE_ENV === "development")
+      console.log('/event/:id edit ' + req);
 
     event = findById(req.body.id);
 
@@ -120,7 +125,8 @@ exports.edit = function(req, done){
 
 exports.delete = function(id, done){
     var err, o_id = new BSON.ObjectID.createFromHexString(id.toString());;
-    console.log('event delete ' + id);
+    if(process.env.NODE_ENV === "development")
+      console.log('event delete ' + id);
 
     db.collection('events', function(err, collection){
         collection.delete({'_id': o_id});
