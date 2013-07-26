@@ -1,12 +1,21 @@
 #!/bin/bash
-# This script suppose to generate db and objects (I will add validation later)
-# author: Anatoly Spektor
-# 
-# Need to be done:
-#  - create collections for each table
-#  - make sure mogno is installed before doing "mongo" (using rpm)
-#  - drop db and collection and than recreate
-#  - put more dummy values
+
+#####################################################
+#						    #	
+#		Linux Lock Installation Script	    #	
+#						    # 	
+#####################################################
+
+# Description:
+#
+# This script installed Node.JS MongoDB and populates MongoDB with collection
+# required for Linux Lock System.
+#
+
+
+# @author Anatoly Spektor
+
+source linux_lock.conf # PLEASE DO NOT MODIFY THIS LINE!!!!
 
 setup_dir=`pwd`
 
@@ -17,46 +26,56 @@ clear
 if [[ "$distro" = "fedora" ]]
  then	
 	#Installing Mongo Dependencies (like git)
-	echo "Installing dependencies.."
+	echo "[Linux Lock] Installing dependencies.."
 	sudo yum -y install git-core scons gcc-c++ glibc-devel
 
 elif [[ $distro = "ubuntu" ]]
  then
 	#Installing Mongo Dependencies (like git)
-	echo "Installing dependencies.."
+	echo "[Linux Lock] Installing dependencies.."
 	sudo apt-get install git-core build-essential scons
 else
-	echo "At This point LinuxLock supports only Fedora and Ubuntu, please email to support@linuxlock.com to get more information" 2> /dev/null 
+	echo "[Linux Lock] At This point LinuxLock supports only Fedora and Ubuntu, please email to support@linuxlock.com to get more information" 2> /dev/null 
 	exit 134
 fi
 
-mkdir ~/LinuxLock >/dev/null 2>&1; cd ~/LinuxLock >/dev/null 2>&1
+# Creating Linux_Lock Path
+mkdir  $LINUX_LOCK_PATH >/dev/null 2>&1; cd  $LINUX_LOCK_PATH >/dev/null 2>&1
 
+# Checking if MongoDB is alredy installed
 type mongo  >/dev/null 2>&1
 if [[ $? != 0 ]]
  then 
+	#Installing MongoDB
 	git clone git://github.com/mongodb/mongo.git; 
 	cd mongo; git checkout r2.4.0; 
 	scons all;
  else 
-	echo "Good news! You already have mongo installed! [skipping installation]";
+	echo "[Linux Lock] Good news! You already have mongo installed! [skipping installation]";
 fi
 
+# Checking if Node is already installed
 type node >/dev/null 2>&1
 if [[ $? != 0 ]]
  then 
+	#Installing Node.js
 	git clone git://github.com/joyent/node.git;
 	cd node; ./configure;make; 
 	sudo make install
  else 
-	echo "Good news! You already have Node installed! [skipping installation]";
+	echo "[Linux Lock] Good news! You already have Node installed! [skipping installation]";
 fi
 
-echo "Populating Mongo Database with required collections..."
+echo "[Linux Lock] Populating Mongo Database with required collections..."
 cd $setup_dir
 chmod 775 mongo_setup;
 chmod 775 mongo_test;
+
+#Populating MongoDB
 mongo < ./mongo_setup | ./mongo_test
 
+# CREATE BACKUP DIR
+mkdir $LL_BACKUP_PATH
 
-echo "Succesfull installation of Node, Mongo and all dependencies required for Linux Lock!"
+
+echo "[Linux Lock] Succesfull installation of Node, Mongo and all dependencies required for Linux Lock!"

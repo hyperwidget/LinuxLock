@@ -1,59 +1,153 @@
 #!/bin/bash
 
-#Receive 2 arguments
-#argument 1 - when to do backups
-#argument 2 - how many backups to do
+##########################################################
+#							 #	
+#	   Linux Lock Mongo Backup			 #
+#							 #	
+##########################################################
+
+#@author Anatoly Spektor
+
+#Description:
+#
+#	Syntax: ./mongo_backup -[w,d,m]
+#
+#	This scripts fill in cronjob for the argument passed to it (weekly, monthly,daily)
+#	Also it checks if maximum number of backups is exceeded, and deletes oldest files if it is so.
+#
+
 
 #NEED TO DO:
   #figure out how to find  existing mongodump crontab and replace it
-  # figure out where to put crontabs
-  #figure out how to save max number to dv and compare with it
+  # figure out where to put crontabs X
+  #figure out how to save max number to dv and compare with it X
   #figure out how to call script from Node.js
   #figure out interface to restore
+
+
+source linux_lock.conf # PLEASE DO NOT MODIFY THIS LINE!!!! (Needed for PATHS!)
+
+
+if [ $? -ne 0 ]
+ then
+	echo "[Linux Lock] ERROR config file not included please make sure linux_lock.conf file is present in the same directory as mongo_backup"
+	exit 16678
+fi
+
+#in case user have changed backup_path and it does not exist yet!
+if [ ! -d "$LL_BACKUP_DIR" ]
+ then
+   mkdir "$LL_BACKUP_DIR" 2> /dev/null 
+   echo "[Linux Lock] Your Backup Path is $LL_BACKUP_DIR"
+fi
+
+#This function gets number of backups from mongo_db settings collection
+#It is needed to evaluate if number of backups exceeds the number in settings
+#than the oldest backup will be deleted from the stack
+
+function getNumOfBackups(){
+
+#CANNOT USE SPACES HERE BECAUSE IT GOES TO COMMAND LINE!
+mongo  << ~ > /tmp/output$$.json
+use linux_lock
+db.settings.find({name: "Number of Backups"}, {value:1});
+~
+	#prases mongo JSON string
+	maxBackups=$(cat /tmp/output$$.json | head -4 | tail -1 | cut -d':' -f3 | head -4 | tail -1 | cut -d':' -f3 | sed 's/[^0-9]*//g') 
+	rm -r /tmp/output$$.json
+}
+
+function removeOldBackup(){
+ # if files in backup dir is more than maxBackups from mongoDB
+ # rm oldest file in the directory
+ if [ $(ls -tr "$LL_BACKUP_DIR" | wc -l) -gt $maxBackups ]
+  then
+	oldest_file=$( ls -tr  "$LL_BACKUP_DIR" | head -n 1)
+	echo "[Linux Lock] Removing $oldest_file because it exceeds $maxBackups..."
+	rm -r $LL_BACKUP_DIR/$oldest_file >> /dev/null #remove oldest
+ fi
+
+}
+
+# Current function does following things:
+ # Checks if crontab has already mongodump entry
+ # if it does deletes this entry and enters new one
+ # dependy on the frequency user requested (weekly, monthly, yearly)	 
+function scheduleBackup() {
+
+  #TEST
+  		
+  crontab -l > /tmp/cronfile$$
+  # tweak needed to get rid of old mongodump entry
+  grep -v "mongodump" /tmp/cronfile$$ > /tmp/cronfile1$$
+  rm -r /tmp/cronfile$$
+  #appending new entry to cronfile
+  echo "$1" >> /tmp/cronfile1$$
+  crontab /tmp/cronfile1$$
+  rm -r /tmp/cronfile1$$
+}
+
+
+getNumOfBackups
 
 #based on that create custom crontab amd pop the oldest file if there are too many files already
 if [[ $# = 0 ]]; then echo "Argument required (allowed: -w -d -m)"; exit 1; fi;
 
-while getopts :w:d:m: opt
+#time stamp needed for mongo backup file names
+now=$(date +"%m_%d_%Y")
+
+
+
+#get options from command line
+while getopts :wdm opt
 do
    case $opt in
-       w) yflag=$OPTARG ;;
-       d) dflag=$OPTARG ;;
-       m) mflag=$OPTARG ;;
+       w) wflag=1 ;;
+       d) dflag=1 ;;
+       m) mflag=1 ;;
        r) rflag=1 ;;
-       :) echo "$(basename $0): option -$OPTARG requires a value to specify amount of backups e.g -m 10" >&2
-          exit 2 ;;
-      \?) echo "$(basename $0): unknown option -$OPTARG available options: -m <max backup files> (monthly) -d <max backup files> (daily) -w <max weekly backup files>" >&2
+      \?) echo "$(basename $0): unknown option -$OPTARG available options: -m  (monthly) -d (daily) -w " >&2
           exit 2 ;;
    esac
 done
 
 #WEEKLY
-if [ "$wflag" != "" ]
+if [ "$wflag" = 1 ]
 	#append to cronjob weekly mongodump	
-   then 
-	echo "You have chosen Weekly backup at 7:30 a.m every Monday with $wflag maximum amount of backups"
-	(crontab -l ; echo "30 7 * * 1 mongodump")| crontab -
+   then 	
+	# deleting old backup if there are too much backups
+	removeOldBackup
+ 	# passing weekly crontab starting at 7:30 every mondat
+	scheduleBackup  "30 7 * * 1 mongodump --db linux_lock --out $LL_BACKUP_DIR/linux_lock_db_backup_$now"
+	echo "[Linux Lock] You have chosen Weekly backup at 7:30 a.m every Monday with $maxBackups maximum amount of backups"
 fi
 #DAILY
-if [ "$dflag" != "" ]
+if [ "$dflag" = 1 ]
 	#append to cronjob daily mongodump
    then 
-	echo "You have chosen Daily backup  at 7:30 a.m. Maximum amount of backups $dflag"
-		(crontab -l ; echo "30 7 * * * mongodump")| crontab -
+	# deleting old backup if there are too much backups
+	removeOldBackup
+	# setting cron job
+	scheduleBackup  "30 7 * * * mongodump  --db linux_lock --out $LL_BACKUP_DIR/linux_lock_db_backup_$now"
+	if [ $? -eq 0 ]
+	  then
+		echo "[Linux Lock] You have chosen Daily backup  at 7:30 a.m. Maximum amount of backups $maxBackups"
+	fi
 fi
 #MONTHLY
-if [ "$mflag" != "" ]
+if [ "$mflag" = 1 ]
 	#append to cronjob monthly mongodump
    then 
-	echo "You have chosen Monthly backup at 7:30 every 1st day of the month, with $mflag maximum amount of backups"
-	(crontab -l ; echo "30 7 1 * * mongodump")| crontab -
-	
+	# deleting old backup if there are too much backups
+	removeOldBackup
+	# setting cron job
+	scheduleBackup "30 7 1 * * mongodump  --db linux_lock --out $LL_BACKUP_DIR/linux_lock_db_backup_$now"
+	echo "[Linux Lock] You have chosen Monthly backup at 7:30 every 1st day of the month, with $maxBackups maximum amount of backups"
 fi
 #RESTORE
 if [ "$rflag" = 1 ]
 	#call mongorestore on latest file!
-   then echo "Restored latest backup!"
+   then echo "[Linux Lock] Restored latest backup!"
 fi
 
 

@@ -49,11 +49,6 @@ db.devices.insert(device3)
 
 //----------------------ZONES (need to create Devices first)---------------//
 
-//zone
-//{ _id: id,
-//name: name,
-//devices: [{device_id: device_id}]
-//}.
 
 
 // CREATE ZONE's  ID's //
@@ -98,17 +93,6 @@ db.rfids.insert(rfid5)
 
 // --------------------CARDHOLDER---------------//
 
-
-//cardHolder
-//{_id: id, 
-//first: first,
-//last: last,
-//email: email,
-//phone: phone,
-//userRole: role,
-//cards: [{rfid_id: rfid_id}]
-//zones: [{zone_id: zone_id}]
-//}
 
 
 // CREATE CardHolder OBJECTS//
@@ -187,31 +171,17 @@ db.events.insert(event2)
 
 
 // ------------------Settings------------------------- //
-//setting
-//{ _id: id,
-//name: name,
-//value: value
-//}
-// Create ID //
+
 setting1_id = event1_id = ObjectId()
+setting2_id = ObjectId()
 // Create Object //
-setting1 = { _id: setting1_id, name: "Backup Time", value: 5 }
+setting1 = { _id: setting1_id, name: "Backup", value: "weekly" }
+setting2 = { _id: setting2_id, name: "Number of Backups", value: 10 }
 // Insert Object //
 db.settings.insert(setting1)
+db.settings.insert(setting2)
 
 // ------------------Admin------------------------- //
-//admin
-//{ _id: id,
-//name: name,
-//username: username,
-//password: password,
-//canManageUsers : bool, 
-//canManageDevices : bool, 
-//canManageZones : bool, 
-//canGenerateReports : bool, 
-//canManageBackups : bool, 
-//canManageSettings : bool 
-//}
 
 admin1_id = ObjectId()
 admin2_id = ObjectId()
