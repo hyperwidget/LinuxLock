@@ -3,7 +3,10 @@ extends layout
 block header
 
 block content
-	div(id='introImage')
+	div.loginHeader
+		div.welcomeMessage
+			p Welcome to Linux Lock
+			p Please log in to continue
 	div(id='loginControls')
 		form(form action="/login",	 method="post")
 			div.loginControl
@@ -14,3 +17,16 @@ block content
 				input.right(id='password', name='password', type='password', value='', placeholder='Enter Password')
 			div.loginControl
 				input.right(type='submit',value='Log In')
+	div.acknowledgements
+		p Built by and using
+		div.acknowledgeImages
+			div.acknowledgementImage.left
+				img(src='img/kal3.png')
+			div.acknowledgementImage.left
+				img(src='img/pi.png')
+			div.acknowledgementImage.left
+				img(src='img/mongo.png')
+			div.acknowledgementImage.left
+				img(src='img/angular.png')
+			div.acknowledgementImage.left
+				img(src='img/nodejs.png')
