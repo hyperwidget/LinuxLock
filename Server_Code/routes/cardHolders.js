@@ -35,6 +35,7 @@ function findAllWithParams(searchValue, done){
             } else {
                 var cardHolderCount = 0;
                 if(items.length > 0 ){
+                    doneCount = 0;
                     items.forEach(function(cardHolder){
                         var cardCount = 0;
                         if(cardHolder.cards.length > 0){
@@ -46,15 +47,19 @@ function findAllWithParams(searchValue, done){
                                             if(cardHolder.zones.length > 0){
                                                 var zoneCount = 0;
                                                 cardHolder.zones.forEach(function(zone){
+                                                console.log(cardHolder.first + " " + cardHolder.zones.length);
                                                     Zones.findById(zone.zone_id, function(err, zoneInfo){
                                                         zone.name = zoneInfo[0].name;
-                                                        if((++zoneCount == cardHolder.zones.length) && (items[items.length - 1]._id == cardHolder._id)){
+                                                        if((++zoneCount == cardHolder.zones.length) && (items.length == ++doneCount)){
                                                             done(null, items);
                                                         }
                                                     });
                                                 });
                                             } else {
-                                                done(null, items);
+                                                console.log(cardHolder.first + " " + cardHolder.zones.length);
+                                                if(items.length == ++doneCount){
+                                                    done(null, items);
+                                                }
                                             }
                                         });
                                     }
@@ -66,13 +71,16 @@ function findAllWithParams(searchValue, done){
                                 cardHolder.zones.forEach(function(zone){
                                     Zones.findById(zone.zone_id, function(err, zoneInfo){
                                         zone.name = zoneInfo[0].name;
-                                        if((++zoneCount == cardHolder.zones.length) && (items[items.length - 1]._id == cardHolder._id)){
+                                        console.log(cardHolder.first + " " + cardHolder.zones[0].name);
+                                        if((++zoneCount == cardHolder.zones.length) && (items.length == ++doneCount)){
                                             done(null, items);
                                         }
                                     });
                                 });
                             } else {
-                                done(null, items);
+                                if(items.length == ++doneCount){
+                                    done(null, items);
+                                }
                             }
                         }
                     });

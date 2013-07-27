@@ -188,9 +188,27 @@ td, th {
 /*login styles*/
 #loginControls{
     margin: 0 auto;
-    margin-top: 300px;
+    padding-top: 30px;
     width: 300px;
+    height: 30%;
 }
 
+.loginControl{
+    height:50px;
+}
+
+.left{
+    float: left;
+}
+
+.right{
+    float: right;
+}
+
+#introImage{
+    width: inherit;
+    background-color: lightgrey;
+    height: 30%;
+}
 
 /*end login styles*/
