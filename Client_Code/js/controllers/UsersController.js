@@ -14,18 +14,45 @@ adminConsoleApp.controller('UsersController',
             }
         };
 
+        var setAddCardDisabled = function (newValue) {
+            if(newValue !== null){
+                var found = false;
+                if ($scope.currentUser != null) {
+                    angular.forEach($scope.currentUser.cards, function(v, k) {
+                        if (v.rfid_id == newValue._id) found = true;
+                    });
+                }
+                $scope.isAddCardDisabled = found;
+            }
+        };
+
+        $scope.isAddButtonDisabled = false;
+        $scope.isEditButtonDisabled = true;
+        $scope.isDeleteButtonDisabled = true;
+
         $scope.users = dataManager.User.query();
         $scope.zones = dataManager.Zone.query();
+        $scope.cards = dataManager.RFID.query();
         $scope.currentUser = null;
         $scope.currentIndex = -1;
+
+        $scope.isAddCardDisabled = true;
+        $scope.isRemoveCardDisabled = true;
+        $scope.selectedCardToAdd = null;
+        $scope.selectedCardToRemove = null;
+
         $scope.isAddZoneDisabled = true;
         $scope.isRemoveZoneDisabled = true;
         $scope.selectedZoneToAdd = null;
         $scope.selectedZoneToRemove = null;
 
         $scope.addUser = function () {
-            $scope.selectedZoneToAdd = $scope.zones[0];
+            if ($scope.zones.length) $scope.selectedZoneToAdd = $scope.zones[0];
+            if ($scope.cards.length) $scope.selectedCardToAdd = $scope.cards[0];
             $scope.currentUser = new dataManager.User();
+            if($scope.currentUser.cards !== undefined) {
+                $scope.selectedCardToRemove = $scope.currentUser.cards[0];
+            }
             if($scope.currentUser.zones !== undefined) {
                 $scope.selectedZoneToRemove = $scope.currentUser.zones[0];
             }
@@ -33,19 +60,29 @@ adminConsoleApp.controller('UsersController',
         };
         $scope.editUser = function () {
             if($scope.currentIndex !== -1){
-                $scope.selectedZoneToAdd = $scope.zones[0];
+                if ($scope.zones.length) $scope.selectedZoneToAdd = $scope.zones[0];
+                if ($scope.cards.length) $scope.selectedCardToAdd = $scope.cards[0];
                 $scope.currentUser =  $scope.users[$scope.currentIndex];
-                $scope.selectedZoneToRemove = $scope.currentUser.zones[0];
+                if($scope.currentUser.cards !== undefined) {
+                    $scope.selectedCardToRemove = $scope.currentUser.cards[0];
+                }
+                if($scope.currentUser.zones !== undefined) {
+                    $scope.selectedZoneToRemove = $scope.currentUser.zones[0];
+                }
                 viewManager.showPopup('users', $scope);
             }
         };
         $scope.saveData = function () {
             $scope.currentUser.$save();
             $scope.users = dataManager.User.query();
+            $scope.selectedCardToAdd = null;
+            $scope.selectedCardToRemove = null;
             $scope.selectedZoneToAdd = null;
             $scope.selectedZoneToRemove = null;
         };
         $scope.cancelSave = function () {
+            $scope.selectedCardToAdd = null;
+            $scope.selectedCardToRemove = null;
             $scope.selectedZoneToAdd = null;
             $scope.selectedZoneToRemove = null;
         };
@@ -104,6 +141,7 @@ adminConsoleApp.controller('UsersController',
                 $scope.currentUser.zones = [];
                 $scope.currentUser.zones.push({ zone_id: $scope.selectedZoneToAdd._id, name: $scope.selectedZoneToAdd.name });
             }
+            if ($scope.zones && $scope.currentUser.zones.length == 1) $scope.selectedZoneToRemove = $scope.currentUser.zones[0];
             setAddZoneDisabled($scope.selectedZoneToAdd);
         };
         $scope.removeZone = function () {
@@ -114,12 +152,42 @@ adminConsoleApp.controller('UsersController',
                 if (zones[i].zone_id == $scope.selectedZoneToRemove.zone_id) idx = i;
             if (idx > -1) zones.splice(idx, 1);
             $scope.selectedZoneToRemove = null;
+            setAddZoneDisabled($scope.selectedZoneToAdd);
         };
         $scope.$watch('selectedZoneToAdd', function (newValue, oldValue) {
             setAddZoneDisabled(newValue);
         });
         $scope.$watch('selectedZoneToRemove', function (newValue, oldValue) {
             $scope.isRemoveZoneDisabled = newValue == null;
+        });
+        $scope.addCard = function () {
+            if($scope.currentUser.cards !== undefined){
+                $scope.currentUser.cards.push({ rfid_id: $scope.selectedCardToAdd._id, rfidNo: $scope.selectedCardToAdd.rfidNo });
+            } else {
+                $scope.currentUser.cards = [];
+                $scope.currentUser.cards.push({ rfid_id: $scope.selectedCardToAdd._id, rfidNo: $scope.selectedCardToAdd.rfidNo });
+            }
+            if ($scope.cards && $scope.currentUser.cards.length == 1) $scope.selectedCardToRemove = $scope.currentUser.cards[0];
+            setAddCardDisabled($scope.selectedCardToAdd);
+        };
+        $scope.removeCard = function () {
+            var idx = -1;
+            var i = 0;
+            var cards = $scope.currentUser.cards;
+            while (idx == -1 && i < cards.length)
+                if (cards[i].rfid_id == $scope.selectedCardToRemove.rfid_id) idx = i;
+            if (idx > -1) cards.splice(idx, 1);
+            $scope.selectedCardToRemove = null;
+            setAddCardDisabled($scope.selectedCardToAdd);
+        };
+        $scope.$watch('selectedCardToAdd', function (newValue, oldValue) {
+            setAddCardDisabled(newValue);
+        });
+        $scope.$watch('selectedCardToRemove', function (newValue, oldValue) {
+            $scope.isRemoveCardDisabled = newValue == null;
+        });
+        $scope.$watch('currentIndex', function (newValue, oldValue) {
+            $scope.isEditButtonDisabled = $scope.isDeleteButtonDisabled = newValue < 0;
         });
     }
 );

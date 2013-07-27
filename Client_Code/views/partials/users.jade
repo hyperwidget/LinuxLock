@@ -28,9 +28,9 @@ div.leftPanel
 div.mainPanel
     span.item Results for...
     span.item
-        button(ng-click="addUser()") Add
-        button(ng-click="editUser()") Edit
-        button(ng-click="deleteUser()") Delete
+        button(ng-click="addUser()", ng-disabled="isAddButtonDisabled") Add
+        button(ng-click="editUser()", ng-disabled="isEditButtonDisabled") Edit
+        button(ng-click="deleteUser()", ng-disabled="isDeleteButtonDisabled") Delete
     span.item
         table(cellspacing="0")
             tr

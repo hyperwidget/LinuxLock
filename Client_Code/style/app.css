@@ -149,6 +149,15 @@ td, th {
     clear: both;
 }
 
+.addList {
+    width: 50%;
+}
+.addRemoveBtn {
+    width: 25%;
+    width: 25%;
+    padding: 1px 3px;
+}
+
 /* Popup styles */
 #popup {
     height: 100%;
