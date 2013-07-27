@@ -7,7 +7,7 @@ var mongoose = require('mongoose'),
     	rfid: {type:String, index:true, required:false},
       cardHolder: {type:String, index:true, required:false},
       entryTime: {type:Date, index:true, required:true, default: new Date()},
-      status: {type:String, required:true, default:""}, // WAT
+      status: {type:String, required:true, default:""} // WAT
   	});
 
 Event.statics.log = function(rfid, device, authorized, status, time)
@@ -80,14 +80,17 @@ Event.statics.log = function(rfid, device, authorized, status, time)
   }
   else if(device instanceof ObjectId)
     mongoose.model('Device').findOne({_id: device}, function(err, item) {
-      if(!item) device = "", hostname = ""
-      else {
-        device = item.name
-        hostname = item.hostname
+      if(!item) {
+          device = "";
+          hostname = "";
+      } else {
+        device = item.name;
+        hostname = item.hostname;
       }
     })
-  else
+  else {
     device = "", hostname = ""
+  }
 
   Event.create({
     device: device,
