@@ -1,5 +1,6 @@
 * { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
 html, body {
+    width: 100%;
     height: 100%;
     margin: 0;
     font-family: sans-serif;
@@ -183,3 +184,13 @@ td, th {
     line-height: 40px;
 }
 /* end Popup styles */
+
+/*login styles*/
+#loginControls{
+    margin: 0 auto;
+    margin-top: 300px;
+    width: 300px;
+}
+
+
+/*end login styles*/
