@@ -1,7 +1,18 @@
 div.leftPanel
 div.mainPanel
-    span.item(ng-repeat="setting in settings")
-        div {{setting.name}}
-        input(type="text", ng-model="setting.value")
-    span.item
-        button save
+
+	div.settings
+		div.setting
+			div.left Backup Frequency: 
+			div.right 
+				select(size="1", ng-model="settings[0].value", ng-options="v as v for (k,v) in frequencyList" )
+				button(ng-click="updateFrequency()") save
+		div.setting
+			div.left Backups to Retain: 
+			div.right 
+				input(type="text", ng-model="settings[1].value")
+				button(ng-click="updateBackupNumber()") save
+		div.setting
+			div.left Restore database using:
+			select.list.right(size="5", ng-model="selectedBackupToExecute", ng-options="v as v for (k,v) in backupList")
+			button.right.backupButton(ng-click="executeBackup()") Execute Backup

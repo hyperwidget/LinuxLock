@@ -3,7 +3,8 @@ var connect = require('connect'),
   express = require('express'),
   io = require('socket.io'),
   port = (process.env.PORT || 3000),
-  flash = require('connect-flash');
+  flash = require('connect-flash'),
+  exec = require('child_process').exec;
 //Setup Express
 var app = express();
 var cardHolders = require('./routes/cardHolders');
@@ -342,12 +343,20 @@ app.delete('/rfid/:id', ensureAuthenticated,
 
 
 //Settings
-app.get('/settings', ensureAuthenticated,
+app.get('/setting', ensureAuthenticated,
   function(req, res){
     console.log('get settings');
     settings.findAll(function(err, items){
       res.jsonp(items);
-  })
+  });
+});
+
+app.get('/setting/backups', ensureAuthenticated,
+  function(req, res){
+    console.log('get backups');
+    settings.backupsList(function(err, items){
+      res.jsonp(items);
+    });
 });
 
 app.post('/setting', ensureAuthenticated,
@@ -364,6 +373,22 @@ app.post('/setting/:id', ensureAuthenticated,
     settings.edit(req, function(err){
       res.writeHead('200');
   });
+});
+
+app.post('/executeRestore', ensureAuthenticated,
+  function(req, res){
+    console.log('RUN RESTORE');
+
+    child = exec('mongorestore ./../db_backup/', // command line argument directly in string
+      function (error, stdout, stderr) {      // one easy function to capture data/errors
+        console.log('stdout: ' + stdout);
+        console.log('stderr: ' + stderr);
+        if (error !== null) {
+          console.log('exec error: ' + error);
+        } else {
+          res.writeHead('200');
+        }
+    }); 
 });
 
 //Zones
