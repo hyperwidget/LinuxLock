@@ -5,8 +5,11 @@ span.item
     label(for="last") Last Name
     input.searchBox(type="text", id="last", ng-model="currentUser.last")
 span.item
-    label(for="CardNumber") Card Number
-    input.searchBox(type="text", id="CardNumber", ng-model="currentUser.cards")
+    label(for="CardNumber") Cards
+    select.addList(id="byZone", ng-model="selectedCardToAdd", ng-options="c as c.rfidNo for c in cards")
+    button.addRemoveBtn(ng-disabled="isAddCardDisabled", ng-click="addCard()") Add Card
+    button.addRemoveBtn(ng-click="removeCard()", ng-disabled="isRemoveCardDisabled") Remove Card
+    select.list(size="2", ng-model="selectedCardToRemove", ng-options="card as card.rfidNo for card in currentUser.cards")
 span.item
     label(for="email") Email
     input.searchBox(type="text", id="email", ng-model="currentUser.email")
@@ -14,8 +17,9 @@ span.item
     label(for="phone") Phone Number
     input.searchBox(type="text", id="phone", ng-model="currentUser.phone")
 span.item
-    label(for="Zones") Zone
-    select(id="byZone", ng-model="selectedZoneToAdd", ng-options="z as z.name for z in zones")
-    button(ng-disabled="isAddZoneDisabled", ng-click="addZone()") Add Zone
-    select.list(size="5", ng-model="selectedZoneToRemove", ng-options="userZone as userZone.zone_id for userZone in currentUser.zones")
-    button(ng-click="removeZone()", ng-disabled="isRemoveZoneDisabled") Remove Zones
+    label(for="Zones") Zones
+    select.addList(id="byZone", ng-model="selectedZoneToAdd", ng-options="z as z.name for z in zones")
+    button.addRemoveBtn(ng-disabled="isAddZoneDisabled", ng-click="addZone()") Add Zone
+    button.addRemoveBtn(ng-click="removeZone()", ng-disabled="isRemoveZoneDisabled") Remove Zone
+    select.list(size="3", ng-model="selectedZoneToRemove", ng-options="userZone as userZone.name for userZone in currentUser.zones")
+
