@@ -78,8 +78,8 @@ exports.edit = function(req, done){
                     case "Backup":
                     switch(req.body.value){
                         case "Weekly":
-                        child = exec('bash/mongo_backup -w', // command line argument directly in string
-                          function (error, stdout, stderr) {      // one easy function to capture data/errors
+                        exec('bash/mongo_backup -w', 
+                          function (error, stdout, stderr) { 
                             console.log('stdout: ' + stdout);
                             console.log('stderr: ' + stderr);
                             if (error !== null) {
@@ -90,8 +90,8 @@ exports.edit = function(req, done){
                         });                       
                         break;
                         case "Monthly":
-                        child = exec('bash/mongo_backup -m', // command line argument directly in string
-                          function (error, stdout, stderr) {      // one easy function to capture data/errors
+                        exec('bash/mongo_backup -m', 
+                          function (error, stdout, stderr) { 
                             console.log('stdout: ' + stdout);
                             console.log('stderr: ' + stderr);
                             if (error !== null) {
@@ -102,8 +102,8 @@ exports.edit = function(req, done){
                         }); 
                         break;
                         case "Daily":
-                        child = exec('bash/mongo_backup -d', // command line argument directly in string
-                          function (error, stdout, stderr) {      // one easy function to capture data/errors
+                        exec('bash/mongo_backup -d',
+                          function (error, stdout, stderr) { 
                             console.log('stdout: ' + stdout);
                             console.log('stderr: ' + stderr);
                             if (error !== null) {
