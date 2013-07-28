@@ -228,13 +228,23 @@ td, th {
     text-align: center;
     background-color: lightgrey;
     color: white;
-    height: 33%;
+    height: 40px;
     font-weight: bolder;
+    position: absolute;
+    bottom: 0;
+    overflow: hidden;
+    transition: .5s;
+    -webkit-transition: .5s;
+}
+
+.acknowledgements:hover{
+    height:30%;
 }
 
 .acknowledgements img{
     width: auto;
     height: 100%;
+    margin: 0 auto;
 }
 
 .acknowledgementImage{
@@ -249,7 +259,7 @@ td, th {
 
 #loginControls{
     margin: 0 auto;
-    padding-top: 30px;
+    padding-top: 5%;
     width: 300px;
     height: 34%;
 }
@@ -265,6 +275,8 @@ td, th {
     color: white;
     text-align: center;
     font-size: 2em;
+    position: fixed;
+    z-index: 101;
 }
 
 .left{
