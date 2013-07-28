@@ -20,9 +20,8 @@ exports.backupsList = function(callback){
     filesList = [];
     fs.readdir(p, function (err, files) {
         if (err) {
-            throw err;
+            return callback(err, filesList);            
         }
-
         files.map(function (file) {
             return file;
         }).forEach(function (file) {
