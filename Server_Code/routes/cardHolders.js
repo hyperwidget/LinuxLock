@@ -85,7 +85,7 @@ function findAllWithParams(searchValue, done){
                         }
                     });
                 } else {
-                    done(null, null);
+                    done(null, items);
                 }
             }
         });

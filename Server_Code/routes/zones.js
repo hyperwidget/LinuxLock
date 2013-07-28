@@ -38,6 +38,8 @@ function findAllWithParams(searchValue, done){
                             }
                         }
                     });
+                } else {
+                    done(null, items);
                 }
             }
         });
