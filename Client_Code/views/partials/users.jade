@@ -26,7 +26,6 @@ div.leftPanel
         select(id="byZone", ng-model="zone", ng-options="z as z.name for z in zones")
         button.goButton(ng-click="searchByZone()") Go
 div.mainPanel
-    span.item Results for...
     span.item
         button(ng-click="addUser()", ng-disabled="isAddButtonDisabled") Add
         button(ng-click="editUser()", ng-disabled="isEditButtonDisabled") Edit

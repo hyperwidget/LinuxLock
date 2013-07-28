@@ -45,6 +45,12 @@ adminConsoleApp.controller('AdminController',
             } else if($scope.userName == '') {
                 $scope.admins = dataManager.Admin.query();
             }
-        }        
+        }
+        $scope.$watch('currentIndex', function (newValue, oldValue) {
+            $scope.isEditButtonDisabled = $scope.isDeleteButtonDisabled = newValue < 0;
+        });
+        $scope.isAddButtonDisabled = false;
+        $scope.isEditButtonDisabled = true;
+        $scope.isDeleteButtonDisabled = true;
     }
 );

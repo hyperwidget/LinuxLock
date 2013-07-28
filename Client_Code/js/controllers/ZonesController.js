@@ -104,5 +104,11 @@ adminConsoleApp.controller('ZonesController',
         $scope.$watch('selectedDeviceToRemove', function (newValue, oldValue) {
             $scope.isRemoveDeviceDisabled = newValue == null;
         });
+        $scope.$watch('currentIndex', function (newValue, oldValue) {
+            $scope.isEditButtonDisabled = $scope.isDeleteButtonDisabled = newValue < 0;
+        });
+        $scope.isAddButtonDisabled = false;
+        $scope.isEditButtonDisabled = true;
+        $scope.isDeleteButtonDisabled = true;
     }
 );

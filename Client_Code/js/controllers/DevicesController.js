@@ -53,5 +53,11 @@ adminConsoleApp.controller('DevicesController',
                 $scope.devices = dataManager.Device.query();
             }
         }
+        $scope.$watch('currentIndex', function (newValue, oldValue) {
+            $scope.isEditButtonDisabled = $scope.isDeleteButtonDisabled = newValue < 0;
+        });
+        $scope.isAddButtonDisabled = false;
+        $scope.isEditButtonDisabled = true;
+        $scope.isDeleteButtonDisabled = true;
     }
 );

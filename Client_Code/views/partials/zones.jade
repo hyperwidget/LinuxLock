@@ -10,11 +10,10 @@ div.leftPanel
         select(id="byDevice", ng-model="device", ng-options="d as d.name for d in devices")
         button.goButton(ng-click="searchByDevice()") Go
 div.mainPanel
-    span.item Results for...
     span.item
-        button(ng-click="addZone()") Add
-        button(ng-click="editZone()") Edit
-        button(ng-click="deleteZone()") Delete
+        button(ng-click="addZone()", ng-disabled="isAddButtonDisabled") Add
+        button(ng-click="editZone()", ng-disabled="isEditButtonDisabled") Edit
+        button(ng-click="deleteZone()", ng-disabled="isDeleteButtonDisabled") Delete
     span.item
         table
             tr
