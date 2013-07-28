@@ -47,7 +47,6 @@ function findAllWithParams(searchValue, done){
                                             if(cardHolder.zones.length > 0){
                                                 var zoneCount = 0;
                                                 cardHolder.zones.forEach(function(zone){
-                                                console.log(cardHolder.first + " " + cardHolder.zones.length);
                                                     Zones.findById(zone.zone_id, function(err, zoneInfo){
                                                         zone.name = zoneInfo[0].name;
                                                         if((++zoneCount == cardHolder.zones.length) && (items.length == ++doneCount)){
