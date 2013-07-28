@@ -11,11 +11,9 @@ div.leftPanel
         button.goButton(ng-click="searchByUserName()") Go
 div.mainPanel
     span.item
-        Results Results for...
-    span.item
-        button(ng-click="addAdmin()") Add
-        button(ng-click="editAdmin()") Edit
-        button(ng-click="deleteAdmin()") Delete
+        button(ng-click="addAdmin()", ng-disabled="isAddButtonDisabled") Add
+        button(ng-click="editAdmin()", ng-disabled="isEditButtonDisabled") Edit
+        button(ng-click="deleteAdmin()", ng-disabled="isDeleteButtonDisabled") Delete
     span.item
         table
             tr

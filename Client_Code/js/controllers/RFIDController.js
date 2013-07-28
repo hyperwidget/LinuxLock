@@ -45,6 +45,12 @@ adminConsoleApp.controller('RFIDController',
             } else if($scope.status == '') {
                 $scope.rfids = dataManager.RFID.query();
             }
-        }        
+        }
+        $scope.$watch('currentIndex', function (newValue, oldValue) {
+            $scope.isEditButtonDisabled = $scope.isDeleteButtonDisabled = newValue < 0;
+        });
+        $scope.isAddButtonDisabled = false;
+        $scope.isEditButtonDisabled = true;
+        $scope.isDeleteButtonDisabled = true;
     }
 );

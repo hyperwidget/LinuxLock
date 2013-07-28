@@ -14,11 +14,10 @@
 		input#byDeviceHostname.searchBox(type="text", ng-model="hostname", name="byDeviceHostname")
 		button.goButton(ng-click="searchByHostName()") Go
 .mainPanel
-	span.item Results for...
 	span.item
-		button(ng-click="addDevice()") Add
-		button(ng-click="editDevice()") Edit
-		button(ng-click="deleteDevice()") Delete
+		button(ng-click="addDevice()", ng-disabled="isAddButtonDisabled") Add
+		button(ng-click="editDevice()", ng-disabled="isEditButtonDisabled") Edit
+		button(ng-click="deleteDevice()", ng-disabled="isDeleteButtonDisabled") Delete
 	span.item
 		table
 			tr

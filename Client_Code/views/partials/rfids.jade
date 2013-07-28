@@ -10,11 +10,10 @@
         input.searchBox(type="text", ng-model="status", id="byStatus")
         button.goButton(ng-click="searchByRFIDStatus()") Go
 .mainPanel
-    span.item Results for...
     span.item
-        button(ng-click="addRFID()") Add
-        button(ng-click="editRFID()") Edit
-        button(ng-click="deleteRFID()") Delete
+        button(ng-click="addRFID()", ng-disabled="isAddButtonDisabled") Add
+        button(ng-click="editRFID()", ng-disabled="isEditButtonDisabled") Edit
+        button(ng-click="deleteRFID()", ng-disabled="isDeleteButtonDisabled") Delete
     span.item
         table
             tr
