@@ -32,7 +32,7 @@ adminConsoleApp.controller('UsersController',
 
         $scope.users = dataManager.User.query();
         $scope.zones = dataManager.Zone.query();
-        $scope.cards = dataManager.RFID.query();
+        $scope.cards = [];
         $scope.currentUser = null;
         $scope.currentIndex = -1;
 
@@ -48,7 +48,6 @@ adminConsoleApp.controller('UsersController',
 
         $scope.addUser = function () {
             if ($scope.zones.length) $scope.selectedZoneToAdd = $scope.zones[0];
-            if ($scope.cards.length) $scope.selectedCardToAdd = $scope.cards[0];
             $scope.currentUser = new dataManager.User();
             if($scope.currentUser.cards !== undefined) {
                 $scope.selectedCardToRemove = $scope.currentUser.cards[0];
@@ -56,12 +55,14 @@ adminConsoleApp.controller('UsersController',
             if($scope.currentUser.zones !== undefined) {
                 $scope.selectedZoneToRemove = $scope.currentUser.zones[0];
             }
+            $scope.cards = dataManager.RFID.query({status: 'n'}, function () {
+                if ($scope.cards.length) $scope.selectedCardToAdd = $scope.cards[0];
+            });
             viewManager.showPopup('users', $scope);
         };
         $scope.editUser = function () {
             if($scope.currentIndex !== -1){
                 if ($scope.zones.length) $scope.selectedZoneToAdd = $scope.zones[0];
-                if ($scope.cards.length) $scope.selectedCardToAdd = $scope.cards[0];
                 $scope.currentUser =  $scope.users[$scope.currentIndex];
                 if($scope.currentUser.cards !== undefined) {
                     $scope.selectedCardToRemove = $scope.currentUser.cards[0];
@@ -69,6 +70,9 @@ adminConsoleApp.controller('UsersController',
                 if($scope.currentUser.zones !== undefined) {
                     $scope.selectedZoneToRemove = $scope.currentUser.zones[0];
                 }
+                $scope.cards = dataManager.RFID.query({status: 'n'}, function () {
+                    if ($scope.cards.length) $scope.selectedCardToAdd = $scope.cards[0];
+                });
                 viewManager.showPopup('users', $scope);
             }
         };
