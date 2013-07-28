@@ -1,5 +1,5 @@
 require('./mongo_connect.js');
-devices = require('./devices.js');
+Devices = require('./devices.js');
 CardHolders = require('./cardHolders');
 
 exports.findAll = function(req, res, done) {
@@ -19,21 +19,26 @@ function findAllWithParams(searchValue, done){
             if(err){
                 done(err, items);
             } else {
-                items.forEach(function(zone){
-                    if(zone.devices.length > 0){
-                        var deviceCount = 0;
-                        zone.devices.forEach(function(device){
-                            devices.findById(device.device_id, function(err, deviceInfo){
-                                device.name = deviceInfo[0].name;
-                                if((++deviceCount == zone.devices.length) && (items[items.length - 1]._id == zone._id)){
-                                    done(null, items);
-                                }
+                if(items.length > 0){
+                    doneCount = 0;
+                    items.forEach(function(zone){
+                        if(zone.devices.length > 0){
+                            var deviceCount = 0;
+                            zone.devices.forEach(function(device){
+                                Devices.findById(device.device_id, function(err, deviceInfo){
+                                    device.name = deviceInfo[0].name;
+                                    if((++deviceCount == zone.devices.length) && (++doneCount == items.length)){
+                                        done(null, items);
+                                    }
+                                });
                             });
-                        });
-                    } else {
-                        done(null, items);
-                    }
-                });
+                        } else {
+                            if(items.length == ++doneCount){
+                                done(null, items);
+                            }
+                        }
+                    });
+                }
             }
         });
     });
@@ -73,16 +78,21 @@ exports.add = function(req, done){
 };
 
 exports.edit = function(req, done){
-    var err, o_id = new BSON.ObjectID.createFromHexString(id.toString());;
+    var err, o_id = new BSON.ObjectID.createFromHexString(req.body._id.toString());;
     console.log('zone edit ' + req);
 
-    zone = findById(req.body.id);
+    devices = [];
+    for(i in req.body.devices) {
+        device_id = new BSON.ObjectID.createFromHexString(req.body.devices[i].device_id.toString());
+        devices.push({device_id: device_id});
+    }
+
 
     db.collection('zones', function(err, collection){
         collection.update({'_id': o_id},
         {
-            $set: {'name': req.body.name,
-            'devices': req.body.devices}
+            $set: {name: req.body.name,
+            devices: devices}
          }, function(){
             done(null);
          });
