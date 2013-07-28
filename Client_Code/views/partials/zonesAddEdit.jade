@@ -1,6 +1,9 @@
 span.item
     label(for="Alias") Alias
-    input.searchBox(type="text", id="Alias", ng-model="currentZone.alias")
+    input.searchBox(type="text", id="Alias", ng-model="currentZone.name")
 span.item
-    label(for="Devices") Devices
-    input.searchBox(type="text", id="Devices", ng-model="currentZone.device")
+    label Devices
+    select.addList(ng-model="selectedDeviceToAdd", ng-options="d as d.name for d in devices")
+    button.addRemoveBtn(ng-disabled="isAddDeviceDisabled", ng-click="addDevice()") Add Device
+    button.addRemoveBtn(ng-click="removeDevice()", ng-disabled="isRemoveDeviceDisabled") Remove Device
+    select.list(size="3", ng-model="selectedDeviceToRemove", ng-options="device as device.name for device in currentZone.devices")

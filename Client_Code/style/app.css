@@ -132,12 +132,12 @@ td, th {
     width: 100%;
 }
 .addList {
-    width: 50%;
+    width: 48%;
 }
 .addRemoveBtn {
-    width: 25%;
-    width: 25%;
-    padding: 1px 3px;
+    width: 26%;
+    width: 26%;
+    padding: 1px 0px;
 }
 /* Popup styles */
 #popup {

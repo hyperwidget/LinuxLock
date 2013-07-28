@@ -141,7 +141,7 @@ adminConsoleApp.controller('UsersController',
                 $scope.currentUser.zones = [];
                 $scope.currentUser.zones.push({ zone_id: $scope.selectedZoneToAdd._id, name: $scope.selectedZoneToAdd.name });
             }
-            if ($scope.zones && $scope.currentUser.zones.length == 1) $scope.selectedZoneToRemove = $scope.currentUser.zones[0];
+            if ($scope.currentUser.zones && $scope.currentUser.zones.length == 1) $scope.selectedZoneToRemove = $scope.currentUser.zones[0];
             setAddZoneDisabled($scope.selectedZoneToAdd);
         };
         $scope.removeZone = function () {
@@ -167,7 +167,7 @@ adminConsoleApp.controller('UsersController',
                 $scope.currentUser.cards = [];
                 $scope.currentUser.cards.push({ rfid_id: $scope.selectedCardToAdd._id, rfidNo: $scope.selectedCardToAdd.rfidNo });
             }
-            if ($scope.cards && $scope.currentUser.cards.length == 1) $scope.selectedCardToRemove = $scope.currentUser.cards[0];
+            if ($scope.currentUser.cards && $scope.currentUser.cards.length == 1) $scope.selectedCardToRemove = $scope.currentUser.cards[0];
             setAddCardDisabled($scope.selectedCardToAdd);
         };
         $scope.removeCard = function () {
