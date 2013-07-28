@@ -145,12 +145,54 @@ app.get('/console', ensureAuthenticated,
 app.get('/templates/:name', ensureAuthenticated,
   function(req,res){
     console.log('template' + req.params.name);
-    res.render('partials/' + req.params.name + '.jade', {
-      title : 'Linux Lock',
-      description: 'Starting page',
-      author: 'Kaleidus Code',
-      messages: req.flash()
-    });
+    var allowed = true;
+    switch(req.params.name){
+      case 'users':
+        if(req.user.canManageUsers != true){
+          allowed = false;
+        }
+        break;
+      case 'devices':
+        if(req.user.canManageDevices != true){
+          allowed = false;
+        }
+        break;
+      case 'zones':
+        if(req.user.canManageZones != true){
+          allowed = false;
+        }
+        break;
+      case 'reports':
+        if(req.user.canGenerateReports != true){
+          allowed = false;
+        }
+        break;
+      case 'settings':
+        if(req.user.canManageSettings != true){
+          allowed = false;
+        }
+        break;
+      case 'admin':
+        if(req.user.name !== "Default SuperAdmin"){
+          allowed = false;
+        }
+        break;
+      case 'rfids':
+        if(req.user.canManageRFIDs != true){
+          allowed = false;
+        }
+        break;
+    }
+    if (allowed === false) {
+      res.render('401.jade');
+    } else {
+      res.render('partials/' + req.params.name + '.jade', {
+        title : 'Linux Lock',
+        description: 'Starting page',
+        author: 'Kaleidus Code',
+        messages: req.flash()
+      });
+    }
 });
 
 // Admins
@@ -165,7 +207,7 @@ app.get('/admin', ensureAuthenticated,
 app.post('/admin', ensureAuthenticated,
   function(req, res){
     console.log('add admins');
-    adminss.add(req, function(err){
+    admins.add(req, function(err){
 
   });
 });

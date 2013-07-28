@@ -186,10 +186,10 @@ db.settings.insert(setting2)
 admin1_id = ObjectId()
 admin2_id = ObjectId()
 
-superAdmin = { _id: admin1_id, name : "Default SuperAdmin", username: "admin", password: "P@ssw0rd", canManageUsers : true, canManageDevices : true, canManageZones : true, canGenerateReports : true, canManageBackups : true, canManageSettings : true }
+superAdmin = { _id: admin1_id, name : "Default SuperAdmin", username: "admin", password: "P@ssw0rd", canManageUsers : true, canManageDevices : true, canManageZones : true, canGenerateReports : true, canManageRFIDs : true, canManageSettings : true }
 db.admins.insert(superAdmin);
 
-secondAdmin = { _id: admin2_id, name : "Anatolijs Spektors", username: "aspektor", password: "P@ssw0rd", canManageUsers : true, canManageDevices : true, canManageZones : false, canGenerateReports : true, canManageBackups : false, canManageSettings : false }
+secondAdmin = { _id: admin2_id, name : "Anatolijs Spektors", username: "aspektor", password: "P@ssw0rd", canManageUsers : true, canManageDevices : true, canManageZones : false, canGenerateReports : true, canManageRFIDs : false, canManageSettings : false }
 db.admins.insert(secondAdmin);
 
 

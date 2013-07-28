@@ -2,11 +2,19 @@ mongo = require('./mongo_connect.js');
 
 exports.findAll = function(req, res, done) {
     if(req.query.name !== undefined){
-        findAllWithParams({name: req.query.name}, done);
-    } else if(req.query.username !== undefined){
-        findAllWithParams({username: req.query.username}, done);
+        if(req.query.name !== 'Default SuperAdmin'){
+            findAllWithParams({name: req.query.name}, done);
+        } else {
+            findAllWithParams({name:{$ne: 'Default SuperAdmin'}}, done);
+        }
+    } else if(req.query.userName !== undefined){
+        if(req.query.userName !== 'admin'){
+            findAllWithParams({username: req.query.userName}, done);
+        } else {
+            findAllWithParams({name:{$ne: 'Default SuperAdmin'}}, done);
+        }
     } else {
-        findAllWithParams('', done);
+        findAllWithParams({name:{$ne: 'Default SuperAdmin'}}, done);
     }
 };
 

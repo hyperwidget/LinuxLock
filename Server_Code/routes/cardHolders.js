@@ -35,7 +35,7 @@ function findAllWithParams(searchValue, done){
             } else {
                 var cardHolderCount = 0;
                 if(items.length > 0 ){
-                    doneCount = 0;
+                    finishCount = 0;
                     items.forEach(function(cardHolder){
                         var cardCount = 0;
                         if(cardHolder.cards.length > 0){
@@ -49,14 +49,15 @@ function findAllWithParams(searchValue, done){
                                                 cardHolder.zones.forEach(function(zone){
                                                     Zones.findById(zone.zone_id, function(err, zoneInfo){
                                                         zone.name = zoneInfo[0].name;
-                                                        if((++zoneCount == cardHolder.zones.length) && (items.length == ++doneCount)){
+                                                        console.log(cardHolder.first + " " + zone.name + " " + finishCount);
+                                                        if((++zoneCount == cardHolder.zones.length) && (items.length == ++finishCount)){
                                                             done(null, items);
                                                         }
                                                     });
                                                 });
                                             } else {
                                                 console.log(cardHolder.first + " " + cardHolder.zones.length);
-                                                if(items.length == ++doneCount){
+                                                if(items.length == ++finishCount){
                                                     done(null, items);
                                                 }
                                             }
@@ -71,13 +72,13 @@ function findAllWithParams(searchValue, done){
                                     Zones.findById(zone.zone_id, function(err, zoneInfo){
                                         zone.name = zoneInfo[0].name;
                                         console.log(cardHolder.first + " " + cardHolder.zones[0].name);
-                                        if((++zoneCount == cardHolder.zones.length) && (items.length == ++doneCount)){
+                                        if((++zoneCount == cardHolder.zones.length) && (items.length == ++finishCount)){
                                             done(null, items);
                                         }
                                     });
                                 });
                             } else {
-                                if(items.length == ++doneCount){
+                                if(items.length == ++finishCount){
                                     done(null, items);
                                 }
                             }

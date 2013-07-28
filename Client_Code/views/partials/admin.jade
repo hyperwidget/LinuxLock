@@ -23,7 +23,7 @@ div.mainPanel
                 th Manage Devices
                 th Manage Zones
                 th Generate Reports
-                th Manage Backups
+                th Manage RFIDs
                 th Manage Settings
             tr(ng-repeat="admin in admins", class="{{'row' + $index % 2 }}", ng-click="changeCurrentAdmin($event, $index)")
                 td {{admin.name}}
@@ -32,5 +32,5 @@ div.mainPanel
                 td {{admin.canManageDevices}}
                 td {{admin.canManageZones}}
                 td {{admin.canGenerateReports}}
-                td {{admin.canManageBackups}}
+                td {{admin.canManageRFIDs}}
                 td {{admin.canManageSettings}}
