@@ -4,7 +4,8 @@ var connect = require('connect'),
   io = require('socket.io'),
   port = (process.env.PORT || 3000),
   flash = require('connect-flash'),
-  exec = require('child_process').exec;
+  exec = require('child_process').exec,
+  bcrypt = require('bcrypt-nodejs');
 //Setup Express
 var app = express();
 var cardHolders = require('./routes/cardHolders');
@@ -86,10 +87,13 @@ passport.use(new LocalStrategy(
       if (!user) {
         return done(null, false, { message: 'Incorrect username.' });
       }
-      if (user.password !== password) {
-        return done(null, false, { message: 'Incorrect password.' });
-      }
-      return done(null, user);
+      bcrypt.compare(password, user.password, function(err, res){
+        if(res == false){
+          return done(null, false, { message: 'Incorrect password.' });
+        } else {
+          return done(null, user);
+        }
+      });
     });
   }
 ));
@@ -111,6 +115,7 @@ function ensureAuthenticated(req, res, next) {
 
 app.get('/', function(req,res){
   console.log('emptyPath');
+  console.log(bcrypt.hashSync("P@ssw0rd"));
   res.render('login.jade', {
       title : 'Linux Lock',
       description: 'Starting page',

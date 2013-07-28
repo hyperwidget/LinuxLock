@@ -1,4 +1,6 @@
-mongo = require('./mongo_connect.js');
+mongo = require('./mongo_connect.js'),
+bcrypt = require('bcrypt-nodejs');
+
 
 exports.findAll = function(req, res, done) {
     if(req.query.name !== undefined){
@@ -78,7 +80,7 @@ exports.add = function(req, done){
 
     newAdmin = {name: req.body.name, 
         username: req.body.username,
-        password: req.body.password,
+        password: bcrypt.hashSync(req.body.password),
         canManageUsers: req.body.canManageUsers,
         canManageDevices: req.body.canManageDevices,
         canManageZones: req.body.canManageZones,
@@ -98,17 +100,15 @@ exports.add = function(req, done){
 };
 
 exports.edit = function(req, done){
-    var err, o_id = new BSON.ObjectID.createFromHexString(id.toString());;
+    var err, o_id = new BSON.ObjectID.createFromHexString(req.body._id.toString());;
     console.log('admin edit ' + req);
-
-    admin = findById(req.body.id);
 
     db.collection('admins', function(err, collection){
         collection.update({'_id': o_id},
         {
             $set: {name: req.body.name, 
             username: req.body.username,
-            password: req.body.password,
+            password: bcrypt.hashSync(req.body.password),
             canManageUsers: req.body.canManageUsers,
             canManageDevices: req.body.canManageDevices,
             canManageZones: req.body.canManageZones,
