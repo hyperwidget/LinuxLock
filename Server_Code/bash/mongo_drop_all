@@ -1,0 +1,24 @@
+// DROPS EVERYTHING AND THAN CREATES AN EMPTY DB DIAGRAM WITH SYS ADMIN IN IT //
+// HOW IT'S WORK:
+// 
+//  mongo < mongo_drop_all
+//
+
+show dbs 
+use linux_lock 
+db.dropDatabase() // Drops all tables in linux lock
+
+ // RECREATE COLLECTIONS //
+db.createCollection("rfids")
+db.createCollection("zones")
+db.createCollection("cardHolders")
+db.createCollection("devices")
+db.createCollection("events")
+db.createCollection("settings")
+db.createCollection("admins")
+
+// ------------------Admin------------------------- //
+
+admin1_id = ObjectId()
+superAdmin = { _id: admin1_id, name : "Default SuperAdmin", username: "admin", password: "$2a$10$KkFFgJ48BKEbCGyJ81ULNulK0BWoyT4GcVOiQeOiWeZrnwsiJt2P.", canManageUsers : true, canManageDevices : true, canManageZones : true, canGenerateReports : true, canManageRFIDs : true, canManageSettings : true }
+db.admins.insert(superAdmin);
