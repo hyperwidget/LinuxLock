@@ -14,7 +14,6 @@
 #
 #
 # @author Anatoly Spektor
-
 source linux_lock.conf # PLEASE DO NOT MODIFY THIS LINE!!!!
 
 setup_dir=`pwd`
@@ -100,11 +99,9 @@ mongo < ./mongo_setup | ./mongo_test
 
   # CREATE BACKUP DIR
   mkdir $LL_BACKUP_DIR
-
-  cd $LINUX_LOCK_PATH/Server_Code
   echo -e "${green}[Linux Lock] Succesfull installation of Node, Mongo, Linux Lock and all dependencies!${endColor}"
-  cd ..
     echo -e "[Linux Lock] Please type -  node server.js  - to start Linux Lock "
+      cd $LINUX_LOCK_PATH/Server_Code
  else
 	echo -e "${red}[Linux Lock] Please ensure that you have internet connection and try again!${endColor}" >&2
 	exit 4
