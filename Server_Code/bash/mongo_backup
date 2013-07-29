@@ -36,6 +36,8 @@ if [ $? -ne 0 ]
 	exit 16678
 fi
 
+now=$(date +"%m_%d_%Y")
+
 #in case user have changed backup_path and it does not exist yet!
 if [ ! -d "$LL_BACKUP_DIR" ]
  then
