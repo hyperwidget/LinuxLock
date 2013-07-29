@@ -77,7 +77,7 @@ exports.edit = function(req, done){
                     case "Backup":
                     switch(req.body.value){
                         case "Weekly":
-                        exec('bash/mongo_backup -w', 
+                        exec('./bash/mongo_backup -w', 
                           function (error, stdout, stderr) { 
                             console.log('stdout: ' + stdout);
                             console.log('stderr: ' + stderr);
@@ -89,7 +89,7 @@ exports.edit = function(req, done){
                         });                       
                         break;
                         case "Monthly":
-                        exec('bash/mongo_backup -m', 
+                        exec('./bash/mongo_backup -m', 
                           function (error, stdout, stderr) { 
                             console.log('stdout: ' + stdout);
                             console.log('stderr: ' + stderr);
@@ -101,7 +101,7 @@ exports.edit = function(req, done){
                         }); 
                         break;
                         case "Daily":
-                        exec('bash/mongo_backup -d',
+                        exec('./bash/mongo_backup -d',
                           function (error, stdout, stderr) { 
                             console.log('stdout: ' + stdout);
                             console.log('stderr: ' + stderr);

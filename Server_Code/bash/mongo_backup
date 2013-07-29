@@ -25,6 +25,8 @@
   #figure out interface to restore
 
 
+cd ~/LinuxLock/Server_Code/bash #PLEASE DO NOT MODIFY THIS LINE
+
 source linux_lock.conf # PLEASE DO NOT MODIFY THIS LINE!!!! (Needed for PATHS!)
 
 
@@ -79,7 +81,7 @@ function scheduleBackup() {
   		
   crontab -l > /tmp/cronfile$$
   # tweak needed to get rid of old mongodump entry
-  grep -v "mongodump" /tmp/cronfile$$ > /tmp/cronfile1$$
+  grep -v "mongo_dump" /tmp/cronfile$$ > /tmp/cronfile1$$
   rm -r /tmp/cronfile$$
   #appending new entry to cronfile
   echo "$1" >> /tmp/cronfile1$$
@@ -94,9 +96,9 @@ getNumOfBackups
 if [[ $# = 0 ]]; then echo "Argument required (allowed: -w -d -m)"; exit 1; fi;
 
 #time stamp needed for mongo backup file names
-now=$(date +"%m_%d_%Y")
+x
 
-
+mongodump --db linux_lock --out $LL_BACKUP_DIR/linux_lock_db_backup_$now > /dev/null
 
 #get options from command line
 while getopts :wdm opt
@@ -118,7 +120,7 @@ if [ "$wflag" = 1 ]
 	# deleting old backup if there are too much backups
 	removeOldBackup
  	# passing weekly crontab starting at 7:30 every mondat
-	scheduleBackup  "30 7 * * 1 mongodump --db linux_lock --out $LL_BACKUP_DIR/linux_lock_db_backup_$now"
+	scheduleBackup  "30 7 * * 1 $LINUX_LOCK_PATH/Server_Code/bash/mongo_dump "
 	echo "[Linux Lock] You have chosen Weekly backup at 7:30 a.m every Monday with $maxBackups maximum amount of backups"
 fi
 #DAILY
@@ -128,7 +130,7 @@ if [ "$dflag" = 1 ]
 	# deleting old backup if there are too much backups
 	removeOldBackup
 	# setting cron job
-	scheduleBackup  "30 7 * * * mongodump  --db linux_lock --out $LL_BACKUP_DIR/linux_lock_db_backup_$now"
+	scheduleBackup  "30 7 * * * $LINUX_LOCK_PATH/Server_Code/bash/mongo_dump"
 	if [ $? -eq 0 ]
 	  then
 		echo "[Linux Lock] You have chosen Daily backup  at 7:30 a.m. Maximum amount of backups $maxBackups"
@@ -141,13 +143,9 @@ if [ "$mflag" = 1 ]
 	# deleting old backup if there are too much backups
 	removeOldBackup
 	# setting cron job
-	scheduleBackup "30 7 1 * * mongodump  --db linux_lock --out $LL_BACKUP_DIR/linux_lock_db_backup_$now"
+	scheduleBackup "30 7 1 * * $LINUX_LOCK_PATH/Server_Code/bash/mongo_dump"
 	echo "[Linux Lock] You have chosen Monthly backup at 7:30 every 1st day of the month, with $maxBackups maximum amount of backups"
 fi
-#RESTORE
-if [ "$rflag" = 1 ]
-	#call mongorestore on latest file!
-   then echo "[Linux Lock] Restored latest backup!"
-fi
+
 
 
