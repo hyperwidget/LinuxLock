@@ -76,6 +76,11 @@ rfid2_id = ObjectId()
 rfid3_id = ObjectId()
 rfid4_id = ObjectId()
 rfid5_id = ObjectId()
+rfid6_id = ObjectId()
+rfid7_id = ObjectId()
+rfid8_id = ObjectId()
+rfid9_id = ObjectId()
+rfid10_id = ObjectId()
 
 //Create RDIF's //
 rfid1 = { _id : rfid1_id,  rfidNo : "0200D17485", status: "a", cardHolder_id: cardHolder1_id }
@@ -83,6 +88,11 @@ rfid2 = { _id : rfid2_id,  rfidNo : "0200D14D3E", status: "a", cardHolder_id: ca
 rfid3 = { _id : rfid3_id,  rfidNo : "0200D15473", status: "n", cardHolder_id: cardHolder3_id }
 rfid4 = { _id : rfid4_id,  rfidNo : "0200D2881A", status: "n", cardHolder_id: cardHolder1_id }
 rfid5 = { _id : rfid5_id,  rfidNo : "0200D1423F", status: "n", cardHolder_id: cardHolder2_id }
+rfid6 = { _id : rfid6_id,  rfidNo : "0200D173F5", status: "n", cardHolder_id: cardHolder2_id }
+rfid7 = { _id : rfid7_id,  rfidNo : "0200D1500A", status: "n", cardHolder_id: cardHolder2_id }
+rfid8 = { _id : rfid8_id,  rfidNo : "0200D12A08", status: "n", cardHolder_id: cardHolder2_id }
+rfid9 = { _id : rfid9_id,  rfidNo : "0200D1269F", status: "n", cardHolder_id: cardHolder2_id }
+rfid10 = { _id : rfid10_id,  rfidNo : "0200D150C7", status: "n", cardHolder_id: cardHolder2_id }
 
 // INSERT RFIDs TO DB //
 db.rfids.insert(rfid1)
@@ -90,6 +100,11 @@ db.rfids.insert(rfid2)
 db.rfids.insert(rfid3)
 db.rfids.insert(rfid4)
 db.rfids.insert(rfid5)
+db.rfids.insert(rfid6)
+db.rfids.insert(rfid7)
+db.rfids.insert(rfid8)
+db.rfids.insert(rfid9)
+db.rfids.insert(rfid10)
 
 // --------------------CARDHOLDER---------------//
 
