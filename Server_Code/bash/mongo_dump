@@ -1,0 +1,11 @@
+#!/bin/bash
+#
+# This script should be called only by mongo_backup!
+#
+
+#
+source ~/LinuxLock/Server_Code/bash/linux_lock.conf
+
+now=$(date +"%m_%d_%Y")
+mongodump --db linux_lock --out $LL_BACKUP_DIR/linux_lock_db_backup_$now
+
