@@ -6,26 +6,19 @@
 		input#byDeviceName.searchBox(type="text", ng-model="name", name="byDeviceName")
 		button.goButton(ng-click="searchByDeviceName()") Go
 	span.item
-		label(for="byDeviceType") Device Type
-		input#byDeviceType.searchBox(type="text", ng-model="type", name="byDeviceType")
-		button.goButton(ng-click="searchByDeviceType()") Go
-	span.item
 		label(for="byDeviceHostname") Device Hostname
 		input#byDeviceHostname.searchBox(type="text", ng-model="hostname", name="byDeviceHostname")
 		button.goButton(ng-click="searchByHostName()") Go
 .mainPanel
-	span.item Results for...
 	span.item
-		button(ng-click="addDevice()") Add
-		button(ng-click="editDevice()") Edit
-		button(ng-click="deleteDevice()") Delete
+		button(ng-click="addDevice()", ng-disabled="isAddButtonDisabled") Add
+		button(ng-click="editDevice()", ng-disabled="isEditButtonDisabled") Edit
+		button(ng-click="deleteDevice()", ng-disabled="isDeleteButtonDisabled") Delete
 	span.item
 		table
 			tr
 				th Name
-				th Type
 				th Hostname
 			tr(ng-repeat="device in devices", class="{{'row' + $index % 2 }}", ng-click="changeCurrentDevice($event, $index)")
 				td {{device.name}}
-				td {{device.type}}
 				td {{device.hostname}}

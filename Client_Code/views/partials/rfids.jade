@@ -3,18 +3,17 @@
         span Search By:
     span.item
         label(for="byCardNumber") Card Number
-        input.searchBox(type="text", id="byCardNumber")
-        button.goButton Go
+        input.searchBox(type="text", ng-model="rfidNo", id="byCardNumber")
+        button.goButton(ng-click="searchByRFIDNo()") Go
     span.item
         label(for="byStatus") Status
-        input.searchBox(type="text", id="byStatus")
-        button.goButton Go
+        input.searchBox(type="text", ng-model="status", id="byStatus")
+        button.goButton(ng-click="searchByRFIDStatus()") Go
 .mainPanel
-    span.item Results for...
     span.item
-        button(ng-click="addRFID()") Add
-        button(ng-click="editRFID()") Edit
-        button(ng-click="deleteRFID()") Delete
+        button(ng-click="addRFID()", ng-disabled="isAddButtonDisabled") Add
+        button(ng-click="editRFID()", ng-disabled="isEditButtonDisabled") Edit
+        button(ng-click="deleteRFID()", ng-disabled="isDeleteButtonDisabled") Delete
     span.item
         table
             tr

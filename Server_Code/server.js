@@ -3,7 +3,9 @@ var connect = require('connect'),
   express = require('express'),
   io = require('socket.io'),
   port = (process.env.PORT || 3000),
-  flash = require('connect-flash');
+  flash = require('connect-flash'),
+  exec = require('child_process').exec,
+  bcrypt = require('bcrypt-nodejs');
 //Setup Express
 var app = express();
 var cardHolders = require('./routes/cardHolders');
@@ -20,6 +22,7 @@ var passport = require('passport'),
 app.configure(function(){
   app.set('views', './../Client_Code/views');
   app.set('view options', { layout: false });
+  app.use(express.logger('dev'));
   app.use(connect.bodyParser());
   app.use(express.cookieParser());
   app.use(express.session({ secret: "shhhhhhhhh!"}));
@@ -84,18 +87,24 @@ passport.use(new LocalStrategy(
       if (!user) {
         return done(null, false, { message: 'Incorrect username.' });
       }
-      if (user.password !== password) {
-        return done(null, false, { message: 'Incorrect password.' });
-      }
-      return done(null, user);
+      bcrypt.compare(password, user.password, function(err, res){
+        if(res == false){
+          return done(null, false, { message: 'Incorrect password.' });
+        } else {
+          return done(null, user);
+        }
+      });
     });
   }
 ));
 
 
 function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) { return next(); }
+  if (req.isAuthenticated()) { 
+    return next(); 
+  }
   res.redirect('/')
+
 }
 
 ///////////////////////////////////////////
@@ -106,6 +115,7 @@ function ensureAuthenticated(req, res, next) {
 
 app.get('/', function(req,res){
   console.log('emptyPath');
+  console.log(bcrypt.hashSync("P@ssw0rd"));
   res.render('login.jade', {
       title : 'Linux Lock',
       description: 'Starting page',
@@ -140,16 +150,58 @@ app.get('/console', ensureAuthenticated,
 app.get('/templates/:name', ensureAuthenticated,
   function(req,res){
     console.log('template' + req.params.name);
-    res.render('partials/' + req.params.name + '.jade', {
-      title : 'Linux Lock',
-      description: 'Starting page',
-      author: 'Kaleidus Code',
-      messages: req.flash()
-    });
+    var allowed = true;
+    switch(req.params.name){
+      case 'users':
+        if(req.user.canManageUsers != true){
+          allowed = false;
+        }
+        break;
+      case 'devices':
+        if(req.user.canManageDevices != true){
+          allowed = false;
+        }
+        break;
+      case 'zones':
+        if(req.user.canManageZones != true){
+          allowed = false;
+        }
+        break;
+      case 'reports':
+        if(req.user.canGenerateReports != true){
+          allowed = false;
+        }
+        break;
+      case 'settings':
+        if(req.user.canManageSettings != true){
+          allowed = false;
+        }
+        break;
+      case 'admin':
+        if(req.user.name !== "Default SuperAdmin"){
+          allowed = false;
+        }
+        break;
+      case 'rfids':
+        if(req.user.canManageRFIDs != true){
+          allowed = false;
+        }
+        break;
+    }
+    if (allowed === false) {
+      res.render('401.jade');
+    } else {
+      res.render('partials/' + req.params.name + '.jade', {
+        title : 'Linux Lock',
+        description: 'Starting page',
+        author: 'Kaleidus Code',
+        messages: req.flash()
+      });
+    }
 });
 
 // Admins
-app.get('/admins', ensureAuthenticated,
+app.get('/admin', ensureAuthenticated,
   function(req, res){
     console.log('get admins');
     admins.findAll(req, res, function(err, items){
@@ -160,7 +212,7 @@ app.get('/admins', ensureAuthenticated,
 app.post('/admin', ensureAuthenticated,
   function(req, res){
     console.log('add admins');
-    adminss.add(req, function(err){
+    admins.add(req, function(err){
 
   });
 });
@@ -169,6 +221,14 @@ app.post('/admin/:id', ensureAuthenticated,
   function(req, res){
     console.log('edit admins');
     admins.edit(req, function(err){
+  });
+});
+
+app.delete('/admin/:id', ensureAuthenticated,
+  function(req, res){
+    console.log('delete admin');
+    cardHolders.delete(req.params.id, function(err){
+      res.writeHead('200');
   });
 });
 
@@ -185,7 +245,7 @@ app.post('/cardHolder', ensureAuthenticated,
   function(req, res){
     console.log('add cardHolder');
     cardHolders.add(req, function(err){
-
+      res.writeHead('200');
   });
 });
 
@@ -193,14 +253,15 @@ app.post('/cardHolder/:id', ensureAuthenticated,
   function(req, res){
     console.log('edit cardHolder');
     cardHolders.edit(req, function(err){
+      res.writeHead('200');
   });
 });
 
 app.delete('/cardHolder/:id', ensureAuthenticated,
   function(req, res){
-    console.log('edit cardHolder');
+    console.log('delete cardHolder');
     cardHolders.delete(req.params.id, function(err){
-      console.log(err);
+      res.writeHead('200');
   });
 });
 
@@ -217,7 +278,7 @@ app.post('/device', ensureAuthenticated,
   function(req, res){
     console.log('add device');
     devices.add(req, function(err){
-
+      res.writeHead('200');
   });
 });
 
@@ -225,6 +286,7 @@ app.post('/device/:id', ensureAuthenticated,
   function(req, res){
     console.log('edit device');
     devices.edit(req, function(err){
+      res.writeHead('200');
   });
 });
 
@@ -232,24 +294,59 @@ app.delete('/device/:id', ensureAuthenticated,
   function(req, res){
     console.log('delete device');
     devices.delete(req.params.id, function(err){
-      console.log(err);
+      res.writeHead('200');
   });
 });
 
+function dateify(str) {
+  // For some reason goddamned browser keeps sending these with
+  // surrounding quotes -- if they're present, remove them
+  str = str.replace(/^"/,'').replace(/"$/,'')
+  var time = Date.parse(str)
+  if(isNaN(time)) {
+      str = str.toLowerCase()
+      time = new Date()
+      if(str === "now") return time
+      else {
+        time.setHours(0,0,0,0)
+        if(str === "today") return time
+        else if(str === "yesterday") time.setDate(time.getDate() - 1)
+        else if(str === "last week") time.setDate(time.getDate() - 7)
+        else if(str === "last month") time.setDate(time.getDate() - 30)
+        else if(str === "last year") time.setDate(time.getDate() - 364)
+        else time = null // IDK
+        return time
+      }
+  } else return new Date(time)
+}
+
 //Events
-app.get('/events', ensureAuthenticated,
+app.get('/event', ensureAuthenticated,
   function(req, res){
-    console.log('get events');
-    events.findAll(function(err, items){
+    // validate query if any
+    var from = req.param('from',null),
+        to = req.param('to',null),
+        who = req.param('who',null),
+        rfid = req.param('rfid',null),
+        dev = req.param('dev',null),
+        params = {}
+    if(from) params.from = dateify(from)
+    if(to) params.to = dateify(to)
+    if(who) params.who = who
+    if(rfid) params.rfid = rfid
+    if(dev) params.dev = dev
+    events.findWithParams(params, function(err, items) {
+      if(err) console.log(err)
+      if(!items) items=[]
       res.jsonp(items);
-  })
+    })
 });
 
 app.post('/event', ensureAuthenticated,
   function(req, res){
     console.log('add event');
     events.add(req, function(err){
-
+      res.writeHead('200');
   });
 });
 
@@ -257,6 +354,7 @@ app.post('/event/:id', ensureAuthenticated,
   function(req, res){
     console.log('edit event');
     events.edit(req, function(err){
+      res.writeHead('200');
   });
 });
 
@@ -273,7 +371,7 @@ app.post('/rfid', ensureAuthenticated,
   function(req, res){
     console.log('add rfid');
     rfids.add(req, function(err){
-
+      res.writeHead('200');
   });
 });
 
@@ -281,6 +379,7 @@ app.post('/rfid/:id', ensureAuthenticated,
   function(req, res){
     console.log('edit rfid');
     rfids.edit(req, function(err){
+      res.writeHead('200');
   });
 });
 
@@ -288,25 +387,33 @@ app.delete('/rfid/:id', ensureAuthenticated,
   function(req, res){
     console.log('delete rfid');
     rfids.delete(req.params.id, function(err){
-      console.log(err);
+      res.writeHead('200');
   });
 });
 
 
 //Settings
-app.get('/settings', ensureAuthenticated,
+app.get('/setting', ensureAuthenticated,
   function(req, res){
     console.log('get settings');
     settings.findAll(function(err, items){
       res.jsonp(items);
-  })
+  });
+});
+
+app.get('/setting/backups', ensureAuthenticated,
+  function(req, res){
+    console.log('get backups');
+    settings.backupsList(function(err, items){
+      res.jsonp(items);
+    });
 });
 
 app.post('/setting', ensureAuthenticated,
   function(req, res){
     console.log('add setting');
     settings.add(req, function(err){
-
+      res.writeHead('200');
   });
 });
 
@@ -314,11 +421,28 @@ app.post('/setting/:id', ensureAuthenticated,
   function(req, res){
     console.log('edit setting');
     settings.edit(req, function(err){
+      res.writeHead('200');
   });
 });
 
+app.post('/executeRestore', ensureAuthenticated,
+  function(req, res){
+    console.log('RUN RESTORE');
+
+    child = exec('mongorestore ./../db_backup/', // command line argument directly in string
+      function (error, stdout, stderr) {      // one easy function to capture data/errors
+        console.log('stdout: ' + stdout);
+        console.log('stderr: ' + stderr);
+        if (error !== null) {
+          console.log('exec error: ' + error);
+        } else {
+          res.writeHead('200');
+        }
+    }); 
+});
+
 //Zones
-app.get('/zones', ensureAuthenticated,
+app.get('/zone', ensureAuthenticated,
   function(req, res){
     console.log('get zones');
     zones.findAll(req, res, function(err, items){
@@ -330,7 +454,7 @@ app.post('/zone', ensureAuthenticated,
   function(req, res){
     console.log('add zone');
     zones.add(req, function(err){
-
+      res.writeHead('200');
   });
 });
 
@@ -338,11 +462,17 @@ app.post('/zone/:id', ensureAuthenticated,
   function(req, res){
     console.log('edit zone');
     zones.edit(req, function(err){
+      res.writeHead('200');
   });
 });
 
-
-
+app.delete('/zone/:id', ensureAuthenticated,
+  function(req, res){
+    console.log('delete zone');
+    zones.delete(req.params.id, function(err){
+      res.writeHead('200');
+  });
+});
 
 
 //A Route for Creating a 500 Error (Useful to keep around)

@@ -1,6 +1,6 @@
 require('./mongo_connect.js');
-rfids = require('./rfids');
-zones = require('./zones');
+Rfids = require('./rfids');
+Zones = require('./zones');
 
 exports.findAll = function(req, res, done) {
     if(req.query.first !== undefined){
@@ -20,9 +20,8 @@ exports.findAll = function(req, res, done) {
             }
         });
     } else if(req.query.zone !== undefined){
-        zones.findById(req.query.card, function(err, zone){
-            findAllWithParams({"cards.zone_id": zone[0]._id}, done);
-        });
+        o_id = new BSON.ObjectID.createFromHexString(req.query.zone.toString());
+        findAllWithParams({"zones.zone_id": o_id}, done);
     } else {
         findAllWithParams('', done);
     }
@@ -36,26 +35,31 @@ function findAllWithParams(searchValue, done){
             } else {
                 var cardHolderCount = 0;
                 if(items.length > 0 ){
+                    finishCount = 0;
                     items.forEach(function(cardHolder){
                         var cardCount = 0;
                         if(cardHolder.cards.length > 0){
                             cardHolder.cards.forEach(function(card){
-                                rfids.findById(card.rfid_id, function(err, cardInfo){
+                                Rfids.findById(card.rfid_id, function(err, cardInfo){
                                     card.rfidNo = cardInfo[0].rfidNo;
                                     if((++cardCount == cardHolder.cards.length) && (items[items.length - 1]._id == cardHolder._id)){
                                         items.forEach(function(cardHolder){
                                             if(cardHolder.zones.length > 0){
                                                 var zoneCount = 0;
                                                 cardHolder.zones.forEach(function(zone){
-                                                    zones.findById(zone.zone_id, function(err, zoneInfo){
+                                                    Zones.findById(zone.zone_id, function(err, zoneInfo){
                                                         zone.name = zoneInfo[0].name;
-                                                        if((++zoneCount == cardHolder.zones.length) && (items[items.length - 1]._id == cardHolder._id)){
+                                                        console.log(cardHolder.first + " " + zone.name + " " + finishCount);
+                                                        if((++zoneCount == cardHolder.zones.length) && (items.length == ++finishCount)){
                                                             done(null, items);
                                                         }
                                                     });
                                                 });
                                             } else {
-                                                done(null, items);
+                                                console.log(cardHolder.first + " " + cardHolder.zones.length);
+                                                if(items.length == ++finishCount){
+                                                    done(null, items);
+                                                }
                                             }
                                         });
                                     }
@@ -65,20 +69,23 @@ function findAllWithParams(searchValue, done){
                             if(cardHolder.zones.length > 0){
                                 var zoneCount = 0;
                                 cardHolder.zones.forEach(function(zone){
-                                    zones.findById(zone.zone_id, function(err, zoneInfo){
+                                    Zones.findById(zone.zone_id, function(err, zoneInfo){
                                         zone.name = zoneInfo[0].name;
-                                        if((++zoneCount == cardHolder.zones.length) && (items[items.length - 1]._id == cardHolder._id)){
+                                        console.log(cardHolder.first + " " + cardHolder.zones[0].name);
+                                        if((++zoneCount == cardHolder.zones.length) && (items.length == ++finishCount)){
                                             done(null, items);
                                         }
                                     });
                                 });
                             } else {
-                                done(null, items);
+                                if(items.length == ++finishCount){
+                                    done(null, items);
+                                }
                             }
                         }
                     });
                 } else {
-                    done(null, null);
+                    done(null, items);
                 }
             }
         });
@@ -102,16 +109,29 @@ exports.findById = function(id, done) {
 exports.add = function(req, done){
     var err;
     console.log('cardholder add ' + req);
-    cardsArray = [];
-    zonesArray = [];  
+    o_id = new BSON.ObjectID();
+    zones = [];
+    cards = [];
+    for(i in req.body.zones) {
+        zone_id = new BSON.ObjectID.createFromHexString(req.body.zones[i].zone_id.toString());
+        zones.push({zone_id: zone_id});
+    }
 
-    newCardHolder = {'first': req.body.first,
-        'last': req.body.last, 
-        'email': req.body.email, 
-        'phone': req.body.phone, 
-        'userRole': "u", 
-        'cards': cardsArray, 
-        'zones': zonesArray};
+    for(i in req.body.cards) {
+        card_id = new BSON.ObjectID.createFromHexString(req.body.cards[i].card_id.toString());
+        cards.push({card_id: card_id});
+    }
+
+    newCardHolder = {
+        _id: o_id,
+        first: req.body.first,
+        last: req.body.last, 
+        email: req.body.email, 
+        phone: req.body.phone, 
+        userRole: "u", 
+        cards: cards, 
+        zones: zones
+    };
 
     db.collection('cardHolders', function(err, collection){
         collection.insert(newCardHolder, {safe:true},function(err, doc){
@@ -125,21 +145,34 @@ exports.add = function(req, done){
 };
 
 exports.edit = function(req, done){
-    var err, o_id = new BSON.ObjectID.createFromHexString(id.toString());;
-    console.log('cardholder edit ' + req);
+    console.log(req.body);
+    var err, o_id = new BSON.ObjectID.createFromHexString(req.body._id.toString());
+    zones = [];
+    cards = [];
+    for(i in req.body.zones) {
+        zone_id = new BSON.ObjectID.createFromHexString(req.body.zones[i].zone_id.toString());
+        zones.push({zone_id: zone_id});
+    }
 
-    cardHolder = findById(req.body.id);
+    for(i in req.body.cards) {
+        rfid_id = new BSON.ObjectID.createFromHexString(req.body.cards[i].rfid_id.toString());
+        cards.push({rfid_id: rfid_id});
+    }
+
+    console.log(zones);
 
     db.collection('cardHolders', function(err, collection){
-        collection.update({'_id': o_id},
+        collection.update({_id: o_id},
         {
-            $set: {'first': req.body.first,
-            'last': req.body.last,
-            'email': req.body.email,
-            'phone': req.body.phone,
-            'userRole': req.body.userRole,
-            'cards': req.body.cards,
-            'zones': req.body.zones}
+            first: req.body.first,
+            last: req.body.last, 
+            email: req.body.email, 
+            phone: req.body.phone, 
+            userRole: "u", 
+            cards: cards, 
+            zones: zones        
+        }, function(){
+            done(null);
         });
     });
 };
@@ -153,4 +186,28 @@ exports.delete = function(id, done){
             done(null);
         });
     });    
+};
+
+exports.removeRFIDFromCardHolders = function(id, done){
+    var err, o_id = new BSON.ObjectID.createFromHexString(id.toString());;
+    console.log('remove RFID ' + id + ' from cardHolders');
+
+    db.collection('cardHolders', function(err, collection){
+        collection.update({},
+            { $pull : { cards : { rfid_id : o_id } } }, {upsert:false, multi:true}, function(){
+                done(null);
+            } );
+    });
+};
+
+exports.removeZoneFromCardHolders = function(id, done){
+    var err, o_id = new BSON.ObjectID.createFromHexString(id.toString());;
+    console.log('remove Zone ' + id + ' from cardHolders');
+
+    db.collection('cardHolders', function(err, collection){
+        collection.update({},
+            { $pull : { zones : { zone_id : o_id } } }, {upsert:false, multi:true}, function(){
+                done(null);
+            } );
+    });
 };

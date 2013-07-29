@@ -2,24 +2,24 @@
 
 adminConsoleApp.factory('dataManager', function ($resource) {
     var User = $resource('cardHolder/:userId', {userId: '@_id'}),
-    Device = $resource('device/:deviceId', {deviceId: '@_id'}),
-    RFID = $resource('rfid/:rfidId', {rfidId: '@_id'}),
-        usersData = User.query(),
-        devicesData = Device.query(),
-        zonesData = $.getJSON('zones'),
-        adminsData = $.getJSON('admins'),
-        rfidsData = RFID.query(),
-        settingsData = $.getJSON('settings')
+        Device = $resource('device/:deviceId', {deviceId: '@_id'}),
+        RFID = $resource('rfid/:rfidId', {rfidId: '@_id'}),
+        Zone = $resource('zone/:zoneId', {zoneId: '@_id'}),
+        Admin = $resource('admin/:adminId', {adminId: '@_id'}),
+        Event = $resource('event/:eventId', {eventId: '@_id'}),
+        Setting = $resource('setting/:settingId', {settingId: '@_id'}),
+        backups = $.getJSON('setting/backups'),
+        eventsData = []
     ;
     return {
-        dataUsers: usersData,
-        dataDevices: devicesData,
-        dataZones: zonesData,
-        dataAdmins: adminsData,
-        dataRFIDs: rfidsData,
-        dataSettings: settingsData,
+        Setting: Setting,
+        Backups: backups,
+        dataEvents: eventsData,
         User: User,
         Device: Device,
-        RFID: RFID
+        RFID: RFID,
+        Event: Event,
+        Zone: Zone,
+        Admin: Admin,
     };
 });

@@ -1,12 +1,22 @@
-mongo = require('./mongo_connect.js');
+mongo = require('./mongo_connect.js'),
+bcrypt = require('bcrypt-nodejs');
+
 
 exports.findAll = function(req, res, done) {
     if(req.query.name !== undefined){
-        findAllWithParams({name: req.query.name}, done);
-    } else if(req.query.username !== undefined){
-        findAllWithParams({username: req.query.username}, done);
+        if(req.query.name !== 'Default SuperAdmin'){
+            findAllWithParams({name: req.query.name}, done);
+        } else {
+            findAllWithParams({name:{$ne: 'Default SuperAdmin'}}, done);
+        }
+    } else if(req.query.userName !== undefined){
+        if(req.query.userName !== 'admin'){
+            findAllWithParams({username: req.query.userName}, done);
+        } else {
+            findAllWithParams({name:{$ne: 'Default SuperAdmin'}}, done);
+        }
     } else {
-        findAllWithParams('', done);
+        findAllWithParams({name:{$ne: 'Default SuperAdmin'}}, done);
     }
 };
 
@@ -68,15 +78,15 @@ exports.add = function(req, done){
     var err;
     console.log('admin add ' + req);
 
-    newAdmin = {'name': req.body.name, 
-        'username': req.body.username,
-        'password': req.body.password,
-        'canManageUsers': req.body.canManageUsers,
-        'canManageDevices': req.body.canManageDevices,
-        'canManageZones': req.body.canManageZones,
-        'canGenerateReports': req.body.canGenerateReports,
-        'canManageBackups': req.body.canManageBackups,
-        'canManageSettings': req.body.canManageSettings};
+    newAdmin = {name: req.body.name, 
+        username: req.body.username,
+        password: bcrypt.hashSync(req.body.password),
+        canManageUsers: req.body.canManageUsers,
+        canManageDevices: req.body.canManageDevices,
+        canManageZones: req.body.canManageZones,
+        canGenerateReports: req.body.canGenerateReports,
+        canManageBackups: req.body.canManageBackups,
+        canManageSettings: req.body.canManageSettings};
 
     db.collection('admins', function(err, collection){
         collection.insert(newAdmin, {safe:true}, function(err, doc){
@@ -90,23 +100,23 @@ exports.add = function(req, done){
 };
 
 exports.edit = function(req, done){
-    var err, o_id = new BSON.ObjectID.createFromHexString(id.toString());;
+    var err, o_id = new BSON.ObjectID.createFromHexString(req.body._id.toString());;
     console.log('admin edit ' + req);
-
-    admin = findById(req.body.id);
 
     db.collection('admins', function(err, collection){
         collection.update({'_id': o_id},
         {
-            $set: {'name': req.body.name, 
-            'username': req.body.username,
-            'password': req.body.password,
-            'canManageUsers': req.body.canManageUsers,
-            'canManageDevices': req.body.canManageDevices,
-            'canManageZones': req.body.canManageZones,
-            'canGenerateReports': req.body.canGenerateReports,
-            'canManageBackups': req.body.canManageBackups,
-            'canManageSettings': req.body.canManageSettings }
+            $set: {name: req.body.name, 
+            username: req.body.username,
+            password: bcrypt.hashSync(req.body.password),
+            canManageUsers: req.body.canManageUsers,
+            canManageDevices: req.body.canManageDevices,
+            canManageZones: req.body.canManageZones,
+            canGenerateReports: req.body.canGenerateReports,
+            canManageBackups: req.body.canManageBackups,
+            canManageSettings: req.body.canManageSettings }
+         }, function(){
+            done(null);
          });
     });
 };
@@ -116,6 +126,8 @@ exports.delete = function(id, done){
     console.log('admin delete ' + id);
 
     db.collection('admins', function(err, collection){
-        collection.delete({'_id': o_id});
+        collection.delete({'_id': o_id}, function(err, items){
+            done(null);
+        });
     });
 };

@@ -1,6 +1,12 @@
-span.item
-    label(for="Alias") Alias
-    input.searchBox(type="text", id="Alias", ng-model="newZone.alias")
-span.item
-    label(for="Devices") Devices
-    input.searchBox(type="text", id="Devices", ng-model="newZone.devices")
+form(name="form", class="css-form", novalidate)
+    span.item
+        label(for="Alias") Alias
+        input.searchBox(type="text", id="Alias", ng-model="currentZone.name", required, maxlength="30")
+    span.item
+        label Devices
+        select.addList(ng-model="selectedDeviceToAdd", ng-options="d as d.name for d in devices")
+        button.addRemoveBtn(ng-disabled="isAddDeviceDisabled", ng-click="addDevice()") Add Device
+        button.addRemoveBtn(ng-click="removeDevice()", ng-disabled="isRemoveDeviceDisabled") Remove Device
+        select.list(size="3", ng-model="selectedDeviceToRemove", ng-options="device as device.name for device in currentZone.devices")
+        button(ng-disabled="form.$invalid", ng-click="saveData()") Save
+        button(ng-click="hidePopup()") Cancel

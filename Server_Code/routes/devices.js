@@ -1,4 +1,5 @@
 require('./mongo_connect.js');
+Zones = require('./zones');
 
 exports.findAll = function(req, res, done) {
     if(req.query.name !== undefined){
@@ -91,7 +92,7 @@ exports.delete = function(id, done){
 
     db.collection('devices', function(err, collection){
         collection.remove({'_id': o_id}, function(err, items){
-            done(null);
+            Zones.removeDeviceFromZones(id, done);
         });
     });
 };

@@ -23,14 +23,13 @@ div.leftPanel
         button.goButton(ng-click="searchByPhone()") Go
     span.item
         label(for="byZone") Zone
-        input.searchBox(type="text", id="byZone")
-        button.goButton Go
+        select(id="byZone", ng-model="zone", ng-options="z as z.name for z in zones")
+        button.goButton(ng-click="searchByZone()") Go
 div.mainPanel
-    span.item Results for...
     span.item
-        button(ng-click="addUser()") Add
-        button(ng-click="editUser()") Edit
-        button(ng-click="deleteUser()") Delete
+        button(ng-click="addUser()", ng-disabled="isAddButtonDisabled") Add
+        button(ng-click="editUser()", ng-disabled="isEditButtonDisabled") Edit
+        button(ng-click="deleteUser()", ng-disabled="isDeleteButtonDisabled") Delete
     span.item
         table(cellspacing="0")
             tr
@@ -47,5 +46,5 @@ div.mainPanel
                 td {{user.phone}}
                 td 
                     div(ng-repeat="card in user.cards"){{card.rfidNo}}
-                td 
+                td
                     div(ng-repeat="zone in user.zones"){{zone.name}}

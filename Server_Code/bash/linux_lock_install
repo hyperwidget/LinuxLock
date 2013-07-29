@@ -1,49 +1,108 @@
 #!/bin/bash
-# This script suppose to generate db and objects (I will add validation later)
-# author: Anatoly Spektor
-# 
-# Need to be done:
-#  - create collections for each table
-#  - make sure mogno is installed before doing "mongo" (using rpm)
-#  - drop db and collection and than recreate
-#  - put more dummy values
+
+#####################################################
+#						    #	
+#		Linux Lock Installation Script	    #	
+#						    # 	
+#####################################################
+
+# Description:
+#
+# This script installed Node.JS MongoDB and populates MongoDB with collection
+# required for Linux Lock System. It also pulls Linux Lock from the repository and runs the server.
+#
+#
+#
+# @author Anatoly Spektor
+source linux_lock.conf # PLEASE DO NOT MODIFY THIS LINE!!!!
+
+setup_dir=`pwd`
+
+#FORMATTING STRINGS
+green='\e[0;32m'
+endColor='\e[0m'
+red='\e[0;31m'
+
 
 #Fine distribution and install Mongo depending on distro
 distro=$(cat /etc/*-release |  grep "^ID=" | awk -F'=' '{print $2}')
 arch=$(uname -m)
-
-# Make sure only root can run our script
-#if [ "$(id -u)" != "0" ]; then
-#   echo "This script must be run as root" 1>&2
-#   exit 1
-#fi
-# ...
-
-
-if [ "$distro" = "fedora" ]
- then	
-	#Installing Mongo Dependencies (like git)
-	sudo yum -y install git-core scons gcc-c++ glibc-devel 2>/dev/null
-else if [[ $distro = "ubuntu" ]]
-   then
-	#Installing Mongo Dependencies (like git)
-	sudo apt-get install git-core build-essential scons 2> /dev/null
-else exit 134
-fi
-		
-if [ $? == "0" ]
+clear
+#checks if user is connected to Internet
+if ping  -w 5 -c 1 yahoo.com >& /dev/null
  then
-			#Installing Mongo
-			type mongo >/dev/null 2>&1 || { git clone git://github.com/mongodb/mongo.git; cd mongo; git checkout r2.4.0; scons all }
-			#Installing Node
-			type node >/dev/null 2>&1 || { git clone git://github.com/joyent/node.git; cd node; ./configure;make; sudo make install }
-			#Installing LinuxLock
-			mkdir ~/linux_lock; cd linux_lock
-			#Pseudocode
-				#Clone Repo (need to be public)
-				#go to Server do npm install
-				#do mongo setup and mongo_test
-				#allow user to do some congif
-	
+
+  if [[ "$distro" = "fedora" ]]
+   then	
+	#Installing Mongo Dependencies (like git)
+	echo -e  "${green}[Linux Lock] Installing dependencies.. ${endColor}"
+	sudo yum -y install git-core scons gcc-c++ glibc-devel >/dev/null
+  elif [[ $distro = "ubuntu" ]]
+  then
+	#Installing Mongo Dependencies (like git)
+	echo -e  "${green}[Linux Lock] Installing dependencies.. ${endColor}"
+	sudo apt-get install git-core build-essential scons >/dev/null
+  else
+	echo -e "${red}[Linux Lock] At This point LinuxLock supports only Fedora and Ubuntu, please email to support@linuxlock.com to get more information ${endColor}" >&2 
+	exit 134
+ fi
+
+ # Checking if MongoDB is alredy installed
+ type mongo  >/dev/null 2>&1
+ if [[ $? != 0 ]]
+  then 
+	#Installing MongoDB
+	git clone git://github.com/mongodb/mongo.git; 
+	cd mongo; git checkout r2.4.0; 
+	scons all;
+ else 
+	echo -e "${green}[Linux Lock] Good news! You already have mongo installed! [skipping installation]${endColor}"
+ fi
+
+# Checking if Node is already installed
+ type node >/dev/null 2>&1
+ if [[ $? != 0 ]]
+  then 
+	#Installing Node.js
+	git clone git://github.com/joyent/node.git;
+	cd node; ./configure;make; 
+	sudo make install
+  else 
+	echo -e "${green}[Linux Lock] Good news! You already have Node installed! [skipping installation]${endColor}"
+ fi
+
+
+ # Creating Linux_Lock Path
+ if [ -d "$LINUX_LOCK_PATH" ]
+  then
+	echo -e "${red}[Linux Lock] Error: IT seems you already have $LINUX_LOCK_PATH , please delete all it's content to continue new instalaltion and run this script again!${endColor}" >&2
+	exit 1515
+ fi
+
+ echo -e "${green}[Linux Lock] Populating Mongo Database with required collections...${endColor}"
+ cd $setup_dir
+ chmod 775 mongo_setup;
+ chmod 775 mongo_test;
+
+ #Populating MongoDB
+mongo < ./mongo_setup | ./mongo_test
+
+ mkdir  $LINUX_LOCK_PATH >/dev/null 2>&1; cd  $LINUX_LOCK_PATH >/dev/null 2>&1
+
+ #clone git repo
+ echo -e "${green}[Linux Lock] Getting Linux Lock source code...${endColor}"
+ git clone git@github.com:rawkamatic/LinuxLock.git .
+
+ #installing additional dependencies
+  echo -e "${green}[Linux Lock] Installing additional dependencies...${endColor}"
+ cd $LINUX_LOCK_PATH/Server_Code; npm install >/dev/null
+
+  # CREATE BACKUP DIR
+  mkdir $LL_BACKUP_DIR
+  echo -e "${green}[Linux Lock] Succesfull installation of Node, Mongo, Linux Lock and all dependencies!${endColor}"
+    echo -e "[Linux Lock] Please type -  node ../server.js  - to start Linux Lock "
+      cd $LINUX_LOCK_PATH/Server_Code
+ else
+	echo -e "${red}[Linux Lock] Please ensure that you have internet connection and try again!${endColor}" >&2
+	exit 4
 fi
-exit 0

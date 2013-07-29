@@ -1,4 +1,7 @@
 require('./mongo_connect.js');
+var fs = require("fs"),
+path = require("path"),
+exec = require('child_process').exec;
 
 exports.findAll = function(callback) {
     db.collection('settings', function(err, collection) {
@@ -9,6 +12,22 @@ exports.findAll = function(callback) {
                 callback(null, items);
             }
         });
+    });
+};
+
+exports.backupsList = function(callback){
+    var p = "../db_backup"
+    filesList = [];
+    fs.readdir(p, function (err, files) {
+        if (err) {
+            return callback(err, filesList);            
+        }
+        files.map(function (file) {
+            return file;
+        }).forEach(function (file) {
+            filesList.push(file);
+        });
+        callback(null, filesList);
     });
 };
 
@@ -45,18 +64,66 @@ exports.add = function(req, done){
 };
 
 exports.edit = function(req, done){
-    var err, o_id = new BSON.ObjectID.createFromHexString(id.toString());;
+    var err, o_id = new BSON.ObjectID.createFromHexString(req.body._id.toString());;
     console.log('setting edit ' + req);
-
-    setting = findById(req.body.id);
 
     db.collection('settings', function(err, collection){
         collection.update({'_id': o_id},
         {
-            $set: {'name': req.body.settingNo,
-            'value': req.body.status}
-         });
-    });
+            $set: {
+                value: req.body.value}
+            }, function(){
+                switch(req.body.name){
+                    case "Backup":
+                    switch(req.body.value){
+                        case "Weekly":
+                        exec('./bash/mongo_backup -w', 
+                          function (error, stdout, stderr) { 
+                            console.log('stdout: ' + stdout);
+                            console.log('stderr: ' + stderr);
+                            if (error !== null) {
+                              console.log('exec error: ' + error);
+                            } else {
+                                done(null);
+                            }
+                        });                       
+                        break;
+                        case "Monthly":
+                        exec('./bash/mongo_backup -m', 
+                          function (error, stdout, stderr) { 
+                            console.log('stdout: ' + stdout);
+                            console.log('stderr: ' + stderr);
+                            if (error !== null) {
+                              console.log('exec error: ' + error);
+                            } else {
+                                done(null);
+                            }
+                        }); 
+                        break;
+                        case "Daily":
+                        exec('./bash/mongo_backup -d',
+                          function (error, stdout, stderr) { 
+                            console.log('stdout: ' + stdout);
+                            console.log('stderr: ' + stderr);
+                            if (error !== null) {
+                              console.log('exec error: ' + error);
+                            } else {
+                                done(null);
+                            }
+                        }); 
+                        break;
+                        default:
+                        done(null);
+                        break;
+                    }
+                    break;
+                    default:
+                    break;
+                };
+            });
+});
+
+
 };
 
 exports.delete = function(id, done){

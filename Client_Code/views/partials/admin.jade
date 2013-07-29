@@ -3,19 +3,17 @@ div.leftPanel
         span Search By:
     span.item
         label(for="byName") Name
-        input.searchBox(type="text", id="byName")
-        button.goButton Go
+        input.searchBox(type="text", ng-model="name", id="byName")
+        button.goButton(ng-click="searchByName()") Go
     span.item
         label(for="byUserName") User Name
-        input.searchBox(type="text", id="byUserName")
-        button.goButton Go
+        input.searchBox(type="text", ng-model="userName", id="byUserName")
+        button.goButton(ng-click="searchByUserName()") Go
 div.mainPanel
     span.item
-        Results Results for...
-    span.item
-        button(ng-click="addAdmin()") Add
-        button Edit
-        button Delete
+        button(ng-click="addAdmin()", ng-disabled="isAddButtonDisabled") Add
+        button(ng-click="editAdmin()", ng-disabled="isEditButtonDisabled") Edit
+        button(ng-click="deleteAdmin()", ng-disabled="isDeleteButtonDisabled") Delete
     span.item
         table
             tr
@@ -25,14 +23,14 @@ div.mainPanel
                 th Manage Devices
                 th Manage Zones
                 th Generate Reports
-                th Manage Backups
+                th Manage RFIDs
                 th Manage Settings
-            tr(ng-repeat="admin in admins", class="{{'row' + $index % 2 }}")
+            tr(ng-repeat="admin in admins", class="{{'row' + $index % 2 }}", ng-click="changeCurrentAdmin($event, $index)")
                 td {{admin.name}}
                 td {{admin.username}}
                 td {{admin.canManageUsers}}
                 td {{admin.canManageDevices}}
                 td {{admin.canManageZones}}
                 td {{admin.canGenerateReports}}
-                td {{admin.canManageBackups}}
+                td {{admin.canManageRFIDs}}
                 td {{admin.canManageSettings}}

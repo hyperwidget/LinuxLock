@@ -3,12 +3,34 @@ extends layout
 block header
 
 block content
-	form(form action="/login",	 method="post")
-		div
-			label(for='username') Username
-			input(id='username', name='username', type='text', value='', placeholder='Enter Username')
-		div
-			label(for='password') Password
-			input(id='password', name='password', type='password', value='', placeholder='Enter Password')
-		div
-			input(type='submit',value='Log In')
+	div.loginHeader
+		div.welcomeMessage
+			p Welcome to Linux Lock
+			p Please log in to continue
+	div(id='loginControls')
+		form(form action="/login",	 method="post")
+			div.loginControl
+				label.left(for='username') Username:
+				input.right(id='username', name='username', type='text', value='', placeholder='Enter Username')
+			div.loginControl
+				label.left(for='password') Password:
+				input.right(id='password', name='password', type='password', value='', placeholder='Enter Password')
+			div.loginControl
+				input.right(type='submit',value='Log In')
+	div.acknowledgements
+		p Built by and using
+		div.acknowledgeImages
+			div.acknowledgementImage.left
+				img(src='img/kal3.png')
+			div.acknowledgementImage.left
+				a(href="http://www.raspberrypi.org/", target="_blank")
+					img(src='img/pi.png')
+			div.acknowledgementImage.left
+				a(href="http://www.mongodb.org/", target="_blank")
+					img(src='img/mongo.png')
+			div.acknowledgementImage.left
+				a(href="http://angularjs.org/", target="_blank")
+					img(src='img/angular.png')
+			div.acknowledgementImage.left
+				a(href="http://nodejs.org/", target="_blank")
+					img(src='img/nodejs.png')

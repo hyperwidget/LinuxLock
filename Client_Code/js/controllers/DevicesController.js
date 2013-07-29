@@ -2,7 +2,7 @@
 
 adminConsoleApp.controller('DevicesController',
     function DevicesController ($scope, dataManager, viewManager, $http) {
-        $scope.devices = dataManager.dataDevices;
+        $scope.devices = dataManager.Device.query();
         $scope.currentDevice = null;
         $scope.currentIndex = -1;
         $scope.addDevice = function () {
@@ -11,7 +11,8 @@ adminConsoleApp.controller('DevicesController',
         };
         $scope.saveData = function () {
             $scope.currentDevice.$save();
-            $scope.devices.push($scope.currentDevice);
+            $scope.devices = dataManager.Device.query();
+            $scope.hidePopup();
         };
         $scope.editDevice = function () {
             if($scope.currentIndex !== -1){
@@ -20,12 +21,12 @@ adminConsoleApp.controller('DevicesController',
             }
         };
         $scope.deleteDevice = function() {
-            $scope.currentDevice = $scope.devices[$scope.currentIndex];
-            $scope.currentDevice.$delete();
-            $scope.devices.splice($scope.currentIndex, 1);
-        };
-        $scope.cancelSave = function () {
-
+            $scope.confirm = confirm('Are you sure you want to delete this device?');
+            if($scope.confirm === true){
+                $scope.currentDevice = $scope.devices[$scope.currentIndex];
+                $scope.currentDevice.$delete();
+                $scope.devices = dataManager.Device.query();
+            }
         };
         $scope.changeCurrentDevice = function (event, index) {
             $('.selected').removeClass('selected');
@@ -34,48 +35,30 @@ adminConsoleApp.controller('DevicesController',
         };
         $scope.searchByDeviceName = function(){
             if($scope.name !== undefined && $scope.name !== ''){
-                $http.get('device?name=' + $scope.name).success(
-                    function(data, status, headers, config){
-                        $scope.devices = data;
-                    }
-                );
+                $scope.devices = dataManager.Device.query({name: $scope.name});
             } else if($scope.name == '') {
-                $http.get('device').success(
-                    function(data, status, headers, config){
-                        $scope.devices = data;
-                    }
-                );
+                $scope.devices = dataManager.Device.query();
             }
         }
         $scope.searchByDeviceType = function(){
             if($scope.type !== undefined && $scope.type !== ''){
-                $http.get('device?type=' + $scope.type).success(
-                    function(data, status, headers, config){
-                        $scope.devices = data;
-                    }
-                );
+                $scope.devices = dataManager.Device.query({type: $scope.type});
             } else if($scope.type == '') {
-                $http.get('device').success(
-                    function(data, status, headers, config){
-                        $scope.devices = data;
-                    }
-                );
+                $scope.devices = dataManager.Device.query();
             }
         }
         $scope.searchByHostName = function(){
             if($scope.hostname !== undefined && $scope.hostname !== ''){
-                $http.get('device?hostname=' + $scope.hostname).success(
-                    function(data, status, headers, config){
-                        $scope.devices = data;
-                    }
-                );
+                $scope.devices = dataManager.Device.query({hostname: $scope.hostname});
             } else if($scope.hostname == '') {
-                $http.get('device').success(
-                    function(data, status, headers, config){
-                        $scope.devices = data;
-                    }
-                );
+                $scope.devices = dataManager.Device.query();
             }
         }
+        $scope.$watch('currentIndex', function (newValue, oldValue) {
+            $scope.isEditButtonDisabled = $scope.isDeleteButtonDisabled = newValue < 0;
+        });
+        $scope.isAddButtonDisabled = false;
+        $scope.isEditButtonDisabled = true;
+        $scope.isDeleteButtonDisabled = true;
     }
 );

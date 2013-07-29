@@ -3,24 +3,23 @@ div.leftPanel
         span Search By:
     span.item
         label(for="byZoneAlias") Zone Alias
-        input.searchBox(type="text", id="byZoneAlias")
-        button.goButton Go
+        input.searchBox(type="text", ng-model="alias", id="byZoneAlias")
+        button.goButton(ng-click="searchByZoneAlias()") Go
     span.item
-        label(for="byDevice") Device Alias
-        input.searchBox(type="text", id="byDevice")
-        button.goButton Go
+        label(for="byDevice") Device
+        select(id="byDevice", ng-model="device", ng-options="d as d.name for d in devices")
+        button.goButton(ng-click="searchByDevice()") Go
 div.mainPanel
-    span.item Results for...
     span.item
-        button(ng-click="addZone()") Add
-        button Edit
-        button Delete
+        button(ng-click="addZone()", ng-disabled="isAddButtonDisabled") Add
+        button(ng-click="editZone()", ng-disabled="isEditButtonDisabled") Edit
+        button(ng-click="deleteZone()", ng-disabled="isDeleteButtonDisabled") Delete
     span.item
         table
             tr
                 th Alias
                 th Devices
-            tr(ng-repeat="zone in zones", class="{{'row' + $index % 2 }}")
+            tr(ng-repeat="zone in zones", class="{{'row' + $index % 2 }}", ng-click="changeCurrentZone($event, $index)")
                 td {{zone.name}}
                 td 
                     div(ng-repeat="device in zone.devices"){{device.name}}

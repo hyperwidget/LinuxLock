@@ -1,19 +1,27 @@
-span.item
-    label(for="first") First Name
-    input.searchBox(type="text", id="first", ng-model="currentUser.first")
-span.item
-    label(for="last") Last Name
-    input.searchBox(type="text", id="last", ng-model="currentUser.last")
-span.item
-    label(for="CardNumber") Card Number
-    input.searchBox(type="text", id="CardNumber", ng-model="currentUser.cards")
-span.item
-    label(for="email") Email
-    input.searchBox(type="text", id="email", ng-model="currentUser.email")
-span.item
-    label(for="phone") Phone Number
-    input.searchBox(type="text", id="phone", ng-model="currentUser.phone")
-span.item
-    label(for="Zones") Zone
-    select(id="Zones", ng-model="currentUser.zone")
-        option(ng-repeat="zone in zones", value="{{zone.id}}") {{zone.name}}
+form(name="form", class="css-form", novalidate)
+    span.item
+        label(for="first") First Name
+        input.searchBox(type="text", id="first", ng-model="currentUser.first", maxlength="50", required, name)
+    span.item
+        label(for="last") Last Name
+        input.searchBox(type="text", id="last", ng-model="currentUser.last", maxlength="50", required, name)
+    span.item
+        label Cards
+        select.addList(ng-model="selectedCardToAdd", ng-options="c as c.rfidNo for c in cards")
+        button.addRemoveBtn(ng-disabled="isAddCardDisabled", ng-click="addCard()") Add Card
+        button.addRemoveBtn(ng-click="removeCard()", ng-disabled="isRemoveCardDisabled") Remove Card
+        select.list(size="2", ng-model="selectedCardToRemove", ng-options="card as card.rfidNo for card in currentUser.cards")
+    span.item
+        label(for="email") Email
+        input.searchBox(type="email", id="email", ng-model="currentUser.email", required)
+    span.item
+        label(for="phone") Phone Number
+        input.searchBox(type="text", id="phone", ng-model="currentUser.phone", phone)
+    span.item
+        label Zones
+        select.addList(ng-model="selectedZoneToAdd", ng-options="z as z.name for z in zones")
+        button.addRemoveBtn(ng-disabled="isAddZoneDisabled", ng-click="addZone()") Add Zone
+        button.addRemoveBtn(ng-click="removeZone()", ng-disabled="isRemoveZoneDisabled") Remove Zone
+        select.list(size="3", ng-model="selectedZoneToRemove", ng-options="userZone as userZone.name for userZone in currentUser.zones")
+    button(ng-disabled="form.$invalid", ng-click="saveData()") Save
+    button(ng-click="hidePopup()") Cancel
