@@ -83,6 +83,7 @@ adminConsoleApp.controller('UsersController',
             $scope.selectedCardToRemove = null;
             $scope.selectedZoneToAdd = null;
             $scope.selectedZoneToRemove = null;
+            $scope.hidePopup();
         };
         $scope.cancelSave = function () {
             $scope.selectedCardToAdd = null;
@@ -152,8 +153,12 @@ adminConsoleApp.controller('UsersController',
             var idx = -1;
             var i = 0;
             var zones = $scope.currentUser.zones;
-            while (idx == -1 && i < zones.length)
-                if (zones[i].zone_id == $scope.selectedZoneToRemove.zone_id) idx = i;
+            while (idx == -1 && i < zones.length) {
+                if (zones[i].zone_id == $scope.selectedZoneToRemove.zone_id) {
+                    idx = i;
+                }
+                i++;
+            }
             if (idx > -1) zones.splice(idx, 1);
             $scope.selectedZoneToRemove = null;
             setAddZoneDisabled($scope.selectedZoneToAdd);
@@ -178,8 +183,12 @@ adminConsoleApp.controller('UsersController',
             var idx = -1;
             var i = 0;
             var cards = $scope.currentUser.cards;
-            while (idx == -1 && i < cards.length)
-                if (cards[i].rfid_id == $scope.selectedCardToRemove.rfid_id) idx = i;
+            while (idx == -1 && i < cards.length) {
+                if (cards[i].rfid_id == $scope.selectedCardToRemove.rfid_id) {
+                    idx = i;
+                }
+                i++;
+            }
             if (idx > -1) cards.splice(idx, 1);
             $scope.selectedCardToRemove = null;
             setAddCardDisabled($scope.selectedCardToAdd);

@@ -36,6 +36,7 @@ adminConsoleApp.controller('ZonesController',
             $scope.zones = dataManager.Zone.query();
             $scope.selectedDeviceToAdd = null;
             $scope.selectedDeviceToRemove = null;
+            $scope.hidePopup();
         };
         $scope.cancelSave = function () {
             $scope.selectedDeviceToAdd = null;
@@ -92,8 +93,12 @@ adminConsoleApp.controller('ZonesController',
             var idx = -1;
             var i = 0;
             var devices = $scope.currentZone.devices;
-            while (idx == -1 && i < devices.length)
-                if (devices[i].device_id == $scope.selectedDeviceToRemove.device_id) idx = i;
+            while (idx == -1 && i < devices.length) {
+                if (devices[i].device_id == $scope.selectedDeviceToRemove.device_id) {
+                    idx = i;
+                }
+                i++;                
+            }
             if (idx > -1) devices.splice(idx, 1);
             $scope.selectedDeviceToRemove = null;
             setAddDeviceDisabled($scope.selectedDeviceToAdd);

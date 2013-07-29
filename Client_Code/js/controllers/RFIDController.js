@@ -12,6 +12,7 @@ adminConsoleApp.controller('RFIDController',
         $scope.saveData = function () {
             $scope.currentRFID.$save();
             $scope.rfids = dataManager.RFID.query();
+            $scope.hidePopup();
         };
         $scope.editRFID = function () {
             if($scope.currentIndex !== -1){

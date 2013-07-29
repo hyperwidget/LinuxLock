@@ -12,6 +12,7 @@ adminConsoleApp.controller('DevicesController',
         $scope.saveData = function () {
             $scope.currentDevice.$save();
             $scope.devices = dataManager.Device.query();
+            $scope.hidePopup();
         };
         $scope.editDevice = function () {
             if($scope.currentIndex !== -1){
