@@ -96,7 +96,7 @@ getNumOfBackups
 if [[ $# = 0 ]]; then echo "Argument required (allowed: -w -d -m)"; exit 1; fi;
 
 #time stamp needed for mongo backup file names
-x
+
 
 mongodump --db linux_lock --out $LL_BACKUP_DIR/linux_lock_db_backup_$now > /dev/null
 
