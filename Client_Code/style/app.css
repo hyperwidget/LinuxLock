@@ -288,3 +288,11 @@ td, th {
 }
 
 /*end login styles*/
+
+/*validation styles*/
+.css-form input.ng-invalid.ng-pristine{
+    background-color: #FFFF56;
+}
+.css-form input.ng-invalid.ng-dirty{
+    background-color: #FA787E;
+}	
