@@ -1,9 +1,9 @@
-span.item
-	label(for="Name") Name
-	input#Name.searchBox(type="text",name="Name",ng-model="currentDevice.name")
-span.item
-	label(for="Type") Type
-	input#Type.searchBox(type="text",name="Type",ng-model="currentDevice.type")
-span.item
-	label(for="Hostname") Hostname
-	input#Hostname.searchBox(type="text",name="Hostname",ng-model="currentDevice.hostname")
+form(name="form", class="css-form", novalidate)
+    span.item
+        label(for="Name") Name
+        input#Name.searchBox(type="text",name="Name",ng-model="currentDevice.name", required, maxlength="50")
+    span.item
+        label(for="Hostname") Hostname
+        input#Hostname.searchBox(type="text",name="Hostname",ng-model="currentDevice.hostname", required, maxlength="50")
+    button(ng-disabled="form.$invalid", ng-click="scope.saveData()") Save
+    button(ng-click="scope.hidePopup") Cancel
