@@ -55,14 +55,12 @@ adminConsoleApp.directive('card', function() {
     };
 });
 
-var STATUS_REGEXP = /^[aAnN]$/;
-
 adminConsoleApp.directive('status', function() {
     return {
         require: 'ngModel',
         link: function(scope, elm, attrs, ctrl) {
             ctrl.$parsers.unshift(function(viewValue) {
-                if (STATUS_REGEXP.test(viewValue)) {
+                if (viewValue == "active" || viewValue == "inactive") {
                     ctrl.$setValidity('status', true);
                     return viewValue;
                 } else {
