@@ -50,6 +50,7 @@ RFID.statics.isAuthorizedForDevice = function(options,done) {
       CardHolder.findOne({_id: rfid.cardHolder_id},
       function(err, item) {
         user = item;
+        if(!user) return done(err)
         // i blame your database design for having to do this -_--
         for(i = 0; i < user.zones.length; ++i) {
           //console.log("Zone #" + i + ": " + user.zones[i].zone_id)
@@ -103,7 +104,8 @@ RFID.statics.isAuthorizedForDevice = function(options,done) {
             auth: true
           };
           // Do we have an active card?
-          if(!rfid.isActive()) item.auth = false;
+          if(!rfid) item.auth = false;
+           else if(!rfid.isActive()) item.auth = false;
           // Do we have a device?
           else if(!device) item.auth = false;
           // Do we have a user associated with the card?
