@@ -85,7 +85,7 @@ exports.add = function(req, done){
         canManageDevices: req.body.canManageDevices,
         canManageZones: req.body.canManageZones,
         canGenerateReports: req.body.canGenerateReports,
-        canManageBackups: req.body.canManageBackups,
+        canManageRFIDs: req.body.canManageRFIDs,
         canManageSettings: req.body.canManageSettings};
 
     db.collection('admins', function(err, collection){
@@ -113,7 +113,7 @@ exports.edit = function(req, done){
             canManageDevices: req.body.canManageDevices,
             canManageZones: req.body.canManageZones,
             canGenerateReports: req.body.canGenerateReports,
-            canManageBackups: req.body.canManageBackups,
+            canManageRFIDs: req.body.canManageRFIDs,
             canManageSettings: req.body.canManageSettings }
          }, function(){
             done(null);

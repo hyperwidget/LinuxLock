@@ -22,7 +22,7 @@ var passport = require('passport'),
 app.configure(function(){
   app.set('views', './../Client_Code/views');
   app.set('view options', { layout: false });
-  app.use(express.logger('dev'));
+  //app.use(express.logger('dev'));
   app.use(connect.bodyParser());
   app.use(express.cookieParser());
   app.use(express.session({ secret: "shhhhhhhhh!"}));
