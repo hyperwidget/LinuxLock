@@ -36,29 +36,30 @@ function findAllWithParams(searchValue, done){
                 var cardHolderCount = 0;
                 if(items.length > 0 ){
                     finishCount = 0;
+                    doneCardsCount = 0;
                     items.forEach(function(cardHolder){
                         var cardCount = 0;
                         if(cardHolder.cards.length > 0){
                             cardHolder.cards.forEach(function(card){
                                 Rfids.findById(card.rfid_id, function(err, cardInfo){
                                     card.rfidNo = cardInfo[0].rfidNo;
-                                    if((++cardCount == cardHolder.cards.length) && (items[items.length - 1]._id == cardHolder._id)){
+                                    if((++cardCount == cardHolder.cards.length) && (items.length == ++doneCardsCount)){
                                         items.forEach(function(cardHolder){
-                                            if(cardHolder.zones.length > 0){
-                                                var zoneCount = 0;
-                                                cardHolder.zones.forEach(function(zone){
-                                                    Zones.findById(zone.zone_id, function(err, zoneInfo){
-                                                        zone.name = zoneInfo[0].name;
-                                                        console.log(cardHolder.first + " " + zone.name + " " + finishCount);
-                                                        if((++zoneCount == cardHolder.zones.length) && (items.length == ++finishCount)){
-                                                            done(null, items);
-                                                        }
+                                            if(cardHolder.cards.length > 0){
+                                                if(cardHolder.zones.length > 0){
+                                                    var zoneCount = 0;
+                                                    cardHolder.zones.forEach(function(zone){
+                                                        Zones.findById(zone.zone_id, function(err, zoneInfo){
+                                                            zone.name = zoneInfo[0].name;
+                                                            if((++zoneCount == cardHolder.zones.length) && (items.length == ++finishCount)){
+                                                                done(null, items);
+                                                            }
+                                                        });
                                                     });
-                                                });
-                                            } else {
-                                                console.log(cardHolder.first + " " + cardHolder.zones.length);
-                                                if(items.length == ++finishCount){
-                                                    done(null, items);
+                                                } else {
+                                                    if(items.length == ++finishCount){
+                                                        done(null, items);
+                                                    }
                                                 }
                                             }
                                         });
@@ -66,19 +67,19 @@ function findAllWithParams(searchValue, done){
                                 });
                             });                        
                         } else {
+                            ++doneCardsCount;
                             if(cardHolder.zones.length > 0){
                                 var zoneCount = 0;
                                 cardHolder.zones.forEach(function(zone){
                                     Zones.findById(zone.zone_id, function(err, zoneInfo){
                                         zone.name = zoneInfo[0].name;
-                                        console.log(cardHolder.first + " " + cardHolder.zones[0].name);
-                                        if((++zoneCount == cardHolder.zones.length) && (items.length == ++finishCount)){
+                                        if((++zoneCount == cardHolder.zones.length) && (items.length == ++finishCount) && (items.length == ++doneCardsCount)){
                                             done(null, items);
                                         }
                                     });
                                 });
                             } else {
-                                if(items.length == ++finishCount){
+                                if((items.length == ++finishCount) && (items.length == ++doneCardsCount)){
                                     done(null, items);
                                 }
                             }
@@ -118,8 +119,8 @@ exports.add = function(req, done){
     }
 
     for(i in req.body.cards) {
-        card_id = new BSON.ObjectID.createFromHexString(req.body.cards[i].card_id.toString());
-        cards.push({card_id: card_id});
+        card_id = new BSON.ObjectID.createFromHexString(req.body.cards[i].rfid_id.toString());
+        cards.push({rfid_id: card_id});
     }
 
     newCardHolder = {
