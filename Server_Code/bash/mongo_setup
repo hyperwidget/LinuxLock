@@ -115,7 +115,7 @@ db.rfids.insert(rfid10)
 
 cardHolder1 = {_id: cardHolder1_id , first: "Anatolijs", last: "Spektors", email: "anatolijs.spektors@senecacollege.ca", phone: "222 222 222", userRole: "su", cards:[{rfid_id: rfid2_id}], zones:[{zone_id: zone2_id}] }
 
-cardHolder2 = { _id: cardHolder2_id , first: "Hunter", last: "Jansen", email: "hunter.jansen@senecacollege.ca", phone: "647 231 333", userRole: "su", cards:[{rfid_id: rfid2_id}], zones:[{zone_id: zone2_id}] }
+cardHolder2 = { _id: cardHolder2_id , first: "Hunter", last: "Jansen", email: "hunter.jansen@senecacollege.ca", phone: "647 231 333", userRole: "su", cards:[{rfid_id: rfid3_id}], zones:[{zone_id: zone2_id}] }
 
 cardHolder3 = { _id : cardHolder3_id , first: "Alex", last: "D'Amico", email: "alex.damico@senecacollege.ca", phone: "416 543 986", userRole: "su", cards:[{rfid_id: rfid1_id}], zones:[{zone_id: zone1_id}] }
 

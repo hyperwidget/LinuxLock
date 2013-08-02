@@ -55,7 +55,7 @@ adminConsoleApp.controller('UsersController',
             if($scope.currentUser.zones !== undefined) {
                 $scope.selectedZoneToRemove = $scope.currentUser.zones[0];
             }
-            $scope.cards = dataManager.RFID.query({status: 'n'}, function () {
+            $scope.cards = dataManager.RFID.query({status: 'inactive'}, function () {
                 if ($scope.cards.length) $scope.selectedCardToAdd = $scope.cards[0];
             });
             viewManager.showPopup('users', $scope);
@@ -70,7 +70,7 @@ adminConsoleApp.controller('UsersController',
                 if($scope.currentUser.zones !== undefined) {
                     $scope.selectedZoneToRemove = $scope.currentUser.zones[0];
                 }
-                $scope.cards = dataManager.RFID.query({status: 'n'}, function () {
+                $scope.cards = dataManager.RFID.query({status: 'inactive'}, function () {
                     if ($scope.cards.length) $scope.selectedCardToAdd = $scope.cards[0];
                 });
                 viewManager.showPopup('users', $scope);

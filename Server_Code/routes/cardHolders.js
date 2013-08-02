@@ -178,8 +178,24 @@ exports.edit = function(req, done){
 };
 
 exports.delete = function(id, done){
-    var err, o_id = new BSON.ObjectID.createFromHexString(id.toString());;
+    var err, o_id = new BSON.ObjectID.createFromHexString(id.toString());
     console.log('cardholder delete ' + id);
+
+    db.collection('cardHolders', function(err, collection){
+        collection.find({_id: o_id}, {cards:1, _id:0}).toArray(function(err, items){
+                items[0].cards.forEach(function(card){
+                    rfid_id = new BSON.ObjectID.createFromHexString(card.rfid_id.toString());
+                    db.collection('rfids', function(err, collection){
+                        collection.update({'_id': rfid_id},
+                        {
+                            $set: {
+                            status: 'inactive'}                            
+                         }, function(){
+                         });
+                    });
+                });             
+        });
+    });   
 
     db.collection('cardHolders', function(err, collection){
         collection.remove({'_id': o_id}, function(err, items){
