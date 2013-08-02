@@ -33,61 +33,57 @@ function findAllWithParams(searchValue, done){
             if(err){
                 done(err, items);
             } else {
-                var cardHolderCount = 0;
-                if(items.length > 0 ){
-                    finishCount = 0;
-                    doneCardsCount = 0;
-                    items.forEach(function(cardHolder){
-                        var cardCount = 0;
-                        if(cardHolder.cards.length > 0){
-                            cardHolder.cards.forEach(function(card){
-                                Rfids.findById(card.rfid_id, function(err, cardInfo){
-                                    card.rfidNo = cardInfo[0].rfidNo;
-                                    if((++cardCount == cardHolder.cards.length) && (items.length == ++doneCardsCount)){
-                                        items.forEach(function(cardHolder){
-                                            if(cardHolder.cards.length > 0){
-                                                if(cardHolder.zones.length > 0){
-                                                    var zoneCount = 0;
-                                                    cardHolder.zones.forEach(function(zone){
-                                                        Zones.findById(zone.zone_id, function(err, zoneInfo){
-                                                            zone.name = zoneInfo[0].name;
-                                                            if((++zoneCount == cardHolder.zones.length) && (items.length == ++finishCount)){
-                                                                done(null, items);
-                                                            }
-                                                        });
-                                                    });
-                                                } else {
-                                                    if(items.length == ++finishCount){
-                                                        done(null, items);
-                                                    }
-                                                }
-                                            }
-                                        });
-                                    }
-                                });
-                            });                        
-                        } else {
-                            ++doneCardsCount;
-                            if(cardHolder.zones.length > 0){
-                                var zoneCount = 0;
-                                cardHolder.zones.forEach(function(zone){
-                                    Zones.findById(zone.zone_id, function(err, zoneInfo){
-                                        zone.name = zoneInfo[0].name;
-                                        if((++zoneCount == cardHolder.zones.length) && (items.length == ++finishCount) && (items.length == ++doneCardsCount)){
+                cardsDone = 0, zonesDone = 0;
+                items.forEach(function(cardHolder){
+
+                    if(cardHolder.cards.length > 0) {
+                        cardHolder.CardsDone = 0;
+                        cardHolder.cards.forEach(function(card){
+                            Rfids.findById(card.rfid_id, function(err, cardInfo){
+                                card.rfidNo = cardInfo[0].rfidNo;
+                                if(++cardHolder.CardsDone == cardHolder.cards.length){
+                                    console.log(cardHolder.first + " cards done");
+                                    if(++cardsDone == items.length){
+                                        if(zonesDone == items.length){
                                             done(null, items);
                                         }
-                                    });
-                                });
-                            } else {
-                                if((items.length == ++finishCount) && (items.length == ++doneCardsCount)){
-                                    done(null, items);
+                                    }
                                 }
+                            });
+                        });
+                    } else {
+                        console.log(cardHolder.first + " cards done");
+                        if(++cardsDone == items.length){
+                            if(zonesDone == items.length){
+                                done(null, items);
+                            }
+                        } 
+                    }
+                    if(cardHolder.zones.length > 0) {
+                        cardHolder.zones.forEach(function(zone){
+                            cardHolder.ZonesDone = 0;
+                            Zones.findById(zone.zone_id, function(err, zoneInfo){
+                                zone.name = zoneInfo[0].name;
+                                if(++cardHolder.ZonesDone == cardHolder.zones.length){
+                                    console.log(cardHolder.first + " zones done");
+                                    if(++zonesDone == items.length){
+                                        if(cardsDone == items.length){
+                                            done(null, items);
+                                        }
+                                    }
+                                }  
+                            });
+                        });
+                    } else {
+                        console.log(cardHolder.first + " zones done");
+                        if(++zonesDone == items.length){
+                            if(cardsDone == items.length){
+                                done(null, items);
                             }
                         }
-                    });
-                } else {
-                    done(null, items);
-                }
+                    }
+                });
+
             }
         });
     });
