@@ -12,6 +12,7 @@ adminConsoleApp.controller('AdminController',
         $scope.saveData = function () {
             $scope.currentAdmin.$save();
             $scope.admins = dataManager.Admin.query();
+            $scope.hidePopup();
         };
         $scope.editAdmin = function () {
             if($scope.currentIndex !== -1){
