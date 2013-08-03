@@ -7,6 +7,8 @@ adminConsoleApp.controller('RFIDController',
         $scope.currentIndex = -1;
         $scope.addRFID = function () {
             $scope.currentRFID = new dataManager.RFID();
+            $scope.currentRFID.status = 'inactive';
+            $scope.currentRFID.isNewCard = true;
             viewManager.showPopup('rfids', $scope);
         };
         $scope.saveData = function () {
@@ -17,6 +19,7 @@ adminConsoleApp.controller('RFIDController',
         $scope.editRFID = function () {
             if($scope.currentIndex !== -1){
                 $scope.currentRFID =  $scope.rfids[$scope.currentIndex];
+                $scope.currentRFID.isNewCard = false;
                 viewManager.showPopup('rfids', $scope);
             }
         };

@@ -4,6 +4,6 @@ form(name="form", class="css-form", novalidate)
         input.searchBox(type="text", id="cardNumber", ng-model="currentRFID.rfidNo", required, card)
     span.item
         label(for="status") Status
-        input.searchBox(type="text", id="status", ng-model="currentRFID.status", required, status)
+        input.searchBox(type="text", id="status", ng-model="currentRFID.status", required, status, ng-disabled="currentRFID.isNewCard")
     button(ng-disabled="form.$invalid", ng-click="saveData()") Save
     button(ng-click="hidePopup()") Cancel
