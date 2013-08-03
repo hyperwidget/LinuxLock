@@ -41,7 +41,7 @@ if ping  -w 5 -c 1 yahoo.com >& /dev/null
   then
 	#Installing Mongo Dependencies (like git)
 	echo -e  "${green}[Linux Lock] Installing dependencies.. ${endColor}"
-	sudo apt-get install git-core build-essential scons >/dev/null
+	sudo apt-get -y install git-core build-essential scons >/dev/null
   else
 	echo -e "${red}[Linux Lock] At This point LinuxLock supports only Fedora and Ubuntu, please email to support@linuxlock.com to get more information ${endColor}" >&2 
 	exit 134
