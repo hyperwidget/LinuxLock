@@ -12,6 +12,14 @@ td, th {
     text-align: left;
     padding: 3px 5px;
 }
+th.reports {
+    cursor: pointer;
+}
+.arrow {
+    float: right;
+    display: inline-block;
+    padding: 0 5px;
+}
 #container {
     width: 100%;
     height: 100%;
@@ -127,6 +135,13 @@ td, th {
     background: orange;
     color: #ffffff;
 }
+.reportsRow0 {
+    background: lightgray;
+}
+.reportsRow1 {
+    background: #ffffff;
+}
+
 .list {
     display: block;
     width: 100%;

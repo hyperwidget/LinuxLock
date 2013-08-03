@@ -22,14 +22,35 @@ div.mainPanel
     span.item
         table
             tr
-                th Date
-                th Time
-                th Status
-                th Device
-                th Hostname
-                th User
-                th RFID
-            tr(data-ng-repeat="event in events", class="{{'row' + $index % 2 }}", data-ng-click="changeCurrentDevice($ev, $index)")
+                th.reports(ng-click="setSortOrder('entryTime')")
+                    span Date
+                    span.arrow(ng-show="byColumn == 'entryTime' && !descending") &#9650;
+                    span.arrow(ng-show="byColumn == 'entryTime' && descending") &#9660;
+                th.reports(ng-click="setSortOrder('entryTime')")
+                    span Time
+                    span.arrow(ng-show="byColumn == 'entryTime' && !descending") &#9650;
+                    span.arrow(ng-show="byColumn == 'entryTime' && descending") &#9660;
+                th.reports(ng-click="setSortOrder('status')")
+                    span Status
+                    span.arrow(ng-show="byColumn == 'status' && !descending") &#9650;
+                    span.arrow(ng-show="byColumn == 'status' && descending") &#9660;
+                th.reports(ng-click="setSortOrder('device')")
+                    span Device
+                    span.arrow(ng-show="byColumn == 'device' && !descending") &#9650;
+                    span.arrow(ng-show="byColumn == 'device' && descending") &#9660;
+                th.reports(ng-click="setSortOrder('hostname')")
+                    span Hostname
+                    span.arrow(ng-show="byColumn == 'hostname' && !descending") &#9650;
+                    span.arrow(ng-show="byColumn == 'hostname' && descending") &#9660;
+                th.reports(ng-click="setSortOrder('cardHolder')")
+                    span User
+                    span.arrow(ng-show="byColumn == 'cardHolder' && !descending") &#9650;
+                    span.arrow(ng-show="byColumn == 'cardHolder' && descending") &#9660;
+                th.reports(ng-click="setSortOrder('rfid')")
+                    span RFID
+                    span.arrow(ng-show="byColumn == 'rfid' && !descending") &#9650;
+                    span.arrow(ng-show="byColumn == 'rfid' && descending") &#9660;
+            tr(data-ng-repeat="event in events | orderBy:byColumn:descending", class="{{'reportsRow' + $index % 2 }}", data-ng-click="changeCurrentDevice($ev, $index)")
                 td {{event.entryTime | date:'yyyy-MM-dd'}}
                 td {{event.entryTime | date:'HH:mm:ss'}}
                 td {{event.status}}

@@ -26,5 +26,14 @@ adminConsoleApp.controller('ReportsController',
       $scope.events = dataManager.Event.query(params)
     }
     $scope.updateReport({from: "Today", to: "Now"})
+    $scope.byColumn = 'entryTime';
+    $scope.descending = true;
+    $scope.setSortOrder = function (column) {
+      if ($scope.byColumn == column)
+        $scope.descending = !$scope.descending;
+      else
+        $scope.descending = false;
+      $scope.byColumn = column;
+    };
   }
 );
