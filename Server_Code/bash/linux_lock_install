@@ -91,7 +91,8 @@ mongo < ./mongo_setup | ./mongo_test
 
  #clone git repo
  echo -e "${green}[Linux Lock] Getting Linux Lock source code...${endColor}"
- git clone git@github.com:rawkamatic/LinuxLock.git .
+
+ git clone git://github.com/rawkamatic/LinuxLock.git .
 
  #installing additional dependencies
   echo -e "${green}[Linux Lock] Installing additional dependencies...${endColor}"
