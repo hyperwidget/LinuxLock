@@ -200,6 +200,28 @@ app.get('/templates/:name', ensureAuthenticated,
     }
 });
 
+// User Permission
+app.get('/permissions', ensureAuthenticated,
+  function(req, res) {
+      console.log('get permissions');
+      var ret = [];
+      if (req.user.canManageUsers)
+        ret.push({ name: 'Users' });
+      if (req.user.canManageRFIDs)
+        ret.push({ name: 'Cards' });
+      if (req.user.canManageDevices)
+        ret.push({ name: 'Devices' });
+      if (req.user.canManageZones)
+          ret.push({ name: 'Zones' });
+      if (req.user.canGenerateReports)
+          ret.push({ name: 'Reports' });
+      if (req.user.name === 'Default SuperAdmin')
+        ret.push({ name: 'Admin' });
+      if (req.user.canManageSettings)
+          ret.push({ name: 'Settings' });
+      res.jsonp(ret);
+  });
+
 // Admins
 app.get('/admin', ensureAuthenticated,
   function(req, res){

@@ -2,15 +2,7 @@
 
 adminConsoleApp.controller('HeaderController',
     function HeaderController ($scope, dataManager) {
-       $scope.navbarItems = [
-           { name: 'Users' },
-           { name: 'Cards' },
-           { name: 'Devices' },
-           { name: 'Zones' },
-           { name: 'Reports' },
-           { name: 'Admin' },
-           { name: 'Settings' }
-       ];
+       $scope.navbarItems = dataManager.Permissions.query();
     }
 );
 

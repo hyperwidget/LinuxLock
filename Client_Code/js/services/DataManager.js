@@ -8,6 +8,7 @@ adminConsoleApp.factory('dataManager', function ($resource) {
         Admin = $resource('admin/:adminId', {adminId: '@_id'}),
         Event = $resource('event/:eventId', {eventId: '@_id'}),
         Setting = $resource('setting/:settingId', {settingId: '@_id'}),
+        Permissions = $resource('permissions/:id', {id: '@_id'}),
         backups = $.getJSON('setting/backups'),
         eventsData = []
     ;
@@ -21,5 +22,6 @@ adminConsoleApp.factory('dataManager', function ($resource) {
         Event: Event,
         Zone: Zone,
         Admin: Admin,
+        Permissions: Permissions
     };
 });
