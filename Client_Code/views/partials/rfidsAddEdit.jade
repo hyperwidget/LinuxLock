@@ -1,7 +1,7 @@
 form(name="form", class="css-form", novalidate)
     span.item
         label(for="cardNumber") Card Number
-        input.searchBox(type="text", id="cardNumber", ng-model="currentRFID.rfidNo", required, card)
+        input.searchBox(type="text", id="cardNumber", ng-model="currentRFID.rfidNo", required, validate-card)
     span.item
         label(for="status") Status
         select(id="status", ng-model="currentRFID.status", ng-disabled="currentRFID.isNewCard")

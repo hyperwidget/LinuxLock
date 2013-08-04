@@ -4,6 +4,6 @@ form(name="form", class="css-form", novalidate)
         input#Name.searchBox(type="text",name="Name",ng-model="currentDevice.name", required, maxlength="50")
     span.item
         label(for="Hostname") Hostname
-        input#Hostname.searchBox(type="text",name="Hostname",ng-model="currentDevice.hostname", required, maxlength="50")
+        input#Hostname.searchBox(type="text",name="Hostname",ng-model="currentDevice.hostname", maxlength="255")
     button(ng-disabled="form.$invalid", ng-click="saveData()") Save
     button(ng-click="hidePopup()") Cancel

@@ -1,10 +1,10 @@
 form(name="form", class="css-form", novalidate)
     span.item
         label(for="first") First Name
-        input.searchBox(type="text", id="first", ng-model="currentUser.first", maxlength="50", required, name)
+        input.searchBox(type="text", id="first", ng-model="currentUser.first", maxlength="50", required, validate-name)
     span.item
         label(for="last") Last Name
-        input.searchBox(type="text", id="last", ng-model="currentUser.last", maxlength="50", required, name)
+        input.searchBox(type="text", id="last", ng-model="currentUser.last", maxlength="50", required, validate-name)
     span.item
         label Cards
         select.addList(ng-model="selectedCardToAdd", ng-options="c as c.rfidNo for c in cards")
@@ -16,7 +16,7 @@ form(name="form", class="css-form", novalidate)
         input.searchBox(type="email", id="email", ng-model="currentUser.email", required)
     span.item
         label(for="phone") Phone Number
-        input.searchBox(type="text", id="phone", ng-model="currentUser.phone", phone)
+        input.searchBox(type="text", id="phone", ng-model="currentUser.phone", validate-phone)
     span.item
         label Zones
         select.addList(ng-model="selectedZoneToAdd", ng-options="z as z.name for z in zones")
