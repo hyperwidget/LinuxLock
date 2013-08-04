@@ -114,9 +114,10 @@ mongo < ./mongo_setup | ./mongo_test
 
   # CREATE BACKUP DIR
   mkdir $LL_BACKUP_DIR
+  npm install forever -g >/dev/null
   echo -e "${green}[Linux Lock] Succesfull installation of Node, Mongo, Linux Lock and all dependencies!${endColor}"
-    echo -e "[Linux Lock] Please type -  node ../server.js  - to start Linux Lock "
-      cd $LINUX_LOCK_PATH/Server_Code
+  echo -e "${green}[Linux Lock] Administration Console running on port 3000.${endColor}"
+  forever server.js start
  else
 	echo -e "${red}[Linux Lock] Please ensure that you have internet connection and try again!${endColor}" >&2
 	exit 4
