@@ -52,9 +52,17 @@ if ping  -w 5 -c 1 yahoo.com >& /dev/null
  if [[ $? != 0 ]]
   then 
 	#Installing MongoDB
-	git clone git://github.com/mongodb/mongo.git; 
-	cd mongo; git checkout r2.4.0; 
-	scons all;
+	#git clone git://github.com/mongodb/mongo.git; 
+	#cd mongo; git checkout r2.4.0; 
+	#scons all;
+
+	#mkdir -p /data/db;
+	#mongo/mongod
+
+	#installing mongo using apt-get
+	apt-get install mongodb-10gen
+	service mongodb start
+
  else 
 	echo -e "${green}[Linux Lock] Good news! You already have mongo installed! [skipping installation]${endColor}"
  fi
@@ -75,7 +83,7 @@ if ping  -w 5 -c 1 yahoo.com >& /dev/null
  # Creating Linux_Lock Path
  if [ -d "$LINUX_LOCK_PATH" ]
   then
-	echo -e "${red}[Linux Lock] Error: IT seems you already have $LINUX_LOCK_PATH , please delete all it's content to continue new instalaltion and run this script again!${endColor}" >&2
+	echo -e "${red}[Linux Lock] Error: IT seems you already have $LINUX_LOCK_PATH , please delete all it's content to continue new installation and run this script again!${endColor}" >&2
 	exit 1515
  fi
 
