@@ -7,7 +7,9 @@
         button.goButton(ng-click="searchByRFIDNo()") Go
     span.item
         label(for="byStatus") Status
-        input.searchBox(type="text", ng-model="status", id="byStatus")
+        select(ng-model="status")
+            option active
+            option inactive
         button.goButton(ng-click="searchByRFIDStatus()") Go
 .mainPanel
     span.item
