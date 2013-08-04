@@ -54,10 +54,22 @@ adminConsoleApp.controller('ZonesController',
         };
         $scope.deleteZone = function() {
             $scope.confirm = confirm('Are you sure you want to delete this zone?');
+
             if($scope.confirm === true){
-                $scope.currentZone = $scope.zones[$scope.currentIndex];
-                $scope.currentZone.$delete();
-                $scope.zones = dataManager.Zone.query();
+                dataManager.User.query({zone: $scope.zones[$scope.currentIndex]._id}, function(data) {
+                    if (data.length > 0) {
+                        if (confirm('The zone you are about to delete is still a part of 1 or more card holders. Do you wish to delete anyway?')) {
+                            $scope.currentZone = $scope.zones[$scope.currentIndex];
+                            $scope.currentZone.$delete();
+                            $scope.zones = dataManager.Zone.query();
+                        }
+                    } else {
+                        $scope.currentZone = $scope.zones[$scope.currentIndex];
+                        $scope.currentZone.$delete();
+                        $scope.zones = dataManager.Zone.query();
+                    }
+
+                });
             }
         };
         $scope.changeCurrentZone = function (event, index) {
