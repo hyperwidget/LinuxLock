@@ -431,6 +431,14 @@ app.get('/setting/backups', ensureAuthenticated,
     });
 });
 
+app.post('/setting/executeBackup', ensureAuthenticated,
+  function(req, res){
+    console.log('Execute Backup');
+    settings.backupsList(function(err, items){
+      res.jsonp(items);
+    });
+});
+
 app.post('/setting', ensureAuthenticated,
   function(req, res){
     console.log('add setting');
