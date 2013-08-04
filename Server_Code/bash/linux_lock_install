@@ -64,7 +64,6 @@ if ping  -w 5 -c 1 yahoo.com >& /dev/null
 	echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/10gen.list
 	apt-get update
 	apt-get install mongodb-10gen
-	service mongodb start
 
  else 
 	echo -e "${green}[Linux Lock] Good news! You already have mongo installed! [skipping installation]${endColor}"
@@ -98,16 +97,18 @@ if ping  -w 5 -c 1 yahoo.com >& /dev/null
  #Populating MongoDB
 mongo < ./mongo_setup | ./mongo_test
 
- mkdir  $LINUX_LOCK_PATH >/dev/null 2>&1; cd  $LINUX_LOCK_PATH >/dev/null 2>&1
+ mkdir  $LINUX_LOCK_PATH >/dev/null 2>&1; 
+ cd  $LINUX_LOCK_PATH >/dev/null 2>&1
 
  #clone git repo
  echo -e "${green}[Linux Lock] Getting Linux Lock source code...${endColor}"
 
- git clone git://github.com/rawkamatic/LinuxLock.git .
+ git clone git://github.com/rawkamatic/LinuxLock.git
 
  #installing additional dependencies
   echo -e "${green}[Linux Lock] Installing additional dependencies...${endColor}"
- cd $LINUX_LOCK_PATH/Server_Code; npm install >/dev/null
+ cd $LINUX_LOCK_PATH/Server_Code; 
+ npm install >/dev/null
 
   # CREATE BACKUP DIR
   mkdir $LL_BACKUP_DIR

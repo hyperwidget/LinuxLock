@@ -33,57 +33,61 @@ function findAllWithParams(searchValue, done){
             if(err){
                 done(err, items);
             } else {
-                cardsDone = 0, zonesDone = 0;
-                items.forEach(function(cardHolder){
 
-                    if(cardHolder.cards.length > 0) {
-                        cardHolder.CardsDone = 0;
-                        cardHolder.cards.forEach(function(card){
-                            Rfids.findById(card.rfid_id, function(err, cardInfo){
-                                card.rfidNo = cardInfo[0].rfidNo;
-                                if(++cardHolder.CardsDone == cardHolder.cards.length){
-                                    console.log(cardHolder.first + " cards done");
-                                    if(++cardsDone == items.length){
-                                        if(zonesDone == items.length){
-                                            done(null, items);
+                if(items.length > 0){
+                    cardsDone = 0, zonesDone = 0;
+                    items.forEach(function(cardHolder){
+
+                        if(cardHolder.cards.length > 0) {
+                            cardHolder.CardsDone = 0;
+                            cardHolder.cards.forEach(function(card){
+                                Rfids.findById(card.rfid_id, function(err, cardInfo){
+                                    card.rfidNo = cardInfo[0].rfidNo;
+                                    if(++cardHolder.CardsDone == cardHolder.cards.length){
+                                        console.log(cardHolder.first + " cards done");
+                                        if(++cardsDone == items.length){
+                                            if(zonesDone == items.length){
+                                                done(null, items);
+                                            }
                                         }
                                     }
+                                });
+                            });
+                        } else {
+                            console.log(cardHolder.first + " cards done");
+                            if(++cardsDone == items.length){
+                                if(zonesDone == items.length){
+                                    done(null, items);
                                 }
-                            });
-                        });
-                    } else {
-                        console.log(cardHolder.first + " cards done");
-                        if(++cardsDone == items.length){
-                            if(zonesDone == items.length){
-                                done(null, items);
-                            }
-                        } 
-                    }
-                    if(cardHolder.zones.length > 0) {
-                        cardHolder.zones.forEach(function(zone){
-                            cardHolder.ZonesDone = 0;
-                            Zones.findById(zone.zone_id, function(err, zoneInfo){
-                                zone.name = zoneInfo[0].name;
-                                if(++cardHolder.ZonesDone == cardHolder.zones.length){
-                                    console.log(cardHolder.first + " zones done");
-                                    if(++zonesDone == items.length){
-                                        if(cardsDone == items.length){
-                                            done(null, items);
+                            } 
+                        }
+                        if(cardHolder.zones.length > 0) {
+                            cardHolder.zones.forEach(function(zone){
+                                cardHolder.ZonesDone = 0;
+                                Zones.findById(zone.zone_id, function(err, zoneInfo){
+                                    zone.name = zoneInfo[0].name;
+                                    if(++cardHolder.ZonesDone == cardHolder.zones.length){
+                                        console.log(cardHolder.first + " zones done");
+                                        if(++zonesDone == items.length){
+                                            if(cardsDone == items.length){
+                                                done(null, items);
+                                            }
                                         }
-                                    }
-                                }  
+                                    }  
+                                });
                             });
-                        });
-                    } else {
-                        console.log(cardHolder.first + " zones done");
-                        if(++zonesDone == items.length){
-                            if(cardsDone == items.length){
-                                done(null, items);
+                        } else {
+                            console.log(cardHolder.first + " zones done");
+                            if(++zonesDone == items.length){
+                                if(cardsDone == items.length){
+                                    done(null, items);
+                                }
                             }
                         }
-                    }
-                });
-
+                    });
+                } else {
+                    done(null, items);
+                }
             }
         });
     });
