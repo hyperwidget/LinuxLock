@@ -37,12 +37,7 @@ sendMail: function(addresses, name, lock, time){
     }
 
     smtpTransport.sendMail(mailOptions, function(error, response){
-        if(error){
-            console.log(error);
-        }
-        else{
-            console.log("Message successfully sent.");
-        }
+        console.log(error || "Message successfully sent.")
     });
 }
 };

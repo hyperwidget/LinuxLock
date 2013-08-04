@@ -4,19 +4,18 @@ var mongoose = require('mongoose'),
     RFID = new Schema({
       rfidNo: {type:String, unique:true, index:true},
       status: {type:String},
-      cardHolder_id: {type:ObjectId, ref:"CardHolder"}
     });
 
 RFID.methods.isActive = function(done) {
   var s = this.status.toLowerCase();
-  if(done) done(s==="a");
-  else return s === "a";
+  if(done) done(s==="active");
+  else return s === "active";
 }
 
 RFID.methods.isInactive = function(done) {
   var s = this.status.toLowerCase();
-  if(done) done(s==="n");
-  else return s === "n";
+  if(done) done(s==="inactive");
+  else return s === "inactive";
 }
 
 // Given a device hostname and a swiped RFID number,
@@ -39,6 +38,7 @@ RFID.statics.isAuthorizedForDevice = function(options,done) {
   var userZones = [];
 
   function findRFID(done) {
+    //console.log("Searching for RFID with rfidNo '" + options.rfidNo + "'")
     RFID.findOne({rfidNo: options.rfidNo}, function(err, item) {
       rfid = item
       done(err);
@@ -46,16 +46,16 @@ RFID.statics.isAuthorizedForDevice = function(options,done) {
   }
   function findUser(done) {
     if(rfid) {
-      //console.log("Searching for CardHolder with id '" + rfid.cardHolder_id + "'")
-      CardHolder.findOne({_id: rfid.cardHolder_id},
-      function(err, item) {
+      CardHolder
+      .findOne({cards: {$elemMatch: { rfid_id: rfid._id}}})
+      .lean()
+      .exec(function(err, item) {
         user = item;
         if(!user) return done(err)
-        // i blame your database design for having to do this -_--
-        for(i = 0; i < user.zones.length; ++i) {
-          //console.log("Zone #" + i + ": " + user.zones[i].zone_id)
-          userZones.push(user.zones[i].zone_id)
-        }
+        userZones = user.zones.map(function(item) {
+          //console.log("USER ZONE: " + item.zone_id)
+          return item.zone_id
+        })
         done(err)
       })
     }
@@ -63,21 +63,35 @@ RFID.statics.isAuthorizedForDevice = function(options,done) {
   }
   function findDevice(done) {
     //console.log("Searching for device at " + options.hostname)
-    Device.findOne({hostname: options.hostname},
-    function(err, item) {
+    Device
+    .findOne({hostname: options.hostname})
+    .lean()
+    .exec(function(err, item) {
       device = item
       done(err)
     })
   }
   function findZones(done) {
     if(device && user) {
-      Zone.findOne(
-        { $and : [ { _id: { $in : userZones } }, 
-        { devices : { $elemMatch : device._id } } ] },
-        //{ $and : [ {_id: { $in : user.zones }}, 
-        //{devices: {$elemMatch : device._id} } ] },
-      function(err, item) {
-        zone = item
+      //console.log("User Zones: " + JSON.stringify(userZones))
+      Zone
+      .find({ _id: { $in : userZones } })
+      .lean()
+      .exec(function(err, items) {
+        // Low-performance hack :(
+        //console.log("There are `" + items.length + "' to check (" + JSON.stringify(items) + "):")
+        items.every(function(z) {
+          //console.log("Item `" + JSON.stringify(z) + "'")
+          return z.devices.some(function(d) {
+            //console.log("Trying to match `" + d.device_id + "' ("+typeof d.device_id+") against `" + device._id + "' (" + typeof device._id + ")")
+            if(d.device_id.equals(device._id)) {
+              //console.log("Matched!")
+              zone = z
+              return true
+            }
+            return false
+          })
+        })
         done(err)
       })
     }

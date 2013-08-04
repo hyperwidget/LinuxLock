@@ -1,7 +1,8 @@
 var PHONE_REGEXP = /^([0-9]( |-)?)?(\(?[0-9]{3}\)?|[0-9]{3})( |-)?([0-9]{3}( |-)?[0-9]{4}|[a-zA-Z0-9]{7})$/ ;
 
-adminConsoleApp.directive('phone', function() {
+adminConsoleApp.directive('validatePhone', function() {
     return {
+        restrict: 'A',
         require: 'ngModel',
         link: function(scope, elm, attrs, ctrl) {
             ctrl.$parsers.unshift(function(viewValue) {
@@ -19,8 +20,9 @@ adminConsoleApp.directive('phone', function() {
 
 var NAME_REGEXP = /^[a-zA-Z'\-,\.][a-zA-Z'\-,\. ]+$/;
 
-adminConsoleApp.directive('name', function() {
+adminConsoleApp.directive('validateName', function() {
     return {
+        restrict: 'A',
         require: 'ngModel',
         link: function(scope, elm, attrs, ctrl) {
             ctrl.$parsers.unshift(function(viewValue) {
@@ -38,8 +40,9 @@ adminConsoleApp.directive('name', function() {
 
 var CARD_REGEXP = /^[A-Z0-9]{10}$/;
 
-adminConsoleApp.directive('card', function() {
+adminConsoleApp.directive('validateCard', function() {
     return {
+        restrict: 'A',
         require: 'ngModel',
         link: function(scope, elm, attrs, ctrl) {
             ctrl.$parsers.unshift(function(viewValue) {

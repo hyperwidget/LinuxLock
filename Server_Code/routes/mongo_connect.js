@@ -7,10 +7,13 @@
 
 var MongoClient = require('mongodb').MongoClient,
     Server = require('mongodb').Server,
-    mongo = require('mongodb');
+    mongo = require('mongodb'),
+    mongoose = require('mongoose')
 
 var mongoClient = new MongoClient(new Server('localhost', 27017));
 
+exports.mongoose = mongoose.connect("mongodb://localhost:27017/linux_lock")
+//mongoose.set('debug',true)
 exports.db;
 exports.BSON;
 BSON = mongo.BSONPure;
