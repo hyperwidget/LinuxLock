@@ -1,7 +1,7 @@
 form(name="form", class="css-form", novalidate)
     span.item
         label(for="name") Name
-        input.searchBox(type="text", id="name", ng-model="currentAdmin.name", required, name, maxlength="100")
+        input.searchBox(type="text", id="name", ng-model="currentAdmin.name", required, validate-name, maxlength="100")
     span.item
         label(for="username") User Name
         input.searchBox(type="text", id="username", ng-model="currentAdmin.username", required, maxlength="50")

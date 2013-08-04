@@ -5,7 +5,15 @@ var connect = require('connect'),
   port = (process.env.PORT || 3000),
   flash = require('connect-flash'),
   exec = require('child_process').exec,
-  bcrypt = require('bcrypt-nodejs');
+  bcrypt = require('bcrypt-nodejs'),
+  models = require('./models'),
+  RFID = models.RFID,
+  Zone = models.Zone,
+  Event = models.Event,
+  lock_email = require('./lock_email.js')
+
+require('./routes/mongo_connect')
+
 //Setup Express
 var app = express();
 var cardHolders = require('./routes/cardHolders');
@@ -112,6 +120,52 @@ function ensureAuthenticated(req, res, next) {
 ///////////////////////////////////////////
 
 /////// ADD ALL YOUR ROUTES HERE  /////////
+
+//
+// API Routes
+//
+app.get('/api/auth/:type/:id.json',
+  function(req,res,next) {
+  var time = new Date()
+  if(req.params.type === "rfid") {
+    //console.log("REQUEST FROM: " + req.connection.remoteAddress)
+    RFID.isAuthorizedForDevice({
+      hostname: req.connection.remoteAddress,
+      rfidNo: req.params.id
+    }, function(err, item) {
+      if(err) {
+        // TODO: Send this to Log API?
+        console.log(err)
+        // Error occurred, use error status!
+        // [ lol :( ]
+        var rfid = null, device = null
+        if(item) rfid = item.rfid, device = item.device
+        Event.log(rfid, device, false, "error", time)
+        res.jsonp(401,{auth: false})
+      } else {
+        // TODO: Log this access.
+        //console.log(item);
+        res.jsonp(item.auth ? 200 : 401,{auth: item.auth})
+        var status = null
+        if(!item.device) status = "unknown-device"
+        else if(!item.rfid) status = "unknown-rfid"
+        Event.log(item.rfid, item.device, item.auth, status, time)
+        // Notify via email that access was granted
+        fullName = null
+        deviceName = null
+        if(item.user)
+          fullName = item.user.fullName;
+        if(item.device)
+          deviceName = item.device.name;
+        if(item.auth)
+          lock_email.sendMail(null,fullName,deviceName,time)
+      }
+    });
+  } else {
+    Event.log(null, null, false, "bad-protocol", time)
+    res.jsonp(401,{auth: false})
+  }
+})
 
 app.get('/', function(req,res){
   console.log('emptyPath');
