@@ -16,7 +16,7 @@ exports.findAll = function(callback) {
 };
 
 exports.backupsList = function(callback){
-    var p = "../db_backup"
+    var p = "./db_backup"
     filesList = [];
     fs.readdir(p, function (err, files) {
         if (err) {
@@ -60,6 +60,19 @@ exports.add = function(req, done){
                 done(err, doc);
             }
         });
+    });
+};
+
+exports.executeBackup = function(req, done){
+    exec('./bash/mongo_dump', 
+      function (error, stdout, stderr) { 
+        console.log('stdout: ' + stdout);
+        console.log('stderr: ' + stderr);
+        if (error !== null) {
+          console.log('exec error: ' + error);
+        } else {
+            done(null);
+        }
     });
 };
 
