@@ -16,3 +16,4 @@ div.mainPanel
 			div.left Restore database using:
 			select.list.right(size="5", ng-model="selectedBackupToExecute", ng-options="v as v for (k,v) in backupList")
 			button.right.backupButton(ng-click="executeBackup()") Execute Backup
+			button.right(ng-click="restoreDatabase()") Restore Database

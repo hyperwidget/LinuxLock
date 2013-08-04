@@ -13,7 +13,7 @@ adminConsoleApp.controller('SettingsController',
 	    	$scope.settings[1].$save();
 	    };
 
-	    $scope.executeBackup = function(){
+	    $scope.restoreDatabase = function(){
             $scope.confirm = confirm('Warning! Performing this action will result in any data changes since the selected backup being replaced. Continue?');
             if($scope.confirm === true){
             	$scope.reqData = {file : $scope.selectedBackupToExecute};
@@ -26,6 +26,18 @@ adminConsoleApp.controller('SettingsController',
             	alert();
             }
 	    };
+
+        $scope.executeBackup = function(){
+            $scope.confirm = confirm('Are you sure you wish to perform a backup now?');
+            if($scope.confirm === true){
+                $.ajax({
+                    url: 'executeBackup',
+                    type: 'POST'
+                });
+            } else {
+                alert();
+            }
+        };
     }
 
 );
