@@ -39,7 +39,7 @@ div.mainPanel
                 th Phone
                 th Cards
                 th Zones
-            tr(ng-repeat="user in users", class="{{'row' + $index % 2 }}", ng-click="changeCurrentUser($event, $index)")
+            tr(ng-repeat="user in users | orderBy:['first', 'last']", class="{{'row' + $index % 2 }}", ng-click="changeCurrentUser($event, user._id)")
                 td {{user.first}}
                 td {{user.last}}
                 td {{user.email}}

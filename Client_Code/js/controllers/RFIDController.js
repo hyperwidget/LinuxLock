@@ -18,7 +18,7 @@ adminConsoleApp.controller('RFIDController',
         };
         $scope.editRFID = function () {
             if($scope.currentIndex !== -1){
-                $scope.currentRFID =  $scope.rfids[$scope.currentIndex];
+                $scope.currentRFID =  angular.copy($scope.rfids[$scope.currentIndex]);
                 $scope.currentRFID.isNewCard = false;
                 viewManager.showPopup('rfids', $scope);
             }
@@ -31,10 +31,10 @@ adminConsoleApp.controller('RFIDController',
                 $scope.rfids = dataManager.RFID.query();
             }
         };
-        $scope.changeCurrentRFID = function (event, index) {
+        $scope.changeCurrentRFID = function (event, id) {
             $('.selected').removeClass('selected');
             $(event.target.parentElement).addClass('selected');
-            $scope.currentIndex = index;
+            $scope.currentIndex = viewManager.findByID($scope.rfids, id);
         };
         $scope.searchByRFIDNo = function(){
             if($scope.rfidNo !== undefined && $scope.rfidNo !== ''){

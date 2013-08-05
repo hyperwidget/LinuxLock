@@ -19,6 +19,6 @@
 			tr
 				th Name
 				th Hostname
-			tr(ng-repeat="device in devices", class="{{'row' + $index % 2 }}", ng-click="changeCurrentDevice($event, $index)")
+			tr(ng-repeat="device in devices | orderBy:'name'", class="{{'row' + $index % 2 }}", ng-click="changeCurrentDevice($event, device._id)")
 				td {{device.name}}
 				td {{device.hostname}}

@@ -18,10 +18,17 @@ adminConsoleApp.factory('viewManager', function ($http, $compile) {
         saveData = function() {
             if (saveFn) saveFn();
             hidePopup();
+        },
+        findByID = function (data, id) {
+            for(var i = 0;i < data.length; i++) {
+                if (data[i]._id == id)
+                    return i;
+            }
         };
     return {
         showPopup: showPopup,
         hidePopup: hidePopup,
-        saveData: saveData
+        saveData: saveData,
+        findByID: findByID
     };
 });
