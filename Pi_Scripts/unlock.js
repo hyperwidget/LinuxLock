@@ -16,12 +16,12 @@ serial.on('open',function() {
 // webservice, since we can't expect it to be 192.168.0.18:8080
 // all the time.
 var client = restify.createJsonClient({
-  url: 'http://zenit.senecac.on.ca/',
+  url: 'http://zenit.senecac.on.ca:9086',
   version: '~1.0'
 })
 
 function tryUnlock(id) {
-  client.get('/api/auth/rfid/'+id, function(err,req,res,obj) {
+  client.get('/api/auth/rfid/'+id+'.json', function(err,req,res,obj) {
     if(err) console.log(err)
     else if("auth" in obj) {
       if(obj.auth) {
