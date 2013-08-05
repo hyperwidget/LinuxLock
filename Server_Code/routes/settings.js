@@ -63,7 +63,7 @@ exports.add = function(req, done){
     });
 };
 
-exports.executeBackup = function(req, done){
+exports.executeBackup = function(done){
     var d = new Date();
     var day = d.getDay();
     var month = d.getMonth();

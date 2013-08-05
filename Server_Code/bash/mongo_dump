@@ -7,5 +7,10 @@
 source ~/LinuxLock/Server_Code/bash/linux_lock.conf
 
 now=$(date +"%m_%d_%Y")
-mongodump --db linux_lock --out $LL_BACKUP_DIR/linux_lock_db_backup_$now
 
+if [[ $# = 0 ]]
+	then
+	mongodump --db linux_lock --out $LL_BACKUP_DIR/linux_lock_db_backup_$now
+else
+	mongodump --db linux_lock --out $LL_BACKUP_DIR/$1
+fi

@@ -488,8 +488,8 @@ app.get('/setting/backups', ensureAuthenticated,
 app.post('/setting/executeBackup', ensureAuthenticated,
   function(req, res){
     console.log('Execute Backup');
-    settings.executeBackup(function(err, items){
-      res.jsonp(items);
+    settings.executeBackup(function(err){
+      res.writeHead('200');
     });
 });
 
