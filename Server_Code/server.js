@@ -488,7 +488,7 @@ app.get('/setting/backups', ensureAuthenticated,
 app.post('/setting/executeBackup', ensureAuthenticated,
   function(req, res){
     console.log('Execute Backup');
-    settings.backupsList(function(err, items){
+    settings.executeBackup(function(err, items){
       res.jsonp(items);
     });
 });
@@ -513,12 +513,13 @@ app.post('/executeRestore', ensureAuthenticated,
   function(req, res){
     console.log('RUN RESTORE');
 
-    child = exec('mongorestore ./../db_backup/', // command line argument directly in string
-      function (error, stdout, stderr) {      // one easy function to capture data/errors
+    child = exec('mongorestore ./db_backup/' + req.body.file, 
+      function (error, stdout, stderr) {      
         console.log('stdout: ' + stdout);
         console.log('stderr: ' + stderr);
         if (error !== null) {
           console.log('exec error: ' + error);
+          res.writeHead('500');
         } else {
           res.writeHead('200');
         }

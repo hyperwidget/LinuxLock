@@ -64,7 +64,12 @@ exports.add = function(req, done){
 };
 
 exports.executeBackup = function(req, done){
-    exec('./bash/mongo_dump', 
+    var d = new Date();
+    var day = d.getDay();
+    var month = d.getMonth();
+    var year = d.getYear();
+
+    exec('./bash/mongo_dump --out ./db_backup/linux_lock_db_backup_' + day + '_' + month + '_' + year + '_instant_' + d.getTime(), 
       function (error, stdout, stderr) { 
         console.log('stdout: ' + stdout);
         console.log('stderr: ' + stderr);
