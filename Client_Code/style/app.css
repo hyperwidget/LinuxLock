@@ -22,6 +22,7 @@ th.reports {
 }
 #container {
     width: 100%;
+    min-width: 1030px;
     height: 100%;
     position: relative;
 }
