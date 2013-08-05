@@ -109,7 +109,7 @@ exports.findById = function(id, done) {
 
 exports.add = function(req, done){
     var err;
-    console.log('cardholder add ' + req);
+    console.log('cardholder add ' + req.body.phone);
     o_id = new BSON.ObjectID();
     zones = [];
     cards = [];

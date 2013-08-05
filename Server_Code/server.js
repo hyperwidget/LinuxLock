@@ -50,7 +50,6 @@ app.configure(function(){
       author: 'Kaleidus Code',
       error: err
     });
-    res.send("error!!!");
   });
 });
 
@@ -304,7 +303,7 @@ app.delete('/admin/:id', ensureAuthenticated,
   function(req, res){
     console.log('delete admin');
     cardHolders.delete(req.params.id, function(err){
-      res.writeHead('200');
+      res.send(200);
   });
 });
 
@@ -321,7 +320,7 @@ app.post('/cardHolder', ensureAuthenticated,
   function(req, res){
     console.log('add cardHolder');
     cardHolders.add(req, function(err){
-      res.writeHead('200');
+      res.send(200);
   });
 });
 
@@ -329,7 +328,7 @@ app.post('/cardHolder/:id', ensureAuthenticated,
   function(req, res){
     console.log('edit cardHolder');
     cardHolders.edit(req, function(err){
-      res.writeHead('200');
+      res.send(200);
   });
 });
 
@@ -337,7 +336,7 @@ app.delete('/cardHolder/:id', ensureAuthenticated,
   function(req, res){
     console.log('delete cardHolder');
     cardHolders.delete(req.params.id, function(err){
-      res.writeHead('200');
+      res.send(200);
   });
 });
 
@@ -354,7 +353,7 @@ app.post('/device', ensureAuthenticated,
   function(req, res){
     console.log('add device');
     devices.add(req, function(err){
-      res.writeHead('200');
+      res.send(200);
   });
 });
 
@@ -362,7 +361,7 @@ app.post('/device/:id', ensureAuthenticated,
   function(req, res){
     console.log('edit device');
     devices.edit(req, function(err){
-      res.writeHead('200');
+      res.send(200);
   });
 });
 
@@ -370,7 +369,7 @@ app.delete('/device/:id', ensureAuthenticated,
   function(req, res){
     console.log('delete device');
     devices.delete(req.params.id, function(err){
-      res.writeHead('200');
+      res.send(200);
   });
 });
 
@@ -422,7 +421,7 @@ app.post('/event', ensureAuthenticated,
   function(req, res){
     console.log('add event');
     events.add(req, function(err){
-      res.writeHead('200');
+      res.send(200);
   });
 });
 
@@ -430,7 +429,7 @@ app.post('/event/:id', ensureAuthenticated,
   function(req, res){
     console.log('edit event');
     events.edit(req, function(err){
-      res.writeHead('200');
+      res.send(200);
   });
 });
 
@@ -447,7 +446,7 @@ app.post('/rfid', ensureAuthenticated,
   function(req, res){
     console.log('add rfid');
     rfids.add(req, function(err){
-      res.writeHead('200');
+      res.send(200);
   });
 });
 
@@ -455,7 +454,7 @@ app.post('/rfid/:id', ensureAuthenticated,
   function(req, res){
     console.log('edit rfid');
     rfids.edit(req, function(err){
-      res.writeHead('200');
+      res.send(200);
   });
 });
 
@@ -463,7 +462,7 @@ app.delete('/rfid/:id', ensureAuthenticated,
   function(req, res){
     console.log('delete rfid');
     rfids.delete(req.params.id, function(err){
-      res.writeHead('200');
+      res.send(200);
   });
 });
 
@@ -489,7 +488,7 @@ app.post('/setting/executeBackup', ensureAuthenticated,
   function(req, res){
     console.log('Execute Backup');
     settings.executeBackup(function(err){
-      res.writeHead('200');
+      res.send(200);
     });
 });
 
@@ -497,7 +496,7 @@ app.post('/setting', ensureAuthenticated,
   function(req, res){
     console.log('add setting');
     settings.add(req, function(err){
-      res.writeHead('200');
+      res.send(200);
   });
 });
 
@@ -505,7 +504,7 @@ app.post('/setting/:id', ensureAuthenticated,
   function(req, res){
     console.log('edit setting');
     settings.edit(req, function(err){
-      res.writeHead('200');
+      res.send(200);
   });
 });
 
@@ -521,7 +520,7 @@ app.post('/executeRestore', ensureAuthenticated,
           console.log('exec error: ' + error);
           res.writeHead('500');
         } else {
-          res.writeHead('200');
+          res.send(200);
         }
     }); 
 });
@@ -539,7 +538,7 @@ app.post('/zone', ensureAuthenticated,
   function(req, res){
     console.log('add zone');
     zones.add(req, function(err){
-      res.writeHead('200');
+      res.send(200);
   });
 });
 
@@ -547,7 +546,7 @@ app.post('/zone/:id', ensureAuthenticated,
   function(req, res){
     console.log('edit zone');
     zones.edit(req, function(err){
-      res.writeHead('200');
+      res.send(200);
   });
 });
 
@@ -555,7 +554,7 @@ app.delete('/zone/:id', ensureAuthenticated,
   function(req, res){
     console.log('delete zone');
     zones.delete(req.params.id, function(err){
-      res.writeHead('200');
+      res.send(200);
   });
 });
 

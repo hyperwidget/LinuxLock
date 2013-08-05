@@ -37,9 +37,9 @@ device3_id = ObjectId()
 
 
 // CREATE DEVICES //
-device1 = { _id: device1_id, name : "Lock1 Main"}
-device2 = { _id: device2_id, name :  "Lock2 Secondary" }
-device3 = { _id: device3_id, name :  "Lock3 Secondary" }
+device1 = { _id: device1_id, name : "Lock1 Main", hostname: ""}
+device2 = { _id: device2_id, name :  "Lock2 Secondary", hostname: "" }
+device3 = { _id: device3_id, name :  "Lock3 Secondary", hostname: "" }
 
 // INSERT Devices TO DB //
 db.devices.insert(device1)

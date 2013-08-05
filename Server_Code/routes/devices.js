@@ -44,7 +44,7 @@ exports.findById = function(id, done) {
     var err,  o_id = new BSON.ObjectID.createFromHexString(id.toString());
     console.log('findDeviceById: ' + id);
     db.collection('devices', function(err, collection) {
-        collection.find({'_id': o_id}).toArray(function(err, items) {
+        collection.find({_id: o_id}).toArray(function(err, items) {
             if(!err){
                 return done(null, items);
             } else{ 
@@ -56,15 +56,23 @@ exports.findById = function(id, done) {
 
 exports.add = function(req, done){
     var err;
-    console.log('device add ' + req);
+    console.log('device add ' + req.body.hostname);
 
-    newDevice = {'name': req.body.name, 'hostname': req.body.hostname};
+    o_id = new BSON.ObjectID();
+    newDevice = {
+        _id: o_id,
+        name: req.body.name, 
+        hostname: req.body.hostname
+    };
+
+    console.log(newDevice);
 
     db.collection('devices', function(err, collection){
         collection.insert(newDevice, {safe:true},function(err, doc){
             if(!err){
                 done(null, doc);
             } else {
+                console.log(err);
                 done(err, doc);
             }
         });
@@ -78,8 +86,10 @@ exports.edit = function(req, done){
     db.collection('devices', function(err, collection){
         collection.update({'_id': o_id},
         {
-            $set: {'name': req.body.name,
-            'hostname': req.body.hostname}
+            $set: {
+                name: req.body.name,
+                hostname: req.body.hostname
+            }
         }, function(err, doc){
             done(null)});
     });
