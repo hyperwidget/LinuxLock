@@ -21,6 +21,6 @@
             tr
                 th Card Number
                 th Status
-            tr(ng-repeat="rfid in rfids", class="{{'row' + $index % 2 }}", ng-click="changeCurrentRFID($event, $index)")
+            tr(ng-repeat="rfid in rfids | orderBy:'rfidNo'", class="{{'row' + $index % 2 }}", ng-click="changeCurrentRFID($event, rfid._id)")
                 td {{rfid.rfidNo}}
                 td {{rfid.status}}

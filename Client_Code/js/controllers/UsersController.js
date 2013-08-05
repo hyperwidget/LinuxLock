@@ -63,7 +63,7 @@ adminConsoleApp.controller('UsersController',
         $scope.editUser = function () {
             if($scope.currentIndex !== -1){
                 if ($scope.zones.length) $scope.selectedZoneToAdd = $scope.zones[0];
-                $scope.currentUser =  $scope.users[$scope.currentIndex];
+                $scope.currentUser =  angular.copy($scope.users[$scope.currentIndex]);
                 if($scope.currentUser.cards !== undefined) {
                     $scope.selectedCardToRemove = $scope.currentUser.cards[0];
                 }
@@ -99,10 +99,10 @@ adminConsoleApp.controller('UsersController',
                 $scope.users = dataManager.User.query();                
             }
         };
-        $scope.changeCurrentUser = function (event, index) {
+        $scope.changeCurrentUser = function (event, id) {
             $('.selected').removeClass('selected');
             $(event.target.parentElement).addClass('selected');
-            $scope.currentIndex = index;
+            $scope.currentIndex = viewManager.findByID($scope.users, id);
         };
         $scope.searchByFirstName = function(){
             if($scope.first !== undefined && $scope.first !== ''){

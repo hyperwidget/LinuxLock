@@ -16,7 +16,7 @@ adminConsoleApp.controller('AdminController',
         };
         $scope.editAdmin = function () {
             if($scope.currentIndex !== -1){
-                $scope.currentAdmin = $scope.admins[$scope.currentIndex];
+                $scope.currentAdmin = angular.copy($scope.admins[$scope.currentIndex]);
                 viewManager.showPopup('admin', $scope);
             }
         };
@@ -28,10 +28,10 @@ adminConsoleApp.controller('AdminController',
                 $scope.admins = dataManager.Admin.query();
             }
         };
-        $scope.changeCurrentAdmin = function (event, index) {
+        $scope.changeCurrentAdmin = function (event, id) {
             $('.selected').removeClass('selected');
             $(event.target.parentElement).addClass('selected');
-            $scope.currentIndex = index;
+            $scope.currentIndex = viewManager.findByID($scope.admins, id);
         };
         $scope.searchByName = function(){
             if($scope.name !== undefined && $scope.name !== ''){

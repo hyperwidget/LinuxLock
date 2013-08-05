@@ -16,7 +16,7 @@ adminConsoleApp.controller('DevicesController',
         };
         $scope.editDevice = function () {
             if($scope.currentIndex !== -1){
-                $scope.currentDevice =  $scope.devices[$scope.currentIndex];
+                $scope.currentDevice =  angular.copy($scope.devices[$scope.currentIndex]);
                 viewManager.showPopup('devices', $scope);
             }
         };
@@ -38,10 +38,10 @@ adminConsoleApp.controller('DevicesController',
                 });
             }
         };
-        $scope.changeCurrentDevice = function (event, index) {
+        $scope.changeCurrentDevice = function (event, id) {
             $('.selected').removeClass('selected');
             $(event.target.parentElement).addClass('selected');
-            $scope.currentIndex = index;
+            $scope.currentIndex = viewManager.findByID($scope.devices, id);;
         };
         $scope.searchByDeviceName = function(){
             if($scope.name !== undefined && $scope.name !== ''){

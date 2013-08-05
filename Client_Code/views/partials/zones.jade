@@ -19,7 +19,7 @@ div.mainPanel
             tr
                 th Alias
                 th Devices
-            tr(ng-repeat="zone in zones", class="{{'row' + $index % 2 }}", ng-click="changeCurrentZone($event, $index)")
+            tr(ng-repeat="zone in zones | orderBy: 'name'", class="{{'row' + $index % 2 }}", ng-click="changeCurrentZone($event, zone._id)")
                 td {{zone.name}}
                 td 
-                    div(ng-repeat="device in zone.devices"){{device.name}}
+                    div(ng-repeat="device in zone.devices") {{device.name}}

@@ -45,7 +45,7 @@ adminConsoleApp.controller('ZonesController',
         $scope.editZone = function () {
             if($scope.currentIndex !== -1){
                 if ($scope.devices.length) $scope.selectedDeviceToAdd = $scope.devices[0];
-                $scope.currentZone = $scope.zones[$scope.currentIndex];
+                $scope.currentZone = angular.copy($scope.zones[$scope.currentIndex]);
                 if($scope.currentZone.devices !== undefined) {
                     $scope.selectedDeviceToRemove = $scope.currentZone.devices[0];
                 }
@@ -72,10 +72,10 @@ adminConsoleApp.controller('ZonesController',
                 });
             }
         };
-        $scope.changeCurrentZone = function (event, index) {
+        $scope.changeCurrentZone = function (event, id) {
             $('.selected').removeClass('selected');
             $(event.target.parentElement).addClass('selected');
-            $scope.currentIndex = index;
+            $scope.currentIndex = viewManager.findByID($scope.zones, id);
         };
         $scope.searchByZoneAlias = function(){
             if($scope.alias !== undefined && $scope.alias !== ''){
