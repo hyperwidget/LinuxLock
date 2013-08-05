@@ -18,7 +18,7 @@ adminConsoleApp.controller('SettingsController',
             if($scope.confirm === true){
             	$scope.reqData = {file : $scope.selectedBackupToExecute};
             	$.ajax({
-            		url: 'executeRestore',
+            		url: 'setting/executeRestore',
             		type: 'POST',
             		data: $scope.reqData
             	});
