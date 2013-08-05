@@ -31,7 +31,7 @@ adminConsoleApp.controller('SettingsController',
             $scope.confirm = confirm('Are you sure you wish to perform a backup now?');
             if($scope.confirm === true){
                 $.ajax({
-                    url: 'executeBackup',
+                    url: 'setting/executeBackup',
                     type: 'POST'
                 });
             } else {
