@@ -1,7 +1,10 @@
-mongo = require('./mongo_connect.js'),
-bcrypt = require('bcrypt-nodejs');
+var mongo = require('./mongo_connect.js'), 
+    bcrypt = require('bcrypt-nodejs');
 
-
+//The first stop in admin query, if a search parameter is passed in,
+//a mongo query is built for that search and passed to findAllWithParams
+//The super admin user can not be searched for.
+//If no search values are present, find all admins who aren't the default superAdmin 
 exports.findAll = function(req, res, done) {
     if(req.query.name !== undefined){
         if(req.query.name !== 'Default SuperAdmin'){
@@ -20,6 +23,7 @@ exports.findAll = function(req, res, done) {
     }
 };
 
+//Find all using the passed in searchValue
 function findAllWithParams(searchValue, done){    
     db.collection('admins', function(err, collection) {
         collection.find(searchValue).toArray(function(err, items) {
@@ -32,9 +36,9 @@ function findAllWithParams(searchValue, done){
     });
 };
 
+//Find a single admin by their username
 exports.findByUserName = function(userName, done) {
     var err;
-    console.log('findByUserName: ' + userName);
     db.collection('admins', function(err, collection) {
         collection.find({'username': userName}).toArray(function(err, items) {
             if(!err){
@@ -46,10 +50,9 @@ exports.findByUserName = function(userName, done) {
     });
 };
 
+//Find a single admin by their ID
 exports.findById = function(id, done) {
-    var err;
-    console.log('findById: ' + id);
-    var o_id = new BSON.ObjectID(id);
+    var err, o_id = new BSON.ObjectID(id);
     db.collection('admins', function(err, collection) {
         collection.find({'_id': o_id}).toArray(function(err, items) {
             if(!err){
@@ -61,8 +64,8 @@ exports.findById = function(id, done) {
     });
 };
 
+//Compares passed in value for a user's password against stored value
 exports.validPassword = function(username, password, done){
-    console.log('validPassword: ' + password);
     db.collection('admins', function(err, collection) {
         collection.find({'username': username}).toArray(function(err, items) {
             if(items[0].password === password){
@@ -74,10 +77,9 @@ exports.validPassword = function(username, password, done){
     });
 };
 
+//Create a new admin using request data
 exports.add = function(req, done){
     var err;
-    console.log('admin add ' + req);
-
     newAdmin = {name: req.body.name, 
         username: req.body.username,
         password: bcrypt.hashSync(req.body.password),
@@ -99,9 +101,9 @@ exports.add = function(req, done){
     });
 };
 
+//Edit an admin by id using request data
 exports.edit = function(req, done){
     var err, o_id = new BSON.ObjectID.createFromHexString(req.body._id.toString());;
-    console.log('admin edit ' + req);
 
     db.collection('admins', function(err, collection){
         collection.update({'_id': o_id},
@@ -121,9 +123,9 @@ exports.edit = function(req, done){
     });
 };
 
+//Remove an admin by ID
 exports.delete = function(id, done){
     var err, o_id = new BSON.ObjectID.createFromHexString(id.toString());;
-    console.log('admin delete ' + id);
 
     db.collection('admins', function(err, collection){
         collection.delete({'_id': o_id}, function(err, items){

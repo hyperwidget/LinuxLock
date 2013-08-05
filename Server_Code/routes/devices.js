@@ -1,6 +1,8 @@
 require('./mongo_connect.js');
 Zones = require('./zones');
 
+//The first stop in Device query, if a search parameter is passed in,
+//a mongo query is built for that search and passed to findAllWithParams
 exports.findAll = function(req, res, done) {
     if(req.query.name !== undefined){
         findAllWithParams({name: req.query.name}, done);
@@ -13,6 +15,7 @@ exports.findAll = function(req, res, done) {
     }
 };
 
+//Find all using the passed in searchValue
 function findAllWithParams(searchValue, done){    
     db.collection('devices', function(err, collection) {
         collection.find(searchValue).toArray(function(err, items) {
@@ -25,12 +28,11 @@ function findAllWithParams(searchValue, done){
     });
 };
 
+//Find a single device by id
 exports.findById = function(id, done) {
-    var err;
-    console.log('findDeviceById: ' + id);
+    var err, console.log('findDeviceById: ' + id);
     db.collection('devices', function(err, collection) {
         collection.find({'_id': 'ObjectId("' + id + '")'}).toArray(function(err, items) {
-            console.log(items);
             if(!err){
                 return done(null, items);
             } else{ 
@@ -40,23 +42,9 @@ exports.findById = function(id, done) {
     });
 };
 
-exports.findById = function(id, done) {
-    var err,  o_id = new BSON.ObjectID.createFromHexString(id.toString());
-    console.log('findDeviceById: ' + id);
-    db.collection('devices', function(err, collection) {
-        collection.find({_id: o_id}).toArray(function(err, items) {
-            if(!err){
-                return done(null, items);
-            } else{ 
-                return done(err, items);
-            }
-        });
-    });
-};
-
+//Add a device using passed in information
 exports.add = function(req, done){
-    var err;
-    console.log('device add ' + req.body.hostname);
+    var err, console.log('device add ' + req.body.hostname);
 
     o_id = new BSON.ObjectID();
     newDevice = {
@@ -65,7 +53,6 @@ exports.add = function(req, done){
         hostname: req.body.hostname
     };
 
-    console.log(newDevice);
 
     db.collection('devices', function(err, collection){
         collection.insert(newDevice, {safe:true},function(err, doc){
@@ -79,9 +66,10 @@ exports.add = function(req, done){
     });
 };
 
+
+//Edit device to match passed in information
 exports.edit = function(req, done){
     var err, o_id = new BSON.ObjectID.createFromHexString(req.body._id.toString());;
-    console.log('device edit ' + req.toString());
 
     db.collection('devices', function(err, collection){
         collection.update({'_id': o_id},
@@ -95,9 +83,9 @@ exports.edit = function(req, done){
     });
 };
 
+//Remove specified Device
 exports.delete = function(id, done){
     var err, o_id = new BSON.ObjectID.createFromHexString(id.toString());;
-    console.log('device delete ' + id);
 
     db.collection('devices', function(err, collection){
         collection.remove({'_id': o_id}, function(err, items){

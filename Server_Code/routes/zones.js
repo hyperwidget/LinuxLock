@@ -2,6 +2,8 @@ require('./mongo_connect.js');
 Devices = require('./devices.js');
 CardHolders = require('./cardHolders');
 
+//The first stop in Zone query, if a search parameter is passed in,
+//a mongo query is built for that search and passed to findAllWithParams
 exports.findAll = function(req, res, done) {
     if(req.query.name !== undefined){
         findAllWithParams({name: req.query.name}, done);
@@ -13,6 +15,7 @@ exports.findAll = function(req, res, done) {
     }
 };
 
+//Find all using the passed in searchValue
 function findAllWithParams(searchValue, done){   
     db.collection('zones', function(err, collection) {
         collection.find(searchValue).toArray(function(err, items) {
@@ -20,25 +23,31 @@ function findAllWithParams(searchValue, done){
                 done(err, items);
             } else {
                 if(items.length > 0){
+                    //Keep track of how many zones have finished processing
                     doneCount = 0;
+                    //Go through each zone and add the devices names to their subdocuments
                     items.forEach(function(zone){
                         if(zone.devices.length > 0){
                             var deviceCount = 0;
+                            //Loop through each device this zone has and add it's name
                             zone.devices.forEach(function(device){
                                 Devices.findById(device.device_id, function(err, deviceInfo){
                                     device.name = deviceInfo[0].name;
+                                    //If all devices are done and all zones' devices are done, return results
                                     if((++deviceCount == zone.devices.length) && (++doneCount == items.length)){
                                         done(null, items);
                                     }
                                 });
                             });
                         } else {
+                            //This Zone has no devices, but if the other zones' devices are done, return results
                             if(items.length == ++doneCount){
                                 done(null, items);
                             }
                         }
                     });
                 } else {
+                    //no zones match the query
                     done(null, items);
                 }
             }
@@ -46,9 +55,9 @@ function findAllWithParams(searchValue, done){
     });
 };
 
+//Find a Zone by ID
 exports.findById = function(id, done) {
     var err,  o_id = new BSON.ObjectID.createFromHexString(id.toString());
-    console.log('findZoneById: ' + id);
     db.collection('zones', function(err, collection) {
         collection.find({'_id': o_id}).toArray(function(err, items) {
             if(!err){
@@ -60,17 +69,18 @@ exports.findById = function(id, done) {
     });
 };
 
+//Add a zone using the passed in info
 exports.add = function(req, done){
     var err;
-    console.log('zone add ' + req);
-    cardsArray = [];
     devices = [];
+
+    //Add each device_id to the device array
     for(i in req.body.devices) {
         device_id = new BSON.ObjectID.createFromHexString(req.body.devices[i].device_id.toString());
         devices.push({device_id: device_id});
     }
 
-    newZone = {'name': req.body.name, 'devices': devices};
+    newZone = {name: req.body.name, devices: devices};
 
     db.collection('zones', function(err, collection){
         collection.insert(newZone, {safe:true}, function(err, doc){
@@ -83,16 +93,17 @@ exports.add = function(req, done){
     });
 };
 
+
+//Edit the zone to match the passed in info
 exports.edit = function(req, done){
     var err, o_id = new BSON.ObjectID.createFromHexString(req.body._id.toString());;
-    console.log('zone edit ' + req);
 
     devices = [];
+    //Add each device_id to the device array
     for(i in req.body.devices) {
         device_id = new BSON.ObjectID.createFromHexString(req.body.devices[i].device_id.toString());
         devices.push({device_id: device_id});
     }
-
 
     db.collection('zones', function(err, collection){
         collection.update({'_id': o_id},
@@ -105,9 +116,9 @@ exports.edit = function(req, done){
     });
 };
 
+//Remove a zone
 exports.delete = function(id, done){
     var err, o_id = new BSON.ObjectID.createFromHexString(id.toString());;
-    console.log('zone delete ' + id);
 
     db.collection('zones', function(err, collection){
         collection.remove({'_id': o_id}, function(err, items){
@@ -116,9 +127,9 @@ exports.delete = function(id, done){
     });
 };
 
+//Remove specified device from all zones(device was deleted)
 exports.removeDeviceFromZones = function(id, done){
     var err, o_id = new BSON.ObjectID.createFromHexString(id.toString());;
-    console.log('remove device ' + id + ' from zones');
 
     db.collection('zones', function(err, collection){
         collection.update({},

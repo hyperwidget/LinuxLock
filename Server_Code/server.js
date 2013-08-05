@@ -16,21 +16,24 @@ require('./routes/mongo_connect')
 
 //Setup Express
 var app = express();
+
+//Setup LinuxLock Objects
 var cardHolders = require('./routes/cardHolders');
 var admins = require('./routes/admins');
 var zones = require('./routes/zones');
 var devices = require('./routes/devices');
 var settings = require('./routes/settings');
 var rfids = require('./routes/rfids');
-var events = require('./routes/events')
+var events = require('./routes/events');
 
+//Setup passport for authentication
 var passport = require('passport'),
   LocalStrategy = require('passport-local').Strategy;
 
+//App configuration
 app.configure(function(){
   app.set('views', './../Client_Code/views');
   app.set('view options', { layout: false });
-  //app.use(express.logger('dev'));
   app.use(connect.bodyParser());
   app.use(express.cookieParser());
   app.use(express.session({ secret: "shhhhhhhhh!"}));
@@ -73,6 +76,7 @@ io.sockets.on('connection', function(socket){
 //              PASSPORT                 //
 ///////////////////////////////////////////
 
+//Store user in session
 passport.serializeUser(function(user, done) {
   done(null, user._id);
 });
@@ -83,8 +87,7 @@ passport.deserializeUser(function(id, done) {
   });
 });
 
-//Authentication 
-
+//Authentication  
 passport.use(new LocalStrategy(
   function(username, password, done) {
     admins.findByUserName(username, function(err, user) {
@@ -105,7 +108,7 @@ passport.use(new LocalStrategy(
   }
 ));
 
-
+//Function to make sure that user is currently logged in and authorized
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) { 
     return next(); 
@@ -166,9 +169,8 @@ app.get('/api/auth/:type/:id.json',
   }
 })
 
+//Empty Path
 app.get('/', function(req,res){
-  console.log('emptyPath');
-  console.log(bcrypt.hashSync("P@ssw0rd"));
   res.render('login.jade', {
       title : 'Linux Lock',
       description: 'Starting page',
@@ -189,9 +191,9 @@ app.get('/logout', function(req, res){
   res.redirect('/');
 });
 
+//Base view for all other views
 app.get('/console', ensureAuthenticated,
     function(req,res){
-    console.log('console');
     res.render('console.jade', {
         title : 'Linux Lock',
         description: 'Starting page',
@@ -200,9 +202,10 @@ app.get('/console', ensureAuthenticated,
     });
 });
 
+//display the template for the requested page
 app.get('/templates/:name', ensureAuthenticated,
   function(req,res){
-    console.log('template' + req.params.name);
+    //check if currently logged in user has permissions to access the requested page
     var allowed = true;
     switch(req.params.name){
       case 'users':
@@ -275,99 +278,102 @@ app.get('/permissions', ensureAuthenticated,
       res.jsonp(ret);
   });
 
-// Admins
+/** Admin Routes **/
+
+//Get all admins
 app.get('/admin', ensureAuthenticated,
   function(req, res){
-    console.log('get admins');
     admins.findAll(req, res, function(err, items){
       res.jsonp(items);
   })
 });
 
+//Add admin
 app.post('/admin', ensureAuthenticated,
   function(req, res){
-    console.log('add admins');
     admins.add(req, function(err){
 
   });
 });
 
+//Edit admin by ID
 app.post('/admin/:id', ensureAuthenticated,
   function(req, res){
-    console.log('edit admins');
     admins.edit(req, function(err){
   });
 });
 
+//Delete Admin by ID
 app.delete('/admin/:id', ensureAuthenticated,
   function(req, res){
-    console.log('delete admin');
     cardHolders.delete(req.params.id, function(err){
       res.send(200);
   });
 });
 
-// Card Holders
+/** Card Holder Routes **/
+
+//Get all Card Holders
 app.get('/cardHolder', ensureAuthenticated,
   function(req, res){
-    console.log('get cardHolders');
     cardHolders.findAll(req, res, function(err, items){
       res.jsonp(items);
   })
 });
 
+//Add Card Holder
 app.post('/cardHolder', ensureAuthenticated,
   function(req, res){
-    console.log('add cardHolder');
     cardHolders.add(req, function(err){
       res.send(200);
   });
 });
 
+//Edit Card Holder By ID
 app.post('/cardHolder/:id', ensureAuthenticated,
   function(req, res){
-    console.log('edit cardHolder');
     cardHolders.edit(req, function(err){
       res.send(200);
   });
 });
 
+//Delete CardHolder By Id
 app.delete('/cardHolder/:id', ensureAuthenticated,
   function(req, res){
-    console.log('delete cardHolder');
     cardHolders.delete(req.params.id, function(err){
       res.send(200);
   });
 });
 
-//Devices
+/** Devices Routes **/
+
+//Get all Devices
 app.get('/device', ensureAuthenticated,
   function(req, res){
-    console.log('get devices');
     devices.findAll(req, res, function(err, items){
       res.jsonp(items);
   })
 });
 
+//Add Device
 app.post('/device', ensureAuthenticated,
   function(req, res){
-    console.log('add device');
     devices.add(req, function(err){
       res.send(200);
   });
 });
 
+//Edit Device by ID
 app.post('/device/:id', ensureAuthenticated,
   function(req, res){
-    console.log('edit device');
     devices.edit(req, function(err){
       res.send(200);
   });
 });
 
+//Delete Device by ID
 app.delete('/device/:id', ensureAuthenticated,
   function(req, res){
-    console.log('delete device');
     devices.delete(req.params.id, function(err){
       res.send(200);
   });
@@ -395,7 +401,9 @@ function dateify(str) {
   } else return new Date(time)
 }
 
-//Events
+/** Events Routes **/
+
+//Get all events
 app.get('/event', ensureAuthenticated,
   function(req, res){
     // validate query if any
@@ -417,142 +425,143 @@ app.get('/event', ensureAuthenticated,
     })
 });
 
+
+//Add Event
 app.post('/event', ensureAuthenticated,
   function(req, res){
-    console.log('add event');
     events.add(req, function(err){
       res.send(200);
   });
 });
 
+//Edit Event by ID
 app.post('/event/:id', ensureAuthenticated,
   function(req, res){
-    console.log('edit event');
     events.edit(req, function(err){
       res.send(200);
   });
 });
 
-//RFIDs
+/** RFID Routes **/
+
+//Get all rfids
 app.get('/rfid', ensureAuthenticated,
   function(req, res){
-    console.log('get rfids');
     rfids.findAll(req, res, function(err, items){
       res.jsonp(items);
   })
 });
 
+//Add an RFID
 app.post('/rfid', ensureAuthenticated,
   function(req, res){
-    console.log('add rfid');
     rfids.add(req, function(err){
       res.send(200);
   });
 });
 
+//Edit RFID by ID
 app.post('/rfid/:id', ensureAuthenticated,
   function(req, res){
-    console.log('edit rfid');
     rfids.edit(req, function(err){
       res.send(200);
   });
 });
 
+//Delete RFID by ID
 app.delete('/rfid/:id', ensureAuthenticated,
   function(req, res){
-    console.log('delete rfid');
     rfids.delete(req.params.id, function(err){
       res.send(200);
   });
 });
 
+/** Settings Routes **/
 
-//Settings
+//Get all Settings
 app.get('/setting', ensureAuthenticated,
   function(req, res){
-    console.log('get settings');
     settings.findAll(function(err, items){
       res.jsonp(items);
   });
 });
 
+//Get list of backups stored on server
 app.get('/setting/backups', ensureAuthenticated,
   function(req, res){
-    console.log('get backups');
     settings.backupsList(function(err, items){
       res.jsonp(items);
     });
 });
 
+//Execute the passed in backup
 app.post('/setting/executeBackup', ensureAuthenticated,
   function(req, res){
-    console.log('Execute Backup');
     settings.executeBackup(function(err){
       res.send(200);
     });
 });
 
+//Add a Setting
 app.post('/setting', ensureAuthenticated,
   function(req, res){
-    console.log('add setting');
     settings.add(req, function(err){
       res.send(200);
   });
 });
 
+//Edit a Setting by ID
 app.post('/setting/:id', ensureAuthenticated,
   function(req, res){
-    console.log('edit setting');
     settings.edit(req, function(err){
       res.send(200);
   });
 });
 
+//Execute a mongo restore based on the passed in filename
 app.post('/executeRestore', ensureAuthenticated,
   function(req, res){
-    console.log('RUN RESTORE');
-
     child = exec('mongorestore ./db_backup/' + req.body.file, 
       function (error, stdout, stderr) {      
         console.log('stdout: ' + stdout);
         console.log('stderr: ' + stderr);
         if (error !== null) {
-          console.log('exec error: ' + error);
-          res.writeHead('500');
+          res.send(500);
         } else {
           res.send(200);
         }
     }); 
 });
 
-//Zones
+/** Zones Routes **/
+
+//Get all Zones
 app.get('/zone', ensureAuthenticated,
   function(req, res){
-    console.log('get zones');
     zones.findAll(req, res, function(err, items){
       res.jsonp(items);
   })
 });
 
+//Add a Zone
 app.post('/zone', ensureAuthenticated,
   function(req, res){
-    console.log('add zone');
     zones.add(req, function(err){
       res.send(200);
   });
 });
 
+//Edit a Zone by ID
 app.post('/zone/:id', ensureAuthenticated,
   function(req, res){
-    console.log('edit zone');
     zones.edit(req, function(err){
       res.send(200);
   });
 });
 
+//Delete a Zone by ID
 app.delete('/zone/:id', ensureAuthenticated,
   function(req, res){
-    console.log('delete zone');
     zones.delete(req.params.id, function(err){
       res.send(200);
   });
@@ -574,6 +583,5 @@ function NotFound(msg){
     Error.call(this, msg);
     Error.captureStackTrace(this, arguments.callee);
 }
-
 
 console.log('Listening on http://0.0.0.0:' + port );

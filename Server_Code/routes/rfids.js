@@ -1,6 +1,8 @@
 require('./mongo_connect.js');
 CardHolders = require('./cardHolders');
 
+//The first stop in RFID query, if a search parameter is passed in,
+//a mongo query is built for that search and passed to findAllWithParams
 exports.findAll = function(req, res, done) {
     console.log('get all rfidsssss');
     if(req.query.rfidNo !== undefined){
@@ -12,10 +14,10 @@ exports.findAll = function(req, res, done) {
     }
 };
 
+//Find an RFID document by the passed in RFIDNumber
 exports.findByRfidNo = function(rfid, done){
     db.collection('rfids', function(err, collection) {
         searchValue = {rfidNo: rfid};
-        console.log(searchValue);
         collection.find(searchValue).toArray(function(err, items) {
             if(err){
                 done(err, items);
@@ -26,6 +28,7 @@ exports.findByRfidNo = function(rfid, done){
     }); 
 };
 
+//Find all using the passed in searchValue
 function findAllWithParams(searchValue, done){   
     db.collection('rfids', function(err, collection) {
         collection.find(searchValue).toArray(function(err, items) {
@@ -38,10 +41,9 @@ function findAllWithParams(searchValue, done){
     }); 
 };
 
-
+//Find an RFID by ID
 exports.findById = function(id, done) {
     var err,  o_id = new BSON.ObjectID.createFromHexString(id.toString());
-    console.log('findUserRfidById: ' + id);
     db.collection('rfids', function(err, collection) {
         collection.find({'_id': o_id}).toArray(function(err, items) {
             if(!err){
@@ -53,11 +55,15 @@ exports.findById = function(id, done) {
     });
 };
 
+//Add an RFID usin the passed in information
 exports.add = function(req, done){
     var err;
-    console.log('rfid add ' + req);
 
-    newRfid = {'rfidNo': req.body.rfidNo, 'status': req.body.status, 'cardHolder_id': req.body.cardHolder_id};
+    newRfid = {
+        rfidNo: req.body.rfidNo, 
+        status: req.body.status, 
+        cardHolder_id: req.body.cardHolder_id
+    };
 
     db.collection('rfids', function(err, collection){
         collection.insert(newRfid, {safe:true}, function(err, doc){
@@ -70,25 +76,24 @@ exports.add = function(req, done){
     });
 };
 
+//Edit an RFID to match the passed in information
 exports.edit = function(req, done){
     var err, o_id = new BSON.ObjectID.createFromHexString(req.body._id.toString());;
-    console.log('rfid edit ' + req);
 
     db.collection('rfids', function(err, collection){
-        collection.update({'_id': o_id},
+        collection.update({_id: o_id},
         {
-            $set: {'rfidNo': req.body.rfidNo,
-            'status': req.body.status,
-            'cardHolder_id': req.body.cardHolder_id}
+            $set: {rfidNo: req.body.rfidNo,
+            status: req.body.status}
          }, function(){
             done(null);
          });
     });
 };
 
+//Delete an RFID
 exports.delete = function(id, done){
     var err, o_id = new BSON.ObjectID.createFromHexString(id.toString());;
-    console.log('rfid delete ' + id);
 
     db.collection('rfids', function(err, collection){
         collection.remove({'_id': o_id}, function(err, items){

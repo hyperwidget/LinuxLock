@@ -2,6 +2,9 @@ require('./mongo_connect.js');
 Rfids = require('./rfids');
 Zones = require('./zones');
 
+//The first stop in cardHolder query, if a search parameter is passed in,
+//a mongo query is built for that search and passed to findAllWithParams
+//If no search values are present, find all cardHolders
 exports.findAll = function(req, res, done) {
     if(req.query.first !== undefined){
         findAllWithParams({first: req.query.first}, done);
@@ -27,24 +30,30 @@ exports.findAll = function(req, res, done) {
     }
 };
 
+//Find all cardHolders using the searchValue passed in
 function findAllWithParams(searchValue, done){    
     db.collection('cardHolders', function(err, collection) {
         collection.find(searchValue).toArray(function(err, items) {
             if(err){
                 done(err, items);
             } else {
-
                 if(items.length > 0){
+                    //Track if all items have finished processing cards and zones
                     cardsDone = 0, zonesDone = 0;
+                    //Loop through all items to append their zone names and rfid numbers
                     items.forEach(function(cardHolder){
 
+                        //If this cardholder has cards, loop through each ID and query the
+                        //RFIDs collection to get the corresponding rfid_number
+                        //Append that RFID number to the current card subdocument
                         if(cardHolder.cards.length > 0) {
                             cardHolder.CardsDone = 0;
                             cardHolder.cards.forEach(function(card){
                                 Rfids.findById(card.rfid_id, function(err, cardInfo){
                                     card.rfidNo = cardInfo[0].rfidNo;
+                                    //If all of this cardHolder's cards are done being processed
+                                    //And all cardholders cards and zones are done being processed, return results
                                     if(++cardHolder.CardsDone == cardHolder.cards.length){
-                                        console.log(cardHolder.first + " cards done");
                                         if(++cardsDone == items.length){
                                             if(zonesDone == items.length){
                                                 done(null, items);
@@ -54,20 +63,26 @@ function findAllWithParams(searchValue, done){
                                 });
                             });
                         } else {
-                            console.log(cardHolder.first + " cards done");
+                            //This cardholder has no cards
+                            //And all cardholders cards and zones are done being processed, return results
                             if(++cardsDone == items.length){
                                 if(zonesDone == items.length){
                                     done(null, items);
                                 }
                             } 
                         }
+
+                        //If this cardholder has zones, loop through each ID and query the
+                        //Zones collection to get the corresponding zone.name
+                        //Append that Zone name to the current zone subdocument
                         if(cardHolder.zones.length > 0) {
                             cardHolder.zones.forEach(function(zone){
                                 cardHolder.ZonesDone = 0;
                                 Zones.findById(zone.zone_id, function(err, zoneInfo){
                                     zone.name = zoneInfo[0].name;
+                                    //If all of this cardHolder's zones are done being processed
+                                    //And all cardholders zones and cards are done being processed, return results
                                     if(++cardHolder.ZonesDone == cardHolder.zones.length){
-                                        console.log(cardHolder.first + " zones done");
                                         if(++zonesDone == items.length){
                                             if(cardsDone == items.length){
                                                 done(null, items);
@@ -77,7 +92,8 @@ function findAllWithParams(searchValue, done){
                                 });
                             });
                         } else {
-                            console.log(cardHolder.first + " zones done");
+                            //This cardholder has no zones
+                            //And all cardholders cards and zones are done being processed, return results
                             if(++zonesDone == items.length){
                                 if(cardsDone == items.length){
                                     done(null, items);
@@ -86,6 +102,7 @@ function findAllWithParams(searchValue, done){
                         }
                     });
                 } else {
+                    //No cardholders found that match the query
                     done(null, items);
                 }
             }
@@ -93,9 +110,10 @@ function findAllWithParams(searchValue, done){
     });
 };
 
+
+//Find a cardholder by the passed in ID
 exports.findById = function(id, done) {
     var err,  o_id = new BSON.ObjectID.createFromHexString(id.toString());
-    console.log('findZoneById: ' + id);
     db.collection('cardHolders', function(err, collection) {
         collection.find({'_id': o_id}).toArray(function(err, items) {
             if(!err){
@@ -107,17 +125,18 @@ exports.findById = function(id, done) {
     });
 };
 
+//Adds a new cardholder using the data passed in
 exports.add = function(req, done){
-    var err;
-    console.log('cardholder add ' + req.body.phone);
-    o_id = new BSON.ObjectID();
+    var err, o_id = new BSON.ObjectID();
     zones = [];
     cards = [];
+    //Loop through all zones and put them into an array
     for(i in req.body.zones) {
         zone_id = new BSON.ObjectID.createFromHexString(req.body.zones[i].zone_id.toString());
         zones.push({zone_id: zone_id});
     }
 
+    //Loop through all cards and put them into an array
     for(i in req.body.cards) {
         card_id = new BSON.ObjectID.createFromHexString(req.body.cards[i].rfid_id.toString());
         cards.push({rfid_id: card_id});
@@ -135,7 +154,7 @@ exports.add = function(req, done){
     };
 
     db.collection('cardHolders', function(err, collection){
-        collection.insert(newCardHolder, {safe:true},function(err, doc){
+        collection.insert(newCardHolder, {safe:true}, function(err, doc){
             if(!err){
                 done(null, doc);
             } else {
@@ -145,22 +164,23 @@ exports.add = function(req, done){
     });
 };
 
+//Edit a card holder
 exports.edit = function(req, done){
-    console.log(req.body);
     var err, o_id = new BSON.ObjectID.createFromHexString(req.body._id.toString());
     zones = [];
     cards = [];
+
+    //Loop through all zones and put them into an array
     for(i in req.body.zones) {
         zone_id = new BSON.ObjectID.createFromHexString(req.body.zones[i].zone_id.toString());
         zones.push({zone_id: zone_id});
     }
 
+    //Loop through all cards and put them into an array
     for(i in req.body.cards) {
         rfid_id = new BSON.ObjectID.createFromHexString(req.body.cards[i].rfid_id.toString());
         cards.push({rfid_id: rfid_id});
     }
-
-    console.log(zones);
 
     db.collection('cardHolders', function(err, collection){
         collection.update({_id: o_id},
@@ -178,10 +198,11 @@ exports.edit = function(req, done){
     });
 };
 
+//Remove a cardholder
 exports.delete = function(id, done){
     var err, o_id = new BSON.ObjectID.createFromHexString(id.toString());
-    console.log('cardholder delete ' + id);
 
+    //Find the cardholder's RFIDs first and set them all to inactive
     db.collection('cardHolders', function(err, collection){
         collection.find({_id: o_id}, {cards:1, _id:0}).toArray(function(err, items){
                 items[0].cards.forEach(function(card){
@@ -192,6 +213,7 @@ exports.delete = function(id, done){
                             $set: {
                             status: 'inactive'}                            
                          }, function(){
+                            //neccessary callback
                          });
                     });
                 });             
@@ -205,9 +227,9 @@ exports.delete = function(id, done){
     });    
 };
 
+//Removes an RFID from a cardholder
 exports.removeRFIDFromCardHolders = function(id, done){
     var err, o_id = new BSON.ObjectID.createFromHexString(id.toString());;
-    console.log('remove RFID ' + id + ' from cardHolders');
 
     db.collection('cardHolders', function(err, collection){
         collection.update({},
@@ -217,9 +239,9 @@ exports.removeRFIDFromCardHolders = function(id, done){
     });
 };
 
+//Removes a Zone from a cardHolder
 exports.removeZoneFromCardHolders = function(id, done){
     var err, o_id = new BSON.ObjectID.createFromHexString(id.toString());;
-    console.log('remove Zone ' + id + ' from cardHolders');
 
     db.collection('cardHolders', function(err, collection){
         collection.update({},
