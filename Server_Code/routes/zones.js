@@ -64,9 +64,13 @@ exports.add = function(req, done){
     var err;
     console.log('zone add ' + req);
     cardsArray = [];
-    devicesArray = [];
+    devices = [];
+    for(i in req.body.devices) {
+        device_id = new BSON.ObjectID.createFromHexString(req.body.devices[i].device_id.toString());
+        devices.push({device_id: device_id});
+    }
 
-    newZone = {'name': req.body.name, 'devices': devicesArray};
+    newZone = {'name': req.body.name, 'devices': devices};
 
     db.collection('zones', function(err, collection){
         collection.insert(newZone, {safe:true}, function(err, doc){
