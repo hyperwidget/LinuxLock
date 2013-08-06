@@ -46,6 +46,7 @@ RFID.statics.isAuthorizedForDevice = function(options,done) {
   }
   function findUser(done) {
     if(rfid) {
+      console.log("Searching for CardHolder with rfid '" + rfid._id + "'")
       CardHolder
       .findOne({cards: {$elemMatch: { rfid_id: rfid._id}}})
       .lean()

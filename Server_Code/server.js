@@ -140,9 +140,9 @@ app.get('/api/auth/:type/:id.json',
         console.log(err)
         // Error occurred, use error status!
         // [ lol :( ]
-        var rfid = null, device = null
+        var rfid = {}, device = {}
         if(item) rfid = item.rfid, device = item.device
-        Event.log(rfid, device, false, "error", time)
+        Event.log(rfid.rfidNo || req.params.id, device.name || "unknown", device.hostname || req.connection.remoteAddress, false, "error", time)
         res.jsonp(401,{auth: false})
       } else {
         // TODO: Log this access.
@@ -151,7 +151,22 @@ app.get('/api/auth/:type/:id.json',
         var status = null
         if(!item.device) status = "unknown-device"
         else if(!item.rfid) status = "unknown-rfid"
-        Event.log(item.rfid, item.device, item.auth, status, time)
+        
+        var deviceName = "unknown", hostName = req.connection.remoteAddress
+        if(item.device) {
+          deviceName = item.device.name
+          hostName = item.device.hostname
+        }
+        var user = "unknown"
+        if(item.user) {
+          user = item.user.first + " " + item.user.last
+        }
+        var rfid = req.params.id
+        if(item.rfid)
+          rfid = item.rfid.rfidNo
+        
+        //console.log(JSON.stringify(item))
+        Event.log(rfid, user, deviceName, hostName, item.auth, status, time)
         // Notify via email that access was granted
         fullName = null
         deviceName = null
@@ -164,7 +179,7 @@ app.get('/api/auth/:type/:id.json',
       }
     });
   } else {
-    Event.log(null, null, false, "bad-protocol", time)
+    Event.log(req.params.id, "unknown", "unknown", req.connection.remoteAddress, false, "bad-protocol", time)
     res.jsonp(401,{auth: false})
   }
 })

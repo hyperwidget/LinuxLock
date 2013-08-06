@@ -10,13 +10,19 @@ var mongoose = require('mongoose'),
       status: {type:String, required:true, default:""} // WAT
   	});
 
-Event.statics.log = function(rfid, device, authorized, status, time)
+Event.statics.log = function(rfid, user, deviceName, hostName, authorized, status, time)
 {
   var RFID = require('./RFID'),
       Device = require('./Device'),
       Event = mongoose.model('Event'),
-      user = "",
-      hostname = ""
+      CardHolder = require('./CardHolder')
+      
+      //console.log("RFID: " + rfid)
+      //console.log("USER: " + user)
+      //console.log("DEVICE: " + deviceName + " (" + hostName + ")")
+      //console.log("AUTHORIZED: " + authorized)
+      //console.log("STATUS: " + status)
+      //console.log("TIME: " + time)
   // status/time are both optional and may be passed in a weird order
   if(status && status instanceof Date) {
     var tmp = status
@@ -39,62 +45,30 @@ Event.statics.log = function(rfid, device, authorized, status, time)
     else status = "unauthorized"
   }
 
-  function getUserName(rfid) {
-    var result = null
-    // If we have an RFID object, use it to get the username.
-    mongoose.model('CardHolder').findOne({_id: rfid.cardHolder}, function(err, item) {
-      if(item) result = item.fullName
-      else result = ""
-    })
-    function sleep() {
-      if(result === null) setTimeout(sleep,0)
-    }
-    sleep()
-    return result
-  }
-
   // If rfid is instanceof RFID, use its _id, otherwise if it's
   // an instanceof ObjectId, use rfid, otherwise if it's a string,
   // convert string to ObjectId, otherwise null
   if(rfid instanceof RFID) {
     rfid = rfid.rfidNo
-    user = getUserName(rfid)
   } else if(rfid instanceof ObjectId)
     mongoose.model('RFID').findOne({_id: rfid}, function(err, item) {
       if(item) {
         rfid = item.rfidNo
-        user = getUserName(item)
       }
       else rfid = ""
     })
-  else if(rfid instanceof String) {}
+  else if(typeof rfid === "string") {}
   else
     rfid = ""
 
-  // Same deal for Device
-  if(device instanceof Device ||
-  device instanceof Object &&
-  "device" in device && "hostname" in device) {
-    device = device.name
-    hostname = device.hostname
-  }
-  else if(device instanceof ObjectId)
-    mongoose.model('Device').findOne({_id: device}, function(err, item) {
-      if(!item) {
-          device = "";
-          hostname = "";
-      } else {
-        device = item.name;
-        hostname = item.hostname;
-      }
-    })
-  else {
-    device = "", hostname = ""
-  }
+  if(user instanceof CardHolder)
+    user = user.fullName
+  else if(typeof user === "string") {}
+  else user = ""
 
   Event.create({
-    device: device,
-    hostname: hostname,
+    device: deviceName,
+    hostname: hostName,
     rfid: rfid,
     cardHolder: user,
     // Leave out alias by default, let the web app add them if they want to
