@@ -30,7 +30,7 @@ function findAllWithParams(searchValue, done){
 
 //Find a single device by id
 exports.findById = function(id, done) {
-    var err, console.log('findDeviceById: ' + id);
+    var err;
     db.collection('devices', function(err, collection) {
         collection.find({'_id': 'ObjectId("' + id + '")'}).toArray(function(err, items) {
             if(!err){
@@ -44,7 +44,7 @@ exports.findById = function(id, done) {
 
 //Add a device using passed in information
 exports.add = function(req, done){
-    var err, console.log('device add ' + req.body.hostname);
+    var err;
 
     o_id = new BSON.ObjectID();
     newDevice = {
