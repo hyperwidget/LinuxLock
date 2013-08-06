@@ -510,14 +510,6 @@ app.post('/setting', ensureAuthenticated,
   });
 });
 
-//Edit a Setting by ID
-app.post('/setting/:id', ensureAuthenticated,
-  function(req, res){
-    settings.edit(req, function(err){
-      res.send(200);
-  });
-});
-
 //Execute a mongo restore based on the passed in filename
 app.post('/setting/executeRestore', ensureAuthenticated,
   function(req, res){
@@ -532,6 +524,14 @@ app.post('/setting/executeRestore', ensureAuthenticated,
         }
     }); 
 });
+
+//Edit a Setting by ID
+app.post('/setting/:id', ensureAuthenticated,
+    function(req, res){
+        settings.edit(req, function(err){
+            res.send(200);
+        });
+    });
 
 /** Zones Routes **/
 
