@@ -26,6 +26,7 @@ adminConsoleApp.controller('AdminController',
                 $scope.currentAdmin = $scope.admins[$scope.currentIndex];
                 $scope.currentAdmin.$delete();
                 $scope.admins = dataManager.Admin.query();
+                $scope.currentIndex = -1;
             }
         };
         $scope.changeCurrentAdmin = function (event, id) {

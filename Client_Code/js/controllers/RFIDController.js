@@ -29,6 +29,7 @@ adminConsoleApp.controller('RFIDController',
                 $scope.currentRFID = $scope.rfids[$scope.currentIndex];
                 $scope.currentRFID.$delete();
                 $scope.rfids = dataManager.RFID.query();
+                $scope.currentIndex = -1;
             }
         };
         $scope.changeCurrentRFID = function (event, id) {

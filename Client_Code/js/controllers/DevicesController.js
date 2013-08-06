@@ -29,11 +29,13 @@ adminConsoleApp.controller('DevicesController',
                             $scope.currentDevice = $scope.devices[$scope.currentIndex];
                             $scope.currentDevice.$delete();
                             $scope.devices = dataManager.Device.query();
+                            $scope.currentIndex = -1;
                         }
                     } else {
                         $scope.currentDevice = $scope.devices[$scope.currentIndex];
                         $scope.currentDevice.$delete();
                         $scope.devices = dataManager.Device.query();
+                        $scope.currentIndex = -1;
                     }
                 });
             }

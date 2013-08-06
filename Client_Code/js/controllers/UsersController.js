@@ -96,7 +96,8 @@ adminConsoleApp.controller('UsersController',
             if($scope.confirm === true){
                 $scope.currentUser = $scope.users[$scope.currentIndex];
                 $scope.currentUser.$delete();
-                $scope.users = dataManager.User.query();                
+                $scope.users = dataManager.User.query();
+                $scope.currentIndex = -1;
             }
         };
         $scope.changeCurrentUser = function (event, id) {

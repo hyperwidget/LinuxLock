@@ -62,11 +62,13 @@ adminConsoleApp.controller('ZonesController',
                             $scope.currentZone = $scope.zones[$scope.currentIndex];
                             $scope.currentZone.$delete();
                             $scope.zones = dataManager.Zone.query();
+                            $scope.currentIndex = -1;
                         }
                     } else {
                         $scope.currentZone = $scope.zones[$scope.currentIndex];
                         $scope.currentZone.$delete();
                         $scope.zones = dataManager.Zone.query();
+                        $scope.currentIndex = -1;
                     }
 
                 });
