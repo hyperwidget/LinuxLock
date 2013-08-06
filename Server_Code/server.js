@@ -519,7 +519,7 @@ app.post('/setting/:id', ensureAuthenticated,
 });
 
 //Execute a mongo restore based on the passed in filename
-app.post('/executeRestore', ensureAuthenticated,
+app.post('/setting/executeRestore', ensureAuthenticated,
   function(req, res){
     child = exec('mongorestore ./db_backup/' + req.body.file, 
       function (error, stdout, stderr) {      
