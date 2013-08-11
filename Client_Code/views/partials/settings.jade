@@ -8,12 +8,14 @@ div.mainPanel
 				select(size="1", ng-model="settings[0].value", ng-options="v as v for (k,v) in frequencyList" )
 				button(ng-click="updateFrequency()") save
 		div.setting
-			div.left Backups to Retain: 
-			div.right 
-				input(type="text", ng-model="settings[1].value")
-				button(ng-click="updateBackupNumber()") save
+			form(name="form", class="css-form", novalidate)
+				div.left Backups to Retain: 
+				div.right 
+					input(type="text", id="integer", ng-model="settings[1].value", required, integer)
+					button(ng-disabled="form.$invalid", ng-click="updateBackupNumber()") save
 		div.setting
-			div.left Restore database using:
-			select.list.right(size="5", ng-model="selectedBackupToExecute", ng-options="v as v for (k,v) in backupList")
-			button.right.backupButton(ng-click="executeBackup()") Execute Backup
-			button.right(ng-click="restoreDatabase()") Restore Database
+			form(name="formB", class="css-form", novalidate)
+				div.left Restore database using:
+				select.list.right(size="5", ng-model="selectedBackupToExecute", ng-options="v as v for (k,v) in backupList", required)
+				button.right.backupButton(ng-click="executeBackup()") Execute Backup
+				button.right(ng-disabled="formB.$invalid", ng-click="restoreDatabase()") Restore Database
