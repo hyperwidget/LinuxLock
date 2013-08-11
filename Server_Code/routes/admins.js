@@ -133,3 +133,16 @@ exports.delete = function(id, done){
         });
     });
 };
+
+//Update superAdmin password
+exports.changeSuperAdminPassword = function(req, done){
+    var err;
+    db.collection('admins', function(err, collection){
+        collection.update({name:'Default SuperAdmin'},
+        {
+            $set:{password: bcrypt.hashSync(req.body.password)}
+        }, function(){
+            done(null);
+        });
+    });
+};

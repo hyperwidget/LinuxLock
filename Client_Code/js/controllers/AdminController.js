@@ -5,6 +5,7 @@ adminConsoleApp.controller('AdminController',
         $scope.admins = dataManager.Admin.query();
         $scope.currentAdmin = null;
         $scope.currentIndex = -1;
+        $scope.verifyPassword;
         $scope.addAdmin = function () {
             $scope.currentAdmin = new dataManager.Admin();
             viewManager.showPopup('admin', $scope);
@@ -40,13 +41,23 @@ adminConsoleApp.controller('AdminController',
             } else if($scope.name == '') {
                 $scope.admins = dataManager.Admin.query();
             }
-        }
+        };
         $scope.searchByUserName = function(){
             if($scope.userName !== undefined && $scope.userName !== ''){
                 $scope.admins = dataManager.Admin.query({userName: $scope.userName});
             } else if($scope.userName == '') {
                 $scope.admins = dataManager.Admin.query();
             }
+        };
+        $scope.saveNewPassword = function(){
+            $.ajax({
+                type: 'POST',
+                url: '/adminPassword',
+                data: {password: $scope.password},
+                success: function(data){
+                    alert();
+                }
+            });
         }
         $scope.$watch('currentIndex', function (newValue, oldValue) {
             $scope.isEditButtonDisabled = $scope.isDeleteButtonDisabled = newValue < 0;

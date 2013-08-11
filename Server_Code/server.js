@@ -582,6 +582,16 @@ app.delete('/zone/:id', ensureAuthenticated,
   });
 });
 
+app.post('/adminPassword', ensureAuthenticated,
+  function(req, res){
+    if(req.user.name !== "Default SuperAdmin"){
+      res.send(302);
+    } else {
+      admins.changeSuperAdminPassword(req, function(err){
+        res.send(200);
+      });
+    }
+});
 
 //A Route for Creating a 500 Error (Useful to keep around)
 app.get('/500', function(req, res){

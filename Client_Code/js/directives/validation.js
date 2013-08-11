@@ -1,4 +1,5 @@
 var PHONE_REGEXP = /^([0-9]( |-)?)?(\(?[0-9]{3}\)?|[0-9]{3})( |-)?([0-9]{3}( |-)?[0-9]{4}|[a-zA-Z0-9]{7})$/ ;
+var PASSWORD_REGEXP = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z@_-]{8,}$/;
 
 adminConsoleApp.directive('validatePhone', function() {
     return {
@@ -58,6 +59,25 @@ adminConsoleApp.directive('validateCard', function() {
     };
 });
 
+//Validates that the password matches the regex (>8 characters with at least one upper case, one lower case, one number and a-z, A-Z or @_-)
+adminConsoleApp.directive('validatePassword', function() {
+    return {
+        restrict: 'A',
+        require: 'ngModel',
+        link: function(scope, elm, attrs, ctrl) {
+            ctrl.$parsers.unshift(function(viewValue) {
+                if (PASSWORD_REGEXP.test(viewValue)) {
+                    ctrl.$setValidity('password', true);
+                    return viewValue;
+                } else {
+                    ctrl.$setValidity('password', false);
+                    return undefined;
+                }
+            });
+        }
+    };
+});
+
 adminConsoleApp.directive('status', function() {
     return {
         require: 'ngModel',
@@ -73,4 +93,25 @@ adminConsoleApp.directive('status', function() {
             });
         }
     };
+});
+
+
+//Used to verify that the re-entered password is the same as the first
+adminConsoleApp.directive('passwordCheck', function(){
+    return{
+        require: 'ngModel',
+        link: function(scope, elem, attrs, ctrl){
+            scope.$watch(attrs.ngModel, function(){
+               ctrl.$parsers.unshift(function(value){
+                if(value === scope[attrs.passwordCheck]) {
+                    ctrl.$setValidity('passwordCheck', true);
+                    return value;
+                } else {
+                    ctrl.$setValidity('passwordCheck', false);
+                    return undefined;
+                }
+               });
+            });
+        }
+    }
 });

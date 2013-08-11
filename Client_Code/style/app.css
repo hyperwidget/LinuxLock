@@ -173,6 +173,12 @@ th.reports {
     width: 26%;
     padding: 1px 0px;
 }
+.passwordSection{
+    width: 25%;
+    margin-left: 37.25%;
+    display: inline-block;
+    padding: 10px 5px;
+}
 
 /* Popup styles */
 #popup {
