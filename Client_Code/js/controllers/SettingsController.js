@@ -7,10 +7,12 @@ adminConsoleApp.controller('SettingsController',
         $scope.frequencyList = ["Weekly", "Monthly", "Daily"];
 	    $scope.updateFrequency = function(){
 	    	$scope.settings[0].$save();
+            alert('Backup frequency saved.');
 	    };
 
 	    $scope.updateBackupNumber = function(){
 	    	$scope.settings[1].$save();
+            alert('Backups to retain saved.');
 	    };
 
 	    $scope.restoreDatabase = function(){
@@ -22,6 +24,7 @@ adminConsoleApp.controller('SettingsController',
             		type: 'POST',
             		data: $scope.reqData
             	});
+                alert('Database restored');
             } else {
             	alert();
             }
@@ -34,6 +37,7 @@ adminConsoleApp.controller('SettingsController',
                     url: 'setting/executeBackup',
                     type: 'POST'
                 });
+                alert('Backup executed');
             } else {
                 alert();
             }
