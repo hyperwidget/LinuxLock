@@ -6,6 +6,9 @@ adminConsoleApp.controller('AdminController',
         $scope.currentAdmin = null;
         $scope.currentIndex = -1;
         $scope.verifyPassword;
+        $scope.editSuperPw = function() {
+            viewManager.showPopup('superPw', $scope);
+        };
         $scope.addAdmin = function () {
             $scope.currentAdmin = new dataManager.Admin();
             viewManager.showPopup('admin', $scope);
@@ -50,6 +53,7 @@ adminConsoleApp.controller('AdminController',
             }
         };
         $scope.saveNewPassword = function(){
+            $scope.hidePopup();
             $.ajax({
                 type: 'POST',
                 url: '/adminPassword',

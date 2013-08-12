@@ -14,6 +14,7 @@ div.mainPanel
         button(ng-click="addAdmin()", ng-disabled="isAddButtonDisabled") Add
         button(ng-click="editAdmin()", ng-disabled="isEditButtonDisabled") Edit
         button(ng-click="deleteAdmin()", ng-disabled="isDeleteButtonDisabled") Delete
+        button.right(ng-click="editSuperPw()") Change SuperAdmin Password
     span.item
         table
             tr
@@ -34,12 +35,3 @@ div.mainPanel
                 td {{admin.canGenerateReports}}
                 td {{admin.canManageRFIDs}}
                 td {{admin.canManageSettings}}
-    span.passwordSection
-        h3 Change superAdmin Password
-        form(name="form", class="css-form", novalidate)
-            label(for="superAdminPassword") New SuperAdmin Password</br>
-            input.list(type="password", ng-model="password", id="password", required, validate-password)
-            label(for="verifyPassword")</br>Verify Password</br>
-            input.list(type="password", ng-model="verifyPassword", id="verifyPassword", required, minlength="8", maxlength="50", password-check="password")
-            button.right(ng-disabled="form.$invalid", ng-click="saveNewPassword()", ng-disabled="isPasswordSaveButtonDisabled") Change
-            span.item Passwords must be at least 8 characters long, contain at least one uppercase, one lower case, and one numeric key. The special characters '@, - and _ are also permitted'

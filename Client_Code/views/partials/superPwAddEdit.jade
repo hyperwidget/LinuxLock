@@ -1,0 +1,10 @@
+form(name="form", class="css-form", novalidate)
+    span.item
+        label(for="superAdminPassword") New SuperAdmin Password</br>
+        input.list(type="password", ng-model="password", id="password", required, validate-password)
+    span.item
+        label(for="verifyPassword")</br>Verify Password</br>
+        input.list(type="password", ng-model="verifyPassword", id="verifyPassword", required, minlength="8", maxlength="50", password-check="password")
+    button.right(ng-disabled="form.$invalid", ng-click="saveNewPassword()") Change
+    span.item
+        A Passwords must be at least 8 characters long, contain at least one uppercase, one lower case, and one numeric key. The special characters '@, - and _ are also permitted'
