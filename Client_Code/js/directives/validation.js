@@ -95,6 +95,7 @@ adminConsoleApp.directive('status', function() {
     };
 });
 
+<<<<<<< HEAD
 
 //Used to verify that the re-entered password is the same as the first
 adminConsoleApp.directive('passwordCheck', function(){
@@ -116,6 +117,8 @@ adminConsoleApp.directive('passwordCheck', function(){
     }
 });
 
+=======
+>>>>>>> 8625a95220682f743897bb3662a74a61792e4daa
 var INTEGER_REGEXP = /^\d*$/;
 
 adminConsoleApp.directive('integer', function() {
