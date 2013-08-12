@@ -19,6 +19,7 @@ db.createCollection("admins")
 cardHolder1_id = ObjectId()
 cardHolder2_id = ObjectId()
 cardHolder3_id = ObjectId()
+cardHolder4_id = ObjectId()
 
 
 //-----------------------DEVICES--------------------------------------//
@@ -85,8 +86,8 @@ rfid10_id = ObjectId()
 //Create RFID's //
 rfid1 = { _id : rfid1_id,  rfidNo : "0200D17485", status: "active"}
 rfid2 = { _id : rfid2_id,  rfidNo : "0200D14D3E", status: "active"}
-rfid3 = { _id : rfid3_id,  rfidNo : "0200D15473", status: "inactive"}
-rfid4 = { _id : rfid4_id,  rfidNo : "0200D2881A", status: "inactive"}
+rfid3 = { _id : rfid3_id,  rfidNo : "0200D15473", status: "active"}
+rfid4 = { _id : rfid4_id,  rfidNo : "0200D2881A", status: "active"}
 rfid5 = { _id : rfid5_id,  rfidNo : "0200D1423F", status: "inactive"}
 rfid6 = { _id : rfid6_id,  rfidNo : "0200D173F5", status: "inactive"}
 rfid7 = { _id : rfid7_id,  rfidNo : "0200D1500A", status: "inactive"}
@@ -119,10 +120,13 @@ cardHolder2 = { _id: cardHolder2_id , first: "Hunter", last: "Jansen", email: "h
 
 cardHolder3 = { _id : cardHolder3_id , first: "Alex", last: "D'Amico", email: "alex.damico@senecacollege.ca", phone: "416 543 986", userRole: "su", cards:[{rfid_id: rfid1_id}], zones:[{zone_id: zone1_id}] }
 
+cardHolder4 = { _id : cardHolder4_id , first: "Emile", last: "Ohan", email: "ictlevel02@gmail.com", phone: "416 543 1236", userRole: "su", cards:[{rfid_id: rfid4_id}], zones:[{zone_id: zone1_id}] }
+
 // INSERT USERS TO DB //
 db.cardHolders.insert(cardHolder1)
 db.cardHolders.insert(cardHolder2)
 db.cardHolders.insert(cardHolder3)
+db.cardHolders.insert(cardHolder4)
 
 
 // ------------------Events------------------------- //

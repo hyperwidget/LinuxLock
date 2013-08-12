@@ -55,7 +55,7 @@ adminConsoleApp.controller('AdminController',
                 url: '/adminPassword',
                 data: {password: $scope.password},
                 success: function(data){
-                    alert();
+                    alert('Password successfully changed');
                 }
             });
         }
